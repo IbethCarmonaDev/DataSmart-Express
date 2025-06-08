@@ -32,15 +32,6 @@ if archivo_usuario:
     df_clasificacion = pd.read_excel(archivo_usuario, sheet_name="CLASIFICACION_CUENTAS")
     df_parametros = ruta_parametros
 
-    # --- SELECCION DE PLAN ---
-    df_planes = pd.read_excel(df_parametros, sheet_name="PLANES", index_col=0)
-    planes_disponibles = df_planes.columns.tolist()
-    plan_seleccionado = st.selectbox("🌟 Selecciona tu plan de análisis", planes_disponibles)
-    st.session_state["plan"] = plan_seleccionado
-
-    # Crear diccionario de funcionalidades activas para el plan
-    config_plan = df_planes[plan_seleccionado].to_dict()
-
     año = st.selectbox("1⃣ Selecciona el año", sorted(df_datos["AÑO"].unique(), reverse=True))
     meses = {
         1: "Enero", 2: "Febrero", 3: "Marzo", 4: "Abril",
@@ -63,51 +54,48 @@ if archivo_usuario:
     df_estado["MES"] = mes
 
     # --- TARJETAS DE KPI ---
-    if config_plan.get("TARJETAS_KPI", 0):
-        st.markdown("### 📌 Indicadores Financieros Clave", unsafe_allow_html=True)
-        if not df_kpis.empty:
-            col1, col2, col3, col4 = st.columns(4)
-            columnas = [col1, col2, col3, col4]
-            for idx, (_, row) in enumerate(df_kpis.iterrows()):
-                mensual = row["MENSUAL"]
-                anual = row["ANUAL"]
-                tipo = str(row.get("TIPO_DATO", "MONEDA")).upper()
+    st.markdown("### 📌 Indicadores Financieros Clave", unsafe_allow_html=True)
+    if not df_kpis.empty:
+        col1, col2, col3, col4 = st.columns(4)
+        columnas = [col1, col2, col3, col4]
+        for idx, (_, row) in enumerate(df_kpis.iterrows()):
+            mensual = row["MENSUAL"]
+            anual = row["ANUAL"]
+            tipo = str(row.get("TIPO_DATO", "MONEDA")).upper()
 
-                if tipo == "PORCENTAJE":
-                    valor_mensual = f"{mensual:,.2f}%"
-                    valor_anual = f"{anual:,.2f}%"
-                elif tipo == "DECIMAL":
-                    valor_mensual = f"{mensual:,.2f}"
-                    valor_anual = f"{anual:,.2f}"
-                else:
-                    valor_mensual = f"$ {mensual:,.0f}"
-                    valor_anual = f"$ {anual:,.0f}"
+            if tipo == "PORCENTAJE":
+                valor_mensual = f"{mensual:,.2f}%"
+                valor_anual = f"{anual:,.2f}%"
+            elif tipo == "DECIMAL":
+                valor_mensual = f"{mensual:,.2f}"
+                valor_anual = f"{anual:,.2f}"
+            else:
+                valor_mensual = f"$ {mensual:,.0f}"
+                valor_anual = f"$ {anual:,.0f}"
 
-                columnas[idx % 4].markdown(
-                    f"""
-                    <div style='background-color:#f8f9fa; padding:15px; border-radius:10px;
-                                box-shadow: 2px 2px 6px rgba(0,0,0,0.05); margin-bottom:10px'>
-                        <h5 style='margin-bottom:0px;'>{row['GRUPO']}</h5>
-                        <h2 style='margin:5px 0; color:#0066cc'>{valor_mensual}</h2>
-                        <p style='margin:0; font-size:16px; color:#2e8b57; font-weight:600'>
-                            📈 Acumulado: {valor_anual}
-                        </p>
-                    </div>
-                    """, unsafe_allow_html=True
-                )
+            columnas[idx % 4].markdown(
+                f"""
+                <div style='background-color:#f8f9fa; padding:15px; border-radius:10px;
+                            box-shadow: 2px 2px 6px rgba(0,0,0,0.05); margin-bottom:10px'>
+                    <h5 style='margin-bottom:0px;'>{row['GRUPO']}</h5>
+                    <h2 style='margin:5px 0; color:#0066cc'>{valor_mensual}</h2>
+                    <p style='margin:0; font-size:16px; color:#2e8b57; font-weight:600'>
+                        📈 Acumulado: {valor_anual}
+                    </p>
+                </div>
+                """, unsafe_allow_html=True
+            )
 
     # --- ANÁLISIS EN LENGUAJE NATURAL ---
-    if config_plan.get("ANALISIS_LENGUAJE", 0):
-        st.markdown("---", unsafe_allow_html=True)
-        st.markdown("### 👀 Análisis en Lenguaje Natural", unsafe_allow_html=True)
-        st.markdown(generar_conclusiones(df_kpis), unsafe_allow_html=True)
+    st.markdown("---", unsafe_allow_html=True)
+    st.markdown("### 👀 Análisis en Lenguaje Natural", unsafe_allow_html=True)
+    st.markdown(generar_conclusiones(df_kpis), unsafe_allow_html=True)
 
     # --- ANÁLISIS AVANZADO ---
-    if config_plan.get("ANALISIS_AVANZADO", 0):
-        st.markdown("### 🚀 Análisis Avanzado")
-        df_comparativo, resumen_avanzado = generar_conclusiones_avanzadas(df_kpis, st.session_state.estado_todos, df_parametros, año, mes)
-        st.markdown(generar_tabla_comparativa_html(df_comparativo), unsafe_allow_html=True)
-        st.markdown(resumen_avanzado, unsafe_allow_html=True)
+    st.markdown("### 🚀 Análisis Avanzado")
+    df_comparativo, resumen_avanzado = generar_conclusiones_avanzadas(df_kpis, st.session_state.estado_todos, df_parametros, año, mes)
+    st.markdown(generar_tabla_comparativa_html(df_comparativo), unsafe_allow_html=True)
+    st.markdown(resumen_avanzado, unsafe_allow_html=True)
 
     # --- ESTADO DE RESULTADOS DETALLADO ---
     st.markdown("---", unsafe_allow_html=True)
