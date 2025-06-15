@@ -4,22 +4,71 @@
 # All rights reserved
 
 import pandas as pd
+import numpy as np
+import streamlit as st
 
+def git init(df_datos, df_clasificacion, archivo_parametros, centro_costos=None):
+    df = df_datos.copy()
 
-def generar_estado_resultados_detallado(df_datos, df_clasificacion, archivo_parametros, año, mes, centro_costos=None):
+    # Asegurar que COD_CUENTA es string limpio
+    df["COD_CUENTA"] = df["COD_CUENTA"].astype(str).str.strip()
+    df["PREFIJO"] = df["COD_CUENTA"].str[:2]
+
+    df_clasificacion["PREFIJO"] = df_clasificacion["PREFIJO"].astype(str).str.strip()
+
+    # Hacer merge por PREFIJO
+    df = df.merge(df_clasificacion, on="PREFIJO", how="left")
+
+    # Calcular el valor contable
+    df["VALOR"] = np.where(
+        df["NATURALEZA_CONTABLE"].str.upper() == "DEBITO",
+        df["DEBITO"] - df["CREDITO"],
+        df["CREDITO"] - df["DEBITO"]
+    )
+
+    columnas_validas = ["AÑO", "MES", "GRUPO", "COD_CUENTA", "CUENTA", "CENTRO_COSTOS", "VALOR"]
+    if "SUBTOTAL_EN" in df.columns:
+        columnas_validas.insert(3, "SUBTOTAL_EN")
+
+    df = df[columnas_validas]
+
+    # Agrupación por cuenta
+    df_cuenta = df.groupby(["AÑO", "MES", "GRUPO", "COD_CUENTA", "CUENTA", "CENTRO_COSTOS"], as_index=False)["VALOR"].sum()
+    df_cuenta["TIPO"] = "CUENTA"
+
+    # Agregar totales por grupo si existe SUBTOTAL_EN
+    if "SUBTOTAL_EN" in columnas_validas:
+        df_totales = df.groupby(["AÑO", "MES", "SUBTOTAL_EN", "CENTRO_COSTOS"], as_index=False)["VALOR"].sum()
+        df_totales = df_totales.rename(columns={"SUBTOTAL_EN": "GRUPO"})
+        df_totales["CUENTA"] = ""
+        df_totales["COD_CUENTA"] = ""
+        df_totales["TIPO"] = "TOTAL_GRUPO"
+        df_resultado = pd.concat([df_cuenta, df_totales], ignore_index=True)
+    else:
+        df_resultado = df_cuenta.copy()
+
+    df_resultado["MENSUAL"] = df_resultado["VALOR"]
+    df_resultado["ANUAL"] = df_resultado.groupby(["GRUPO", "CUENTA", "CENTRO_COSTOS"])["MENSUAL"].transform("sum")
+    df_resultado = df_resultado[["AÑO", "MES", "GRUPO", "COD_CUENTA", "CUENTA", "CENTRO_COSTOS", "TIPO", "MENSUAL", "ANUAL"]]
+
+    return df_resultado
+
+def generar_estado_resultados_detallado(df_datos, df_clasificacion, df_tarjetas, año, mes, df_kpis, centro_costos=None):
     df_datos.columns = df_datos.columns.str.strip().str.upper()
 
     # df_clasificacion es recibido directamente desde app.py
-    df_kpis = pd.read_excel(archivo_parametros, sheet_name="KPIS_FINANCIEROS")
-    df_tarjetas = pd.read_excel(archivo_parametros, sheet_name="TARJETAS")
+    # df_kpis = pd.read_excel(archivo_parametros, sheet_name="KPIS_FINANCIEROS")
+    if 'MOSTRAR_EN_PG' in df_kpis.columns:
+        df_kpis = df_kpis[df_kpis['MOSTRAR_EN_PG'] == 1]
+        ##df_tarjetas = pd.read_excel(archivo_parametros, sheet_name="TARJETAS")
+
     df_clasificacion.columns = df_clasificacion.columns.str.strip().str.upper()
     df_kpis.columns = df_kpis.columns.str.strip().str.upper()
-    df_tarjetas.columns = df_tarjetas.columns.str.strip().str.upper()
+    ##df_tarjetas.columns = df_tarjetas.columns.str.strip().str.upper()
 
     df_datos = df_datos[df_datos["AÑO"] == año].copy()
     df_datos["PREFIJO"] = df_datos["COD_CUENTA"].astype(str).str[:2]
     df_clasificacion["PREFIJO"] = df_clasificacion["PREFIJO"].astype(str)
-
     df_datos = df_datos.merge(df_clasificacion, on="PREFIJO", how="left")
 
     df_datos["VALOR"] = df_datos.apply(
@@ -32,10 +81,9 @@ def generar_estado_resultados_detallado(df_datos, df_clasificacion, archivo_para
 
     df_mensual = df_datos[df_datos["MES"] == mes].groupby(["GRUPO", "COD_CUENTA", "CUENTA"])["VALOR"].sum()
     df_anual = df_datos[df_datos["MES"] <= mes].groupby(["GRUPO", "COD_CUENTA", "CUENTA"])["VALOR"].sum()
-
     df_cuentas = pd.DataFrame({"MENSUAL": df_mensual, "ANUAL": df_anual}).fillna(0).reset_index()
 
-    clasif = df_clasificacion.drop_duplicates(subset=["GRUPO"])[["GRUPO", "SUBTOTAL_EN", "NATURALEZA_FINANCIERA"]]
+    clasif = df_clasificacion.drop_duplicates(subset=["GRUPO"])[["GRUPO"]]
     df_cuentas = df_cuentas.merge(clasif, on="GRUPO", how="left")
 
     orden = df_clasificacion.drop_duplicates(subset=["GRUPO"]).reset_index(drop=True)
@@ -49,7 +97,7 @@ def generar_estado_resultados_detallado(df_datos, df_clasificacion, archivo_para
 
     estructura = []
     totales_por_grupo = {}
-    kpis_para_tarjeta = []
+    #kpis_para_tarjeta = []
     kpis_dict = {}
 
     grupo_actual = None
@@ -128,6 +176,8 @@ def generar_estado_resultados_detallado(df_datos, df_clasificacion, archivo_para
     df_estructura = pd.DataFrame(estructura)
 
     kpis_para_tarjeta = []
+    df_tarjetas.columns = df_tarjetas.columns.str.strip().str.upper()
+
     for _, fila in df_tarjetas.sort_values(by="ORDEN").iterrows():
         nombre = str(fila["KPI"]).upper()
         tipo_dato = str(fila.get("TIPO_DATO", "MONEDA")).upper()
@@ -143,17 +193,5 @@ def generar_estado_resultados_detallado(df_datos, df_clasificacion, archivo_para
             kpis_para_tarjeta.append({"GRUPO": nombre, "MENSUAL": row["MENSUAL"], "ANUAL": row["ANUAL"], "TIPO_DATO": tipo_dato})
 
     df_kpis_tarjeta = pd.DataFrame(kpis_para_tarjeta)
+
     return df_estructura, df_kpis_tarjeta
-
-def generar_estado_resultados_todos_los_meses(df_datos, df_clasificacion, archivo_parametros, centro_costos=None):
-    resultados = []
-
-    for año in sorted(df_datos["AÑO"].unique()):
-        for mes in sorted(df_datos[df_datos["AÑO"] == año]["MES"].unique()):
-            df_estado, _ = generar_estado_resultados_detallado(df_datos, df_clasificacion, archivo_parametros, año, mes, centro_costos)
-            df_estado["AÑO"] = año
-            df_estado["MES"] = mes
-            resultados.append(df_estado)
-
-    df_completo = pd.concat(resultados, ignore_index=True)
-    return df_completo
