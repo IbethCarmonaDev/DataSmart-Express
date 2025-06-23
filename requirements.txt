@@ -6,3 +6,4 @@ Pillow
 streamlit-javascript
 supabase
 scipy
+plotly
