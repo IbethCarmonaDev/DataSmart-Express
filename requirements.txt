@@ -9,3 +9,4 @@ scipy
 plotly
 fpdf
 openpyxl
+streamlit-javascript
