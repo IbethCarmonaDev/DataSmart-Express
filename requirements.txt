@@ -8,3 +8,4 @@ supabase
 scipy
 plotly
 fpdf
+openpyxl
