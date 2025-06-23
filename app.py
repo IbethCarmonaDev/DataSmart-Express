@@ -35,6 +35,9 @@ if isinstance(fragment, str) and fragment.startswith("#"):
     except Exception as e:
         st.warning(f"⚠️ Error leyendo los parámetros de la URL: {e}")
 
+st.write("🪝 Fragment:", fragment)
+st.write("🧩 Params:", params)
+
 if params.get("type") == "recovery" and params.get("access_token"):
     token = params["access_token"]
     mostrar_reset_password(token)
