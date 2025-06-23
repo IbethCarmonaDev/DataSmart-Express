@@ -27,23 +27,15 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 st.set_page_config(page_title="DataSmart Express", layout="wide")
 
 # --- Capturar token de recuperación desde redirect.html ---
-params = {}
-fragment = st_javascript("window.location.hash")
-if isinstance(fragment, str) and fragment.startswith("#"):
-    try:
-        params = dict(urllib.parse.parse_qsl(fragment.lstrip("#")))
-    except Exception as e:
-        st.warning(f"⚠️ Error leyendo los parámetros de la URL: {e}")
+params = st.query_params
+token = params.get("access_token")
+recovery_type = params.get("type")
 
-st.write("🪝 Fragment:", fragment)
-st.write("🧩 Params:", params)
-
-if params.get("type") == "recovery" and params.get("access_token"):
-    token = params["access_token"]
+if token and recovery_type == "recovery":
     mostrar_reset_password(token)
     st.stop()
 
-# --- Login inicial ---
+# --- Login inicial ------
 if "usuario" not in st.session_state:
     mostrar_login()
     st.stop()
