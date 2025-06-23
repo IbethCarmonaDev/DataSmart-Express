@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import openai
 import urllib.parse
 
+
 from auth.interfaz_login import mostrar_login
 from core.analisis_estado_resultados import cargar_cache, obtener_estado_por_mes, obtener_estado_anual
 from core.analisis_estado_resultados import generar_estado_resultados_detallado
