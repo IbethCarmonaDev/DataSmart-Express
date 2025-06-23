@@ -4,6 +4,7 @@ from auth.conexion_supabase import supabase
 def mostrar_reset_password(token):
     st.markdown("<h2 style='color:#2b85ff'>🔒 Restablecer Contraseña</h2>", unsafe_allow_html=True)
 
+
     nueva = st.text_input("Nueva contraseña", type="password")
     confirmar = st.text_input("Confirmar contraseña", type="password")
 

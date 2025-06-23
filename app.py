@@ -60,7 +60,7 @@ params = st.query_params
 token = params.get("access_token")
 recovery_type = params.get("type")
 
-st.warning("📦 Params detectados 5:")
+st.warning("📦 Params detectados 7:")
 st.write(params)
 
 if token and recovery_type == "recovery":
