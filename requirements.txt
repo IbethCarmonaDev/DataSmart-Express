@@ -1,7 +1,7 @@
 streamlit
 pandas
-python-dotenv
 openai
+python-dotenv
 Pillow
-supabase-py
-streamlit_javascript
+streamlit-javascript
+supabase
