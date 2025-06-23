@@ -1,3 +1,5 @@
+from asyncore import write
+
 import streamlit as st
 import pandas as pd
 from PIL import Image
@@ -28,13 +30,27 @@ st.set_page_config(page_title="DataSmart Express", layout="wide")
 from streamlit_javascript import st_javascript
 
 # --- Detectar y redirigir fragmento #access_token a ?access_token ---
-fragment = st_javascript("window.location.hash")
+from streamlit_javascript import st_javascript
+import urllib.parse
 
-if isinstance(fragment, str) and "access_token=" in fragment:
-    parsed_fragment = fragment.lstrip("#")  # remove the #
+# --- Si la URL contiene un fragmento con el token, redirige a query string ---
+fragment = st_javascript("window.location.hash")
+st.write(fragment)
+
+if fragment and "#access_token=" in fragment:
+    st.warning("📦 Entra a: if fragment")
+    parsed_fragment = fragment.lstrip("#")  # Elimina el #
+    # Construye la nueva URL con query string
     base_url = st_javascript("window.location.origin")
     new_url = f"{base_url}/?{parsed_fragment}"
-    st_javascript(f"window.location.replace('{new_url}')")
+
+    # 🚨 IMPORTANTE: redirige sin dejar que Streamlit procese nada más
+    st.markdown(f"""
+        <script>
+            window.location.replace("{new_url}");
+        </script>
+    """, unsafe_allow_html=True)
+
     st.stop()
 
 # --- Capturar token de recuperación desde redirect.html ---
@@ -42,7 +58,7 @@ params = st.query_params
 token = params.get("access_token")
 recovery_type = params.get("type")
 
-st.warning("📦 Params detectados 3:")
+st.warning("📦 Params detectados 4:")
 st.write(params)
 
 if token and recovery_type == "recovery":
