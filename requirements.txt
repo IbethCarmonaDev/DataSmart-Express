@@ -1,9 +1,7 @@
 streamlit
-python-dotenv
 pandas
+python-dotenv
 openai
 Pillow
 supabase-py
 streamlit_javascript
-matplotlib
-xlsxwriter
