@@ -31,7 +31,12 @@ params = st.query_params
 token = params.get("access_token")
 recovery_type = params.get("type")
 
+st.warning("📦 Params detectados:")
+st.write(params)
+
 if token and recovery_type == "recovery":
+    st.warning("✅ Entramos a mostrar_reset_password() con token:")
+    st.code(token)
     mostrar_reset_password(token)
     st.stop()
 
