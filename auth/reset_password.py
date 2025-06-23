@@ -14,22 +14,15 @@ def mostrar_reset_password(token):
             st.error("Las contraseñas no coinciden.")
         else:
             try:
-                # No se necesita set_session() si Supabase ya está en modo recuperación
+                # Actualiza la contraseña usando el token directamente (sin sesión previa)
+                respuesta = supabase.auth.api.update_user(
+                    access_token=token,
+                    attributes={"password": nueva}
+                )
 
-                respuesta = supabase.auth.update_user({"password": nueva})
-
-                if respuesta.user:
-                    st.success("✅ Contraseña actualizada correctamente. Redirigiendo al login...")
+                if respuesta.get("user"):
+                    st.success("✅ Contraseña actualizada. Ya puedes iniciar sesión.")
                     st.balloons()
-
-                    # Redirige después de unos segundos
-                    st.markdown("""
-                        <script>
-                            setTimeout(function() {
-                                window.location.href = "/";
-                            }, 3000);
-                        </script>
-                    """, unsafe_allow_html=True)
                 else:
                     st.error("❌ No se pudo actualizar la contraseña.")
             except Exception as e:
