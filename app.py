@@ -6,7 +6,6 @@ import time
 from dotenv import load_dotenv
 import openai
 import urllib.parse
-from streamlit_javascript import st_javascript
 
 from auth.interfaz_login import mostrar_login
 from core.analisis_estado_resultados import cargar_cache, obtener_estado_por_mes, obtener_estado_anual
@@ -26,6 +25,18 @@ load_dotenv(override=True)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 st.set_page_config(page_title="DataSmart Express", layout="wide")
 
+from streamlit_javascript import st_javascript
+
+# --- Detectar y redirigir fragmento #access_token a ?access_token ---
+fragment = st_javascript("window.location.hash")
+
+if isinstance(fragment, str) and "access_token=" in fragment:
+    parsed_fragment = fragment.lstrip("#")  # remove the #
+    base_url = st_javascript("window.location.origin")
+    new_url = f"{base_url}/?{parsed_fragment}"
+    st_javascript(f"window.location.replace('{new_url}')")
+    st.stop()
+
 # --- Capturar token de recuperación desde redirect.html ---
 params = st.query_params
 token = params.get("access_token")
@@ -36,6 +47,8 @@ st.write(params)
 
 if token and recovery_type == "recovery":
     st.warning("✅ Entramos a mostrar_reset_password() con token:")
+    st.success("✅ Token detectado. Mostrando formulario.")
+
     st.code(token)
     mostrar_reset_password(token)
     st.stop()
