@@ -14,10 +14,9 @@ def mostrar_reset_password(token):
             st.error("❌ Las contraseñas no coinciden.")
         else:
             try:
-                # Aplica la sesión temporal usando solo el access_token
-                supabase.auth.set_session(token, None)
+                # ⚠️ Pasa "" en lugar de None para evitar el error
+                supabase.auth.set_session(token, "")
 
-                # Actualiza la contraseña del usuario autenticado
                 respuesta = supabase.auth.update_user({"password": nueva})
 
                 if respuesta.user:
