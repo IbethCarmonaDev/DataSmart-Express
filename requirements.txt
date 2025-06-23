@@ -4,7 +4,7 @@ openai
 python-dotenv
 Pillow
 streamlit-javascript
-supabase==1.2.0
+supabase==0.7.2
 scipy
 plotly
 fpdf
