@@ -34,7 +34,9 @@ import urllib.parse
 
 # --- Si la URL contiene un fragmento con el token, redirige a query string ---
 fragment = st_javascript("window.location.hash")
+st.write("El fragment")
 st.write(fragment)
+
 
 if fragment and "#access_token=" in fragment:
     st.warning("📦 Entra a: if fragment")
@@ -51,6 +53,8 @@ if fragment and "#access_token=" in fragment:
     """, unsafe_allow_html=True)
 
     st.stop()
+
+st.stop()
 
 # --- Capturar token de recuperación desde redirect.html ---
 params = st.query_params
