@@ -54,14 +54,13 @@ if fragment and "#access_token=" in fragment:
 
     st.stop()
 
-st.stop()
 
 # --- Capturar token de recuperación desde redirect.html ---
 params = st.query_params
 token = params.get("access_token")
 recovery_type = params.get("type")
 
-st.warning("📦 Params detectados 4:")
+st.warning("📦 Params detectados 5:")
 st.write(params)
 
 if token and recovery_type == "recovery":
