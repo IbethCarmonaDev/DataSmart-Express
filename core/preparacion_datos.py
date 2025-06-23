@@ -17,6 +17,9 @@ def preparar_df_mensual(df_datos, df_clasificacion, año, mes, centro):
 
     df_mensual["PREFIJO"] = df_mensual["COD_CUENTA"].astype(str).str[:2]
 
+    df_datos["PREFIJO"] = df_datos["COD_CUENTA"].astype(str).str[:2]
+    df_clasificacion["PREFIJO"] = df_clasificacion["PREFIJO"].astype(str).str.zfill(2)
+
     df_mensual = pd.merge(
         df_mensual,
         df_clasificacion[["PREFIJO", "GRUPO", "NATURALEZA_CONTABLE"]],

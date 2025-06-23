@@ -17,13 +17,6 @@ def filtrar_kpis_por_plan(df_kpis, plan, archivo_parametros):
     kpis_autorizados = df_kpis[df_kpis[plan.upper()] == 1]["KPI"].str.upper().tolist()
     return df_kpis[df_kpis["KPI"].str.upper().isin(kpis_autorizados)]
 
-def OLDobtener_graficas_por_plan(plan, df_graficas):
-    if plan not in df_graficas.columns:
-        return []
-    df_graficas_activas = df_graficas[df_graficas[plan] == 1]
-    df_graficas_activas = df_graficas_activas.sort_values("ORDEN")
-    return df_graficas_activas.to_dict(orient="records")
-
 def obtener_graficas_por_plan(plan, df_graficas):
     if plan not in df_graficas.columns:
         return pd.DataFrame()  # Retorna un DataFrame vacío si no existe la columna del plan

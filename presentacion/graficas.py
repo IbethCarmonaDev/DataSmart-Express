@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 from io import BytesIO
+from core.comentarios import generar_comentario_logico_anual
 
 def grafico_generico(df, kpi_nombre, tipo_grafico, modo="ANUAL", tipo_dato="MONEDA", columna_texto_extra=None):
     df = df.copy()
@@ -54,6 +55,8 @@ def grafico_generico(df, kpi_nombre, tipo_grafico, modo="ANUAL", tipo_dato="MONE
     if tipo_dato.upper() == "PORCENTAJE":
         df_sum["VALOR"] = df_sum["VALOR"] / 100
 
+    df_sum = df_sum[df_sum["VALOR"] != 0]
+
     def formatear_texto(row):
         color_negativo = 'red'
         valor_base = row["VALOR"]
@@ -68,6 +71,7 @@ def grafico_generico(df, kpi_nombre, tipo_grafico, modo="ANUAL", tipo_dato="MONE
             texto_extra = f"<br><span style='font-size:11px'>{row['VALOR_EXTRA']:.1f}%</span>"
             return f"{texto}{texto_extra}"
         return texto
+
 
     df_sum["TEXTO_COMBINADO"] = df_sum.apply(formatear_texto, axis=1)
 
@@ -84,8 +88,6 @@ def grafico_generico(df, kpi_nombre, tipo_grafico, modo="ANUAL", tipo_dato="MONE
     fig.update_yaxes(range=[df_sum["VALOR"].min() * 1.15 if df_sum["VALOR"].min() < 0 else 0, df_sum["VALOR"].max() * 1.15])
     fig.update_layout(uniformtext_minsize=8, uniformtext_mode="show")
     return fig
-
-
 
 def grafico_participacion_mensual(df, kpi_nombre, tipo_grafico, tipo_dato="MONEDA", columna_texto_extra=None, top_n=10):
     import plotly.express as px
@@ -162,8 +164,8 @@ def grafico_participacion_mensual(df, kpi_nombre, tipo_grafico, tipo_dato="MONED
 
     return fig
 
-
 def exportar_grafico_plotly(fig, formato="png"):
     img_bytes = fig.to_image(format=formato, width=800, height=600, scale=2)
     return img_bytes
+
 

@@ -7,424 +7,6 @@ def formato_moneda(valor):
         return "0"
     return f"$ {valor:,.0f}"
 
-def OLDgenerar_html_estado_resultados_anual(df: pd.DataFrame) -> str:
-    df_formateado = df.copy()
-    columnas_valores = [col for col in df.columns if col not in ["GRUPO", "CUENTA", "TIPO_DATO"]]
-
-    def formatear(valor, tipo):
-        if pd.isna(valor) or valor in [float("inf"), float("-inf")]: return ""
-        if tipo == "PORCENTAJE": return f"{valor:.2f}%"
-        elif tipo == "DECIMAL": return f"{valor:.2f}"
-        else: return f"$ {valor:,.0f}"
-
-
-
-    for idx, row in df.iterrows():
-        tipo = str(row.get("TIPO_DATO", "MONEDA")).upper()
-        for col in columnas_valores:
-            valor = row[col]
-            df_formateado.at[idx, col] = formatear(valor, tipo)
-
-    if "TIPO_DATO" in df_formateado.columns:
-        df_formateado = df_formateado.drop(columns=["TIPO_DATO"])
-
-    df_formateado.columns = [col.capitalize() for col in df_formateado.columns]
-
-    html = '''
-    <style>
-        .scroll-table-container {
-            overflow-x: auto;
-            max-width: 100%;
-            border: 1px solid #ddd;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-        }
-        table.custom-table {
-            border-collapse: collapse;
-            width: max-content;
-            min-width: 100%;
-        }
-        table.custom-table th, table.custom-table td {
-            padding: 4px 8px;
-            border: 1px solid #ccc;
-            text-align: right;
-            white-space: nowrap;
-        }
-        table.custom-table th {
-            position: sticky;
-            top: 0;
-            background-color: #003366;
-            color: white;
-            z-index: 3;
-            text-align: center;
-            font-weight: bold;
-        }
-        table.custom-table td:first-child,
-        table.custom-table td:nth-child(2) {
-            position: sticky;
-            left: 0;
-            background-color: #fff;
-            z-index: 2;
-            text-align: left;
-            font-weight: bold;
-        }
-        table.custom-table th:first-child,
-        table.custom-table th:nth-child(2) {
-            position: sticky;
-            left: 0;
-            background-color: #003366;
-            color: white;
-            z-index: 4;
-        }
-        table.custom-table tr.total-row td {
-            background-color: #e6f0ff;
-            font-weight: bold;
-        }
-        table.custom-table tr.kpi-row td {
-            background-color: #e1f5e1;
-            font-weight: bold;
-        }
-    </style>
-    <div class="scroll-table-container">
-    '''
-
-    def clasificar_fila(grupo):
-        if str(grupo).lower().startswith("total "):
-            return "total-row"
-        elif "margen" in str(grupo).lower() or "utilidad" in str(grupo).lower():
-            return "kpi-row"
-        return ""
-
-    html += "<table class='custom-table'>"
-    html += "<thead><tr>" + "".join(f"<th>{col}</th>" for col in df_formateado.columns) + "</tr></thead><tbody>"
-
-    for _, row in df_formateado.iterrows():
-        clase = clasificar_fila(row["Grupo"])
-        html += f"<tr class='{clase}'>" + "".join(f"<td>{cell}</td>" for cell in row) + "</tr>"
-
-    html += "</tbody></table></div>"
-    return html
-
-
-def OLDgenerar_html_estado_resultados_anual(df: pd.DataFrame) -> str:
-    df_formateado = df.copy()
-    columnas_valores = [col for col in df.columns if col not in ["GRUPO", "CUENTA", "TIPO_DATO"]]
-
-    def formatear(valor, tipo):
-        if pd.isna(valor) or valor in [float("inf"), float("-inf")]: return ""
-        if tipo == "PORCENTAJE": return f"{valor:.2f}%"
-        elif tipo == "DECIMAL": return f"{valor:.2f}"
-        else: return f"$ {valor:,.0f}"
-
-    for idx, row in df.iterrows():
-        tipo = str(row.get("TIPO_DATO", "MONEDA")).upper()
-        for col in columnas_valores:
-            valor = row[col]
-            df_formateado.at[idx, col] = formatear(valor, tipo)
-
-    if "TIPO_DATO" in df_formateado.columns:
-        df_formateado = df_formateado.drop(columns=["TIPO_DATO"])
-
-    df_formateado.columns = [col.capitalize() for col in df_formateado.columns]
-
-    html = '''
-    <style>
-        .scroll-table-container {
-            overflow-x: auto;
-            max-width: 100%;
-            border: 1px solid #ddd;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-        }
-        table.custom-table {
-            border-collapse: collapse;
-            width: max-content;
-            min-width: 100%;
-        }
-        table.custom-table th, table.custom-table td {
-            padding: 4px 8px;
-            border: 1px solid #ccc;
-            text-align: right;
-            white-space: nowrap;
-        }
-        table.custom-table th {
-            position: sticky;
-            top: 0;
-            background-color: #003366;
-            color: white;
-            z-index: 3;
-            text-align: center;
-            font-weight: bold;
-        }
-        table.custom-table td:first-child,
-        table.custom-table td:nth-child(2) {
-            position: sticky;
-            left: 0;
-            background-color: #fff;
-            z-index: 2;
-            text-align: left;
-            font-weight: bold;
-        }
-        table.custom-table th:first-child,
-        table.custom-table th:nth-child(2) {
-            position: sticky;
-            left: 0;
-            background-color: #003366;
-            color: white;
-            z-index: 4;
-        }
-        table.custom-table tr.total-row td {
-            background-color: #e6f0ff;
-            font-weight: bold;
-        }
-        table.custom-table tr.kpi-row td {
-            background-color: #e1f5e1;
-            font-weight: bold;
-        }
-    </style>
-    <div class="scroll-table-container">
-    '''
-
-    def clasificar_fila(grupo):
-        if str(grupo).lower().startswith("total "):
-            return "total-row"
-        elif "margen" in str(grupo).lower() or "utilidad" in str(grupo).lower():
-            return "kpi-row"
-        return ""
-
-    html += "<table class='custom-table'>"
-    html += "<thead><tr>" + "".join(f"<th>{col}</th>" for col in df_formateado.columns) + "</tr></thead><tbody>"
-
-    for _, row in df_formateado.iterrows():
-        clase = clasificar_fila(row["Grupo"])
-        html += f"<tr class='{clase}'>" + "".join(f"<td>{cell}</td>" for cell in row) + "</tr>"
-
-    html += "</tbody></table></div>"
-    return html
-
-def OLDgenerar_html_estado_resultados_anual(df: pd.DataFrame) -> str:
-    df_formateado = df.copy()
-    columnas_valores = [col for col in df.columns if col not in ["GRUPO", "CUENTA", "TIPO_DATO"]]
-
-    def formatear(valor, tipo):
-        if pd.isna(valor) or valor in [float("inf"), float("-inf")]: return ""
-        if tipo == "PORCENTAJE": return f"{valor:.2f}%"
-        elif tipo == "DECIMAL": return f"{valor:.2f}"
-        else: return f"$ {valor:,.0f}"
-
-
-
-    for idx, row in df.iterrows():
-        tipo = str(row.get("TIPO_DATO", "MONEDA")).upper()
-        for col in columnas_valores:
-            valor = row[col]
-            df_formateado.at[idx, col] = formatear(valor, tipo)
-
-    if "TIPO_DATO" in df_formateado.columns:
-        df_formateado = df_formateado.drop(columns=["TIPO_DATO"])
-
-    df_formateado.columns = [col.capitalize() for col in df_formateado.columns]
-
-    html = '''
-    <style>
-        .scroll-table-container {
-            overflow-x: auto;
-            max-width: 100%;
-            border: 1px solid #ddd;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-        }
-        table.custom-table {
-            border-collapse: collapse;
-            width: max-content;
-            min-width: 100%;
-        }
-        table.custom-table th, table.custom-table td {
-            padding: 4px 8px;
-            border: 1px solid #ccc;
-            text-align: right;
-            white-space: nowrap;
-        }
-        table.custom-table th {
-            position: sticky;
-            top: 0;
-            background-color: #003366;
-            color: white;
-            z-index: 3;
-            text-align: center;
-            font-weight: bold;
-        }
-        table.custom-table td:first-child,
-        table.custom-table td:nth-child(2) {
-            position: sticky;
-            left: 0;
-            background-color: #fff;
-            z-index: 2;
-            text-align: left;
-            font-weight: bold;
-        }
-        table.custom-table th:first-child,
-        table.custom-table th:nth-child(2) {
-            position: sticky;
-            left: 0;
-            background-color: #003366;
-            color: white;
-            z-index: 4;
-        }
-        table.custom-table tr.total-row td {
-            background-color: #e6f0ff;
-            font-weight: bold;
-        }
-        table.custom-table tr.kpi-row td {
-            background-color: #e1f5e1;
-            font-weight: bold;
-        }
-    </style>
-    <div class="scroll-table-container">
-    '''
-
-    def clasificar_fila(grupo):
-        if str(grupo).lower().startswith("total "):
-            return "total-row"
-        elif "margen" in str(grupo).lower() or "utilidad" in str(grupo).lower():
-            return "kpi-row"
-        return ""
-
-    html += "<table class='custom-table'>"
-    html += "<thead><tr>" + "".join(f"<th>{col}</th>" for col in df_formateado.columns) + "</tr></thead><tbody>"
-
-    for _, row in df_formateado.iterrows():
-        clase = clasificar_fila(row["Grupo"])
-        html += f"<tr class='{clase}'>" + "".join(f"<td>{cell}</td>" for cell in row) + "</tr>"
-
-    html += "</tbody></table></div>"
-    return html
-
-
-
-
-def generar_html_estado_resultados(df: pd.DataFrame, df_kpis: pd.DataFrame) -> str:
-    df_formateado = df.copy()
-    df_formateado = df_formateado.drop(columns=[col for col in ["AÑO", "MES"] if col in df_formateado.columns])
-
-    columnas_valores = [col for col in df_formateado.columns if col not in ["GRUPO", "CUENTA"]]
-
-    # Crear diccionario para mapear cada KPI a su tipo de dato
-    tipos_kpis = {}
-    if isinstance(df_kpis, pd.DataFrame) and not df_kpis.empty:
-        if "MOSTRAR_EN_PG" in df_kpis.columns:
-            df_kpis_filtrado = df_kpis[df_kpis['MOSTRAR_EN_PG'] == 1]
-        else:
-            df_kpis_filtrado = df_kpis
-
-        tipos_kpis = {
-            str(row["GRUPO"]).strip().lower(): str(row.get("TIPO_DATO", "MONEDA")).upper()
-            for _, row in df_kpis_filtrado.iterrows()
-        }
-
-    def formatear(valor, grupo):
-        tipo = tipos_kpis.get(str(grupo).strip().lower(), "MONEDA")
-        try:
-            valor = float(str(valor).replace("$", "").replace(",", "").replace("%", "").strip())
-        except:
-            return valor
-
-        if valor is None or str(valor).lower() in ["nan", "none", ""]:
-            return ""
-
-        if tipo == "PORCENTAJE":
-            valor_ajustado = valor / 100 if valor > 100 else valor
-            return f"{valor_ajustado:.2f}%"
-        elif tipo == "DECIMAL":
-            return f"{valor:.2f}"
-        else:
-            return f"$ {valor:,.0f}"
-
-
-
-    for idx, row in df_formateado.iterrows():
-        grupo = str(row.get("GRUPO", ""))
-        for col in columnas_valores:
-            valor = row[col]
-            df_formateado.at[idx, col] = formatear(valor, grupo)
-
-    df_formateado.columns = [col.capitalize() for col in df_formateado.columns]
-
-    if "Grupo" in df_formateado.columns:
-        df_formateado["Grupo"] = df_formateado["Grupo"].astype(str).str.capitalize()
-    if "Cuenta" in df_formateado.columns:
-        df_formateado["Cuenta"] = df_formateado["Cuenta"].astype(str).str.capitalize()
-
-    html = '''
-    <style>
-        .scroll-table-container {
-            overflow-x: auto;
-            max-width: 100%;
-            border: 1px solid #ddd;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-        }
-        table.custom-table {
-            border-collapse: collapse;
-            width: max-content;
-            min-width: 100%;
-        }
-        table.custom-table th, table.custom-table td {
-            padding: 4px 8px;
-            border: 1px solid #ccc;
-            text-align: right;
-            white-space: nowrap;
-        }
-        table.custom-table th {
-            position: sticky;
-            top: 0;
-            background-color: #003366;
-            color: white;
-            z-index: 1;
-            text-align: center;
-            font-weight: bold;
-        }
-        table.custom-table td:first-child,
-        table.custom-table td:nth-child(2),
-        table.custom-table th:first-child,
-        table.custom-table th:nth-child(2) {
-            position: sticky;
-            left: 0;
-            background-color: #fff;
-            z-index: 2;
-            text-align: left;
-            font-weight: bold;
-        }
-        table.custom-table tr.total-row td {
-            background-color: #e6f0ff;
-            font-weight: bold;
-        }
-        table.custom-table tr.kpi-row td {
-            background-color: #e1f5e1;
-            font-weight: bold;
-        }
-    </style>
-    <div class="scroll-table-container">
-    '''
-
-    def clasificar_fila(grupo):
-        grupo_lower = str(grupo).strip().lower()
-        if grupo_lower.startswith("total "):
-            return "total-row"
-        if grupo_lower in tipos_kpis:
-            return "kpi-row"
-        return ""
-
-    html += "<table class='custom-table'>"
-    html += "<thead><tr>" + "".join(f"<th>{col}</th>" for col in df_formateado.columns) + "</tr></thead><tbody>"
-
-    for _, row in df_formateado.iterrows():
-        clase = clasificar_fila(row["Grupo"])
-        html += f"<tr class='{clase}'>" + "".join(f"<td>{cell}</td>" for cell in row) + "</tr>"
-
-    html += "</tbody></table></div>"
-    return html
-
 
 
 def generar_html_estado_resultados(df: pd.DataFrame, df_kpis: pd.DataFrame) -> str:
@@ -703,3 +285,55 @@ def generar_html_estado_resultados_anual(df: pd.DataFrame, kpi_destacados: list 
     html += "</tbody></table></div>"
     return html
 
+
+def generar_html_estado_resumido(df_estado, df_kpis_filtrados=None):
+    import pandas as pd
+
+    df_resumen = df_estado[df_estado["TIPO"] == "CUENTA"].copy()
+
+    # Agrupar por GRUPO y calcular totales
+    df_grupos = df_resumen.groupby("GRUPO")[["MENSUAL", "ANUAL"]].sum().reset_index()
+
+    html = """
+    <style>
+        .resumen-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .resumen-table th, .resumen-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: right;
+        }
+        .resumen-table th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .resumen-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+        }
+    </style>
+    <table class='resumen-table'>
+        <tr>
+            <th>Grupo</th>
+            <th>Mes actual</th>
+            <th>Acumulado anual</th>
+        </tr>
+    """
+
+    for _, row in df_grupos.iterrows():
+        grupo = row["GRUPO"]
+        mensual = f"$ {row['MENSUAL']:,.0f}"
+        anual = f"$ {row['ANUAL']:,.0f}"
+        html += f"""
+        <tr>
+            <td>{grupo}</td>
+            <td>{mensual}</td>
+            <td>{anual}</td>
+        </tr>
+        """
+
+    html += "</table>"
+    return html
