@@ -9,24 +9,19 @@ def mostrar_reset_password(token):
 
     if st.button("Restablecer"):
         if not nueva or not confirmar:
-            st.warning("Por favor, completa ambos campos.")
+            st.warning("⚠️ Por favor, completa ambos campos.")
         elif nueva != confirmar:
-            st.error("Las contraseñas no coinciden.")
+            st.error("❌ Las contraseñas no coinciden.")
         else:
             try:
-                # Aplica el token como sesión de recuperación
-                session = supabase.auth.set_session(access_token=token, refresh_token="")
+                # Aplica la sesión temporal usando solo el access_token
+                supabase.auth.set_session(token, None)
 
-                # Verifica que la sesión fue creada correctamente
-                if not session or not session.user:
-                    st.error("❌ Auth session missing.")
-                    return
-
-                # Intenta actualizar la contraseña
+                # Actualiza la contraseña del usuario autenticado
                 respuesta = supabase.auth.update_user({"password": nueva})
 
                 if respuesta.user:
-                    st.success("✅ Contraseña actualizada. Ya puedes iniciar sesión.")
+                    st.success("✅ Contraseña actualizada exitosamente. Ya puedes iniciar sesión.")
                     st.balloons()
                 else:
                     st.error("❌ No se pudo actualizar la contraseña.")
