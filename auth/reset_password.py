@@ -54,7 +54,7 @@ def mostrar_reset_password(token):
                         st.success("✅ Contraseña actualizada exitosamente.")
                         st.balloons()
                         st.markdown("<p style='text-align:center'>Redirigiendo al inicio de sesión...</p>", unsafe_allow_html=True)
-                        st.experimental_set_query_params()  # limpia los tokens de la URL
+                        st.query_params.clear() # limpia los tokens de la URL
                         st.session_state.modo = "login"
                         st.rerun()
                     else:
