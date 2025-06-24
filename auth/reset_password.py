@@ -22,7 +22,8 @@ def mostrar_reset_password(token):
         """, unsafe_allow_html=True)
 
     with col_form:
-        st.markdown(""<h2 style='color:#2b85ff; text-align:center'>🔒 Restablecer Contraseña</h2>"", unsafe_allow_html=True)
+        st.markdown("<h2 style='color:#2b85ff; text-align:center'>🔒 Restablecer Contraseña</h2>",
+                    unsafe_allow_html=True)
 
         nueva = st.text_input("Nueva contraseña", type="password")
         confirmar = st.text_input("Confirmar contraseña", type="password")
