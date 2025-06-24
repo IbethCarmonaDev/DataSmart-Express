@@ -83,6 +83,7 @@ def mostrar_login():
             with col2:
                 if st.button("¿Olvidaste tu contraseña?"):
                     st.session_state.modo = "recuperar"
+                    st.experimental_rerun()
 
         elif st.session_state.modo == "registro":
             st.markdown('<div class="form-title">Crear cuenta</div>', unsafe_allow_html=True)
