@@ -316,7 +316,7 @@ def mostrar_login():
 
             if st.button("Enviar enlace de recuperación"):
                 try:
-                    supabase.auth.reset_password_for_email(email)
+                    supabase.auth.api.reset_password_for_email(email)
                     st.success("📧 Si el correo está registrado, se ha enviado un enlace de recuperación.")
                 except Exception as e:
                     st.error(f"❌ Error técnico: {e}")
