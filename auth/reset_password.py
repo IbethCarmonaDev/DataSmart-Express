@@ -14,17 +14,21 @@ def mostrar_reset_password(token):
         elif nueva != confirmar:
             st.error("❌ Las contraseñas no coinciden.")
         else:
+            st.write("🔐 Token recibido:", token)
             try:
                 # Establecer sesión temporal usando el token de recuperación
                 supabase.auth.set_session(token, "")
 
                 # Actualizar la contraseña del usuario autenticado
-                respuesta = supabase.auth.update_user({"password": nueva})
 
-                if respuesta.user:
+                respuesta = supabase.auth.update_user({"password": nueva})
+                st.write("🔧 Respuesta Supabase:", respuesta)  # Puedes quitarlo luego
+
+                if respuesta and respuesta.get("user"):
                     st.success("✅ Contraseña actualizada exitosamente. Ya puedes iniciar sesión.")
                     st.balloons()
                 else:
                     st.error("❌ No se pudo actualizar la contraseña.")
+
             except Exception as e:
                 st.error(f"❌ Error técnico: {e}")
