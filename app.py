@@ -42,9 +42,6 @@ params = st.query_params
 token = params.get("access_token")
 recovery_type = params.get("type")
 
-st.warning("📦 Params detectados:")
-st.write(params)
-
 # --- Flujo de recuperación de contraseña ---
 if token and recovery_type == "recovery":
     st.warning("✅ Entramos a mostrar_reset_password() con token:")
