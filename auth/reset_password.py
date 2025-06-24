@@ -1,6 +1,6 @@
 import streamlit as st
-from auth.conexion_supabase import supabase
-
+import requests
+import os
 
 def mostrar_reset_password(token):
     st.markdown("<h2 style='color:#2b85ff'>🔒 Restablecer Contraseña</h2>", unsafe_allow_html=True)
@@ -14,21 +14,28 @@ def mostrar_reset_password(token):
         elif nueva != confirmar:
             st.error("❌ Las contraseñas no coinciden.")
         else:
-            st.write("🔐 Token recibido:", token)
             try:
-                # Establecer sesión temporal usando el token de recuperación
-                supabase.auth.set_session(token, "")
+                SUPABASE_URL = os.getenv("SUPABASE_URL")
+                SUPABASE_KEY = os.getenv("SUPABASE_API_KEY")
 
-                # Actualizar la contraseña del usuario autenticado
+                headers = {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": f"Bearer {token}",
+                    "Content-Type": "application/json"
+                }
 
-                respuesta = supabase.auth.update_user({"password": nueva})
-                st.write("🔧 Respuesta Supabase:", respuesta)  # Puedes quitarlo luego
+                payload = {
+                    "password": nueva
+                }
 
-                if respuesta and respuesta.get("user"):
+                url = f"{SUPABASE_URL}/auth/v1/user"
+                response = requests.put(url, headers=headers, json=payload)
+
+                if response.status_code == 200:
                     st.success("✅ Contraseña actualizada exitosamente. Ya puedes iniciar sesión.")
                     st.balloons()
                 else:
-                    st.error("❌ No se pudo actualizar la contraseña.")
+                    st.error(f"❌ No se pudo actualizar la contraseña. {response.text}")
 
             except Exception as e:
                 st.error(f"❌ Error técnico: {e}")
