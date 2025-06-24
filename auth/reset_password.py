@@ -1,6 +1,7 @@
 import streamlit as st
 from auth.conexion_supabase import supabase
 
+
 def mostrar_reset_password(token):
     st.markdown("<h2 style='color:#2b85ff'>🔒 Restablecer Contraseña</h2>", unsafe_allow_html=True)
 
@@ -14,9 +15,10 @@ def mostrar_reset_password(token):
             st.error("❌ Las contraseñas no coinciden.")
         else:
             try:
-                # ⚠️ Pasa "" en lugar de None para evitar el error
+                # Establecer sesión temporal usando el token de recuperación
                 supabase.auth.set_session(token, "")
 
+                # Actualizar la contraseña del usuario autenticado
                 respuesta = supabase.auth.update_user({"password": nueva})
 
                 if respuesta.user:
