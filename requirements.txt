@@ -7,4 +7,4 @@ streamlit-javascript
 scipy
 plotly
 fpdf
-supabase
+supabase==0.7.2
