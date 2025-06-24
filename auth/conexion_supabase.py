@@ -5,7 +5,7 @@ import streamlit as st
 # Detectar entorno y obtener las variables
 if "SUPABASE_URL" in st.secrets:
     SUPABASE_URL = st.secrets["SUPABASE_URL"]
-    SUPABASE_KEY = st.secrets["SUPABASE_API_KEY"]
+    SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
 else:
     from dotenv import load_dotenv
     load_dotenv()
