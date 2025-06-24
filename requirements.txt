@@ -8,3 +8,4 @@ openai>=1.0,<2.0
 streamlit-javascript
 scipy
 plotly
+fpdf==1.7.2
