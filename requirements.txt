@@ -7,3 +7,4 @@ supabase>=0.7.0,<1.0.0
 openai>=1.0,<2.0
 streamlit-javascript
 scipy
+plotly
