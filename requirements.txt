@@ -3,9 +3,9 @@ python-dotenv>=1.0.0
 pandas>=2.0
 openpyxl>=3.1
 requests>=2.30
-supabase>=0.7.0,<1.0.0
 openai>=1.0,<2.0
 streamlit-javascript
 scipy
 plotly
 fpdf==1.7.2
+supabase
