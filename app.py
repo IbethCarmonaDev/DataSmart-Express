@@ -44,9 +44,6 @@ recovery_type = params.get("type")
 
 # --- Flujo de recuperación de contraseña ---
 if token and recovery_type == "recovery":
-    st.warning("✅ Entramos a mostrar_reset_password() con token:")
-    st.success("✅ Token detectado. Mostrando formulario.")
-    st.code(token)
     mostrar_reset_password(token)
     st.stop()
 
