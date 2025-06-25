@@ -1,92 +1,37 @@
-# auth/registro.py
+############################################################
+# Creador por: Ibeth Carmona.Jun 25-2025
+# Opcion para registrar los Usuarios nuevos en Supabase
+############################################################
 from auth.conexion_supabase import supabase
+from datetime import datetime
+from database.usuarios import guardar_perfil_usuario
 
-def registrar_usuario(nombre, email, password):
+def registrar_usuario(nombre, correo, password):
     try:
-        # Validar si ya existe en tu tabla personalizada
-        respuesta = supabase.table("usuarios").select("email").eq("email", email).execute()
-        if respuesta.data and len(respuesta.data) > 0:
-            return {"error": "Este correo ya está registrado en la base de datos."}
-
-        # Crear en Supabase Auth
-        auth_response = supabase.auth.sign_up({
-            "email": email,
-            "password": password,
-            "options": {
-                "data": {
-                    "nombre": nombre,
-                    "plan_actual": "Free"
-                }
-            }
+        # 1. Crear cuenta en Supabase Auth
+        response = supabase.auth.sign_up({
+            "email": correo,
+            "password": password
         })
 
-        if not auth_response.user:
-            return {"error": "Error al registrar en Supabase Auth."}
+        if response.user is None:
+            return {"status": "error", "mensaje": str(response)}
 
-        # Crear en tu tabla de usuarios (sin contraseña)
-        data = {
-            "id_auth": auth_response.user.id,
+        user_id = response.user.id
+
+        # 2. Guardar perfil extendido en tabla personalizada
+        perfil = {
+            "user_id": user_id,
             "nombre": nombre,
-            "email": email,
-            "plan_actual": "Free"
+            "email": correo,
+            "plan_actual": "Premium_trial",
+            "fecha_inicio_trial": datetime.now().strftime("%Y-%m-%d"),
+            "dias_trial": 7
         }
 
-        supabase.table("usuarios").insert(data).execute()
-        return {"exito": True, "usuario": auth_response.user}
+        guardar_perfil_usuario(perfil)
+
+        return {"status": "ok"}
 
     except Exception as e:
-        print("❌ Error en el registro:", e)
-        return {"error": str(e)}
-
-
-# from auth.conexion_supabase import supabase
-# from auth.utils import hash_password
-#
-# def registrar_usuario(nombre, email, password):
-#     try:
-#         # 1️⃣ Validar si ya existe en tu tabla personalizada
-#         respuesta = supabase.table("usuarios").select("email").eq("email", email).execute()
-#         if respuesta.data and len(respuesta.data) > 0:
-#             return {"error": "Este correo ya está registrado en el sistema."}
-#
-#         # 2️⃣ Validar si ya existe en Supabase Auth
-#         try:
-#             supabase.auth.sign_in_with_password({
-#                 "email": email,
-#                 "password": password  # Supabase devuelve error si el usuario no existe
-#             })
-#             return {"error": "Este correo ya tiene cuenta en Supabase Auth."}
-#         except Exception:
-#             pass  # Si lanza error, asumimos que el usuario no existe aún
-#
-#         # 3️⃣ Crear en Supabase Auth
-#         auth_response = supabase.auth.sign_up({
-#             "email": email,
-#             "password": password,
-#             "options": {
-#                 "data": {
-#                     "nombre": nombre,
-#                     "plan_actual": "Free"
-#                 }
-#             }
-#         })
-#
-#         if not auth_response.user:
-#             return {"error": "Error al registrar en Supabase Auth."}
-#
-#         # 4️⃣ Crear en tu tabla `usuarios`
-#         password_hash = hash_password(password)
-#         data = {
-#             "id_auth": auth_response.user.id,
-#             "nombre": nombre,
-#             "email": email,
-#             "contrasena_hash": password_hash,
-#             "plan_actual": "Free"
-#         }
-#
-#         supabase.table("usuarios").insert(data).execute()
-#         return {"exito": True, "usuario": auth_response.user}
-#
-#     except Exception as e:
-#         print("❌ Error inesperado:", e)
-#         return {"error": str(e)}
+        return {"status": "error", "mensaje": str(e)}

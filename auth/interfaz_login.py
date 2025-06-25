@@ -1,8 +1,12 @@
+############################################################
+# Creador por: Ibeth Carmona.Jun 15-2025
+# Opcion para Interfaz de Login y registro usuarios
+############################################################
+
 import streamlit as st
 from PIL import Image
 from auth.login import login_usuario
 from auth.registro import registrar_usuario
-from auth.recuperacion import enviar_correo_recuperacion
 from auth.conexion_supabase import supabase
 
 def mostrar_login():
@@ -60,12 +64,9 @@ def mostrar_login():
         if "modo" not in st.session_state:
             st.session_state.modo = "login"
 
+        # --- Login ---
         if st.session_state.modo == "login":
             st.markdown('<div class="form-title">Inicio de sesión</div>', unsafe_allow_html=True)
-            st.markdown("""
-            <div class="form-subtext">¿Aún no tienes una cuenta? 
-            <span class='form-link' onClick="window.location.reload()">Créala aquí</span></div>
-            """, unsafe_allow_html=True)
 
             email = st.text_input("Correo electrónico", key="login_email")
             password = st.text_input("Contraseña", type="password", key="login_pass")
@@ -80,11 +81,18 @@ def mostrar_login():
                         st.rerun()
                     else:
                         st.error("❌ Correo o contraseña incorrectos. Intenta nuevamente.")
+
             with col2:
                 if st.button("¿Olvidaste tu contraseña?"):
                     st.session_state.modo = "recuperar"
                     st.rerun()
 
+            st.markdown('<div class="form-subtext">¿Aún no tienes una cuenta?</div>', unsafe_allow_html=True)
+            if st.button("🔐 Regístrate aquí"):
+                st.session_state.modo = "registro"
+                st.rerun()
+
+        # --- Registro ---
         elif st.session_state.modo == "registro":
             st.markdown('<div class="form-title">Crear cuenta</div>', unsafe_allow_html=True)
 
@@ -94,11 +102,18 @@ def mostrar_login():
 
             if st.button("Registrarme"):
                 resultado = registrar_usuario(nombre, email, password)
-                if resultado.data:
-                    st.success("Registro exitoso. Ahora puedes iniciar sesión.")
+                if resultado["status"] == "ok":
+                    st.success("✅ Registro exitoso. Revisa tu correo.")
                     st.session_state.modo = "login"
                     st.rerun()
+                else:
+                    st.error(f"❌ Error: {resultado['mensaje']}")
 
+            if st.button("← Ya tengo cuenta. Volver al login"):
+                st.session_state.modo = "login"
+                st.rerun()
+
+        # --- Recuperación de contraseña ---
         elif st.session_state.modo == "recuperar":
             st.markdown('<div class="form-title">Recuperar contraseña</div>', unsafe_allow_html=True)
             email = st.text_input("Correo registrado", key="recuperar_email")
@@ -110,8 +125,11 @@ def mostrar_login():
                 except Exception as e:
                     st.error(f"❌ Error técnico: {e}")
 
-            st.markdown("<br><span class='form-link' onClick='window.location.reload()'>← Volver al inicio</span>", unsafe_allow_html=True)
+            if st.button("← Volver al login"):
+                st.session_state.modo = "login"
+                st.rerun()
 
+        # --- Auto login en caso de éxito ---
         if st.session_state.get("usuario"):
             usuario = st.session_state.usuario
             st.success(f"Bienvenido/a {usuario['nombre']}")
