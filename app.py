@@ -21,6 +21,7 @@ from secciones.seccion_kpi import mostrar_kpis
 from secciones.seccion_analisis import mostrar_analisis
 from secciones.seccion_graficas_inteligente import mostrar_graficas
 from secciones.seccion_exportar import mostrar_exportacion
+from auth.verificacion import mostrar_verificacion_exitosa
 
 # --- Configuración inicial ---
 load_dotenv(override=True)
@@ -44,16 +45,7 @@ recovery_type = params.get("type")
 
 # --- Flujo de recuperación de contraseña ---
 if token and recovery_type == "recovery":
-    # Si el usuario ya está en sesión, asumimos que es confirmación de correo
-    if "usuario" in st.session_state:
-        st.success("✅ Tu correo ha sido verificado correctamente.")
-    else:
-        # Podríamos mostrar un mensaje breve + botón de login
-        st.markdown("### ✅ Correo verificado correctamente")
-        st.success("Tu cuenta ya está activa. Ahora puedes iniciar sesión.")
-        if st.button("Iniciar sesión"):
-            st.session_state.modo = "login"
-            st.rerun()
+    mostrar_verificacion_exitosa()
     st.stop()
 
 # --- Login normal ---
