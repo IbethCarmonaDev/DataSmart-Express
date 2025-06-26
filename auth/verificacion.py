@@ -1,33 +1,11 @@
 ############################################################
 # Creador por: Ibeth Carmona.Jun 25-2025
 # Opción para verificar los Usuarios
-# auth/verificacion.py
 ############################################################
 import streamlit as st
 from PIL import Image
 from auth.reset_password import mostrar_reset_password
 from auth.conexion_supabase import supabase
-
-
-def usuario_ya_registrado(user_id: str, email: str) -> bool:
-    try:
-        # Buscar por user_id
-        result_id = supabase.table("usuarios").select("user_id").eq("user_id", user_id).execute()
-        st.write("🧪 Buscando por user_id:", user_id)
-
-        if result_id.data and len(result_id.data) > 0:
-            return True
-
-        # Buscar por email como respaldo
-        st.write("🔍 No se encontró por ID, buscando por email:", email)
-        result_email = supabase.table("usuarios").select("user_id").ilike("email", email).execute()
-
-        return result_email.data and len(result_email.data) > 0
-
-    except Exception as e:
-        st.error("⚠️ Error al verificar existencia del usuario.")
-        st.exception(e)
-        return False
 
 
 def mostrar_verificacion_o_reset(token):
@@ -39,13 +17,17 @@ def mostrar_verificacion_o_reset(token):
 
         user_id = user.id
         email = user.email
+        email_confirmed_at = user.email_confirmed_at  # 👈 Esta es la clave
+
         st.write("🧾 ID desde token:", user_id)
         st.write("📧 Email desde token:", email)
+        st.write("📅 Confirmado:", email_confirmed_at)
 
-        if usuario_ya_registrado(user_id, email):
+        if email_confirmed_at:
+            # ✅ Si ya está confirmado → es restablecimiento
             mostrar_reset_password(token)
         else:
-            # UI bonita con logo
+            # ❌ Si aún no está confirmado → es verificación nueva
             col_logo, col_msg = st.columns([1, 2])
 
             with col_logo:
@@ -67,7 +49,6 @@ def mostrar_verificacion_o_reset(token):
     except Exception as e:
         st.error("❌ Error al procesar el token.")
         st.exception(e)
-
 
 
 # import streamlit as st
