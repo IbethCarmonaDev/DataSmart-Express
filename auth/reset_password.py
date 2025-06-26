@@ -1,10 +1,14 @@
 # auth/reset_password.py
+
 import streamlit as st
 import requests
 from PIL import Image
 from auth.conexion_supabase import SUPABASE_URL, SUPABASE_KEY
+from utilidades.errores_supabase import obtener_mensaje_error
 
 def mostrar_reset_password(token):
+    idioma = st.session_state.get("idioma", "es")  # por defecto español
+
     col_logo, col_form = st.columns([1, 2])
 
     with col_logo:
@@ -30,11 +34,11 @@ def mostrar_reset_password(token):
 
         if st.button("Restablecer"):
             if not nueva or not confirmar:
-                st.warning("⚠️ Por favor, completa ambos campos.")
+                st.warning("⚠️ Por favor, completa ambos campos." if idioma == "es" else "⚠️ Please complete both fields.")
             elif nueva != confirmar:
-                st.error("❌ Las contraseñas no coinciden.")
+                st.error("❌ Las contraseñas no coinciden." if idioma == "es" else "❌ Passwords do not match.")
             elif len(nueva) < 6:
-                st.error("❌ La contraseña debe tener al menos 6 caracteres.")
+                st.error(obtener_mensaje_error("weak_password", idioma))
             else:
                 try:
                     headers = {
@@ -51,38 +55,40 @@ def mostrar_reset_password(token):
                     response = requests.put(url, headers=headers, json=payload)
 
                     if response.status_code == 200:
-                        st.success("✅ Contraseña actualizada exitosamente.")
+                        st.success("✅ Contraseña actualizada exitosamente." if idioma == "es" else "✅ Password successfully updated.")
                         st.balloons()
-                        st.markdown("<p style='text-align:center'>Redirigiendo al inicio de sesión...</p>", unsafe_allow_html=True)
+                        st.markdown("<p style='text-align:center'>Redirigiendo al inicio de sesión...</p>" if idioma == "es" else "<p style='text-align:center'>Redirecting to login...</p>", unsafe_allow_html=True)
                         st.query_params.clear()
                         st.session_state.modo = "login"
                         st.rerun()
                     else:
                         try:
                             resp_json = response.json()
-                            msg = resp_json.get("msg", "")
+                            msg = resp_json.get("msg", "").lower()
 
-                            # Traducción de errores comunes
-                            if resp_json.get("error_code") == "weak_password":
-                                st.error("❌ La contraseña es demasiado débil. Usa al menos 6 caracteres.")
-                            elif "New password should be different" in msg:
-                                st.error("❌ La nueva contraseña debe ser diferente a la anterior.")
-                            elif "Token has expired or is invalid" in msg:
-                                st.error("❌ El enlace ha expirado o es inválido. Solicita uno nuevo.")
+                            # Mapeo de errores
+                            if "new password should be different" in msg:
+                                st.error(obtener_mensaje_error("password_same_as_old", idioma))
+                            elif "token has expired" in msg or "invalid token" in msg:
+                                st.error(obtener_mensaje_error("token_invalid_or_expired", idioma))
+                            elif "missing token" in msg:
+                                st.error(obtener_mensaje_error("missing_token", idioma))
                             else:
-                                st.error(f"❌ Error: {msg or 'Error desconocido'}")
+                                st.error(f"❌ {msg or obtener_mensaje_error('error_desconocido', idioma)}")
 
                         except:
-                            st.error(f"❌ No se pudo actualizar la contraseña. {response.text}")
+                            st.error(f"❌ {response.text}")
 
                 except Exception as e:
                     st.error(f"❌ Error técnico: {e}")
 
 
+# # auth/reset_password.py
 # import streamlit as st
 # import requests
 # from PIL import Image
 # from auth.conexion_supabase import SUPABASE_URL, SUPABASE_KEY
+# from utilidades.errores_supabase import obtener_mensaje_error
 #
 # def mostrar_reset_password(token):
 #     col_logo, col_form = st.columns([1, 2])
@@ -140,14 +146,21 @@ def mostrar_reset_password(token):
 #                     else:
 #                         try:
 #                             resp_json = response.json()
+#                             msg = resp_json.get("msg", "")
+#
+#                             # Traducción de errores comunes
 #                             if resp_json.get("error_code") == "weak_password":
 #                                 st.error("❌ La contraseña es demasiado débil. Usa al menos 6 caracteres.")
+#                             elif "New password should be different" in msg:
+#                                 st.error("❌ La nueva contraseña debe ser diferente a la anterior.")
+#                             elif "Token has expired or is invalid" in msg:
+#                                 st.error("❌ El enlace ha expirado o es inválido. Solicita uno nuevo.")
 #                             else:
-#                                 st.error(f"❌ Error: {resp_json.get('msg', 'Error desconocido')}")
+#                                 st.error(f"❌ Error: {msg or 'Error desconocido'}")
+#
 #                         except:
 #                             st.error(f"❌ No se pudo actualizar la contraseña. {response.text}")
 #
 #                 except Exception as e:
 #                     st.error(f"❌ Error técnico: {e}")
-#
 #
