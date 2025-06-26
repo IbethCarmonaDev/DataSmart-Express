@@ -7,8 +7,36 @@ from PIL import Image
 from auth.reset_password import mostrar_reset_password
 from auth.conexion_supabase import supabase
 
-
 def mostrar_verificacion_o_reset(token):
+    try:
+        user = supabase.auth.get_user(token).user
+        if not user:
+            st.error("❌ Token inválido o expirado.")
+            return
+
+        user_id = user.id
+        email = user.email
+        confirmed_at = user.confirmed_at
+        email_confirmed_at = user.email_confirmed_at
+
+        # Para depuración (puedes quitar luego)
+        st.write("🧾 ID:", user_id)
+        st.write("📧 Email:", email)
+        st.write("📅 Email confirmado:", email_confirmed_at)
+        st.write("🧍 Confirmado:", confirmed_at)
+
+        # ✅ Primera vez que confirma su email
+        if confirmed_at == email_confirmed_at:
+            mostrar_bienvenida_post_registro()
+        else:
+            mostrar_reset_password(token)
+
+    except Exception as e:
+        st.error("❌ Error al procesar el token.")
+        st.exception(e)
+
+
+def OLDmostrar_verificacion_o_reset(token):
     try:
         user = supabase.auth.get_user(token).user
         if not user:
@@ -49,6 +77,25 @@ def mostrar_verificacion_o_reset(token):
     except Exception as e:
         st.error("❌ Error al procesar el token.")
         st.exception(e)
+
+def mostrar_bienvenida_post_registro():
+    col_logo, col_msg = st.columns([1, 2])
+
+    with col_logo:
+        try:
+            logo = Image.open("Logo.png")
+            st.image(logo, width=140)
+        except:
+            st.write("")
+
+    with col_msg:
+        st.markdown("## ✅ ¡Tu correo ha sido verificado!")
+        st.success("Tu cuenta ya está activa. Ahora puedes iniciar sesión.")
+
+        if st.button("🔐 Iniciar sesión"):
+            st.session_state.modo = "login"
+            st.experimental_set_query_params()
+            st.rerun()
 
 
 # import streamlit as st
