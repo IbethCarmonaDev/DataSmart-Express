@@ -71,7 +71,8 @@ def OLDmostrar_verificacion_o_reset(token):
 
                 if st.button("🔐 Iniciar sesión"):
                     st.session_state.modo = "login"
-                    st.experimental_set_query_params()
+                    st.query_params.clear()
+
                     st.rerun()
 
     except Exception as e:
@@ -94,7 +95,8 @@ def mostrar_bienvenida_post_registro():
 
         if st.button("🔐 Iniciar sesión"):
             st.session_state.modo = "login"
-            st.experimental_set_query_params()
+            st.query_params.clear()
+
             st.rerun()
 
 
