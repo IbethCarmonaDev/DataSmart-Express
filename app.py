@@ -44,15 +44,9 @@ token = params.get("access_token")
 recovery_type = params.get("type")
 
 # --- Flujo de recuperación de contraseña ---
-if token and recovery_type == "recovery":
+if token and recovery_type in ["signup", "recovery"]:
     mostrar_verificacion_o_reset(token)
     st.stop()
-
-# --- Flujo de verificación de cuenta tras registro ---
-if token and recovery_type == "signup":
-    manejar_signup(token)
-    st.stop()
-
 
 # --- Login normal ---
 if "usuario" not in st.session_state:
