@@ -44,8 +44,18 @@ token = params.get("access_token")
 recovery_type = params.get("type")
 
 # --- Flujo de recuperación de contraseña ---
-if token and recovery_type in ["signup", "recovery"]:
-    mostrar_verificacion_o_reset(token)
+# if token and recovery_type in ["signup", "recovery"]:
+#     mostrar_verificacion_o_reset(token)
+#     st.stop()
+
+if token and recovery_type == "recovery":
+    mostrar_reset_password(token)
+    st.stop()
+elif token and recovery_type == "signup":
+    manejar_signup(token)
+    st.stop()
+elif token:
+    mostrar_verificacion_o_reset(token)  # Por si llega sin type, muestra genérico
     st.stop()
 
 # --- Login normal ---
