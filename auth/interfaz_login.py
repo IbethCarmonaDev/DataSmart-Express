@@ -1,6 +1,7 @@
 ############################################################
 # Creador por: Ibeth Carmona.Jun 15-2025
-# Opcion para Interfaz de Login y registro usuarios
+# Opcion para Interfaz de Login y registro usuarios.
+#
 ############################################################
 
 import streamlit as st
