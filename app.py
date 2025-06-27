@@ -21,7 +21,7 @@ from secciones.seccion_kpi import mostrar_kpis
 from secciones.seccion_analisis import mostrar_analisis
 from secciones.seccion_graficas_inteligente import mostrar_graficas
 from secciones.seccion_exportar import mostrar_exportacion
-from auth.verificacion import mostrar_verificacion_o_reset
+from auth.verificacion import mostrar_verificacion_o_reset, manejar_signup
 
 # --- Configuración inicial ---
 load_dotenv(override=True)
@@ -47,6 +47,12 @@ recovery_type = params.get("type")
 if token and recovery_type == "recovery":
     mostrar_verificacion_o_reset(token)
     st.stop()
+
+# --- Flujo de verificación de cuenta tras registro ---
+if token and recovery_type == "signup":
+    manejar_signup(token)
+    st.stop()
+
 
 # --- Login normal ---
 if "usuario" not in st.session_state:

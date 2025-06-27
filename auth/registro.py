@@ -10,9 +10,15 @@ from database.usuarios import guardar_perfil_usuario
 def registrar_usuario(nombre, correo, password):
     try:
         # 1. Crear cuenta en Supabase Auth
+
         response = supabase.auth.sign_up({
             "email": correo,
-            "password": password
+            "password": password,
+            "options": {
+                "data": {
+                    "nombre": nombre
+                }
+            }
         })
 
         if response.user is None:

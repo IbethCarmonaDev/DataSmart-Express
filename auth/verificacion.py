@@ -6,6 +6,9 @@ import streamlit as st
 from PIL import Image
 from auth.reset_password import mostrar_reset_password
 from auth.conexion_supabase import supabase
+from database.usuarios import guardar_perfil_usuario
+from datetime import datetime
+import streamlit as st
 
 def mostrar_verificacion_o_reset(token):
     try:
@@ -35,50 +38,6 @@ def mostrar_verificacion_o_reset(token):
         st.error("❌ Error al procesar el token.")
         st.exception(e)
 
-
-def OLDmostrar_verificacion_o_reset(token):
-    try:
-        user = supabase.auth.get_user(token).user
-        if not user:
-            st.error("❌ Token inválido o expirado.")
-            return
-
-        user_id = user.id
-        email = user.email
-        email_confirmed_at = user.email_confirmed_at  # 👈 Esta es la clave
-
-        st.write("🧾 ID desde token:", user_id)
-        st.write("📧 Email desde token:", email)
-        st.write("📅 Confirmado:", email_confirmed_at)
-
-        if email_confirmed_at:
-            # ✅ Si ya está confirmado → es restablecimiento
-            mostrar_reset_password(token)
-        else:
-            # ❌ Si aún no está confirmado → es verificación nueva
-            col_logo, col_msg = st.columns([1, 2])
-
-            with col_logo:
-                try:
-                    logo = Image.open("Logo.png")
-                    st.image(logo, width=140)
-                except:
-                    st.write("")
-
-            with col_msg:
-                st.markdown("## ✅ Correo verificado correctamente")
-                st.success("Tu cuenta ya está activa. Ahora puedes iniciar sesión.")
-
-                if st.button("🔐 Iniciar sesión"):
-                    st.session_state.modo = "login"
-                    st.query_params.clear()
-
-                    st.rerun()
-
-    except Exception as e:
-        st.error("❌ Error al procesar el token.")
-        st.exception(e)
-
 def mostrar_bienvenida_post_registro():
     col_logo, col_msg = st.columns([1, 2])
 
@@ -100,55 +59,35 @@ def mostrar_bienvenida_post_registro():
             st.rerun()
 
 
-# import streamlit as st
-# from PIL import Image
-# from auth.reset_password import mostrar_reset_password
-# from auth.conexion_supabase import supabase
-#
-#
-# def usuario_ya_registrado(user_id):
-#     try:
-#         result = supabase.table("usuarios").select("user_id").eq("user_id", user_id).execute()
-#         return len(result.data) > 0
-#     except Exception as e:
-#         print("Error al verificar si el usuario existe:", e)
-#         return False
-#
-#
-# def mostrar_verificacion_o_reset(token):
-#     try:
-#         # Obtener información del usuario autenticado con el token
-#         user = supabase.auth.get_user(token).user
-#         if not user:
-#             st.error("❌ Token inválido o expirado.")
-#             return
-#
-#         user_id = user.id
-#
-#         if usuario_ya_registrado(user_id):
-#             # Si ya está en la tabla usuarios → es restablecimiento
-#             mostrar_reset_password(token)
-#         else:
-#             # Si no está → es confirmación de nuevo usuario
-#             col_logo, col_msg = st.columns([1, 2])
-#
-#             with col_logo:
-#                 try:
-#                     logo = Image.open("Logo.png")
-#                     st.image(logo, width=140)
-#                 except:
-#                     st.write("")
-#
-#             with col_msg:
-#                 st.markdown("## ✅ Correo verificado correctamente")
-#                 st.success("Tu cuenta ya está activa. Ahora puedes iniciar sesión.")
-#
-#                 if st.button("🔐 Iniciar sesión"):
-#                     st.session_state.modo = "login"
-#                     st.experimental_set_query_params()  # limpia access_token de la URL
-#                     st.rerun()
-#
-#     except Exception as e:
-#         st.error("❌ Error al procesar el token.")
-#         st.exception(e)
-# ############################################################
+def manejar_signup(token):
+    try:
+        user = supabase.auth.get_user(token).user
+
+        if not user:
+            st.error("❌ No se pudo recuperar la información del usuario.")
+            return
+
+        id_usuario = user.id
+        email = user.email
+        nombre = user.user_metadata.get("nombre", "")
+
+        # Verificar si ya existe
+        existe = supabase.table("usuarios").select("user_id").eq("user_id", id_usuario).execute()
+        if not existe.data:
+            perfil = {
+                "user_id": id_usuario,
+                "nombre": nombre,
+                "email": email,
+                "plan_actual": "Premium_trial",
+                "fecha_inicio_trial": datetime.now().strftime("%Y-%m-%d"),
+                "dias_trial": 7
+            }
+            guardar_perfil_usuario(perfil)
+
+        st.success("✅ ¡Tu cuenta ha sido verificada correctamente! Ya puedes iniciar sesión.")
+        st.markdown("[🔑 Ir al login](./)", unsafe_allow_html=True)
+
+    except Exception as e:
+        st.error(f"❌ Error durante la verificación: {e}")
+
+
