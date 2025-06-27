@@ -6,6 +6,7 @@ from auth.conexion_supabase import supabase
 from datetime import datetime
 from database.usuarios import guardar_perfil_usuario
 
+
 def registrar_usuario(nombre, correo, password):
     try:
         # 1. Crear cuenta en Supabase Auth
