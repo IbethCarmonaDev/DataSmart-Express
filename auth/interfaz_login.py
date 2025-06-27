@@ -4,10 +4,15 @@
 ############################################################
 
 import streamlit as st
+import os
+from dotenv import load_dotenv
 from PIL import Image
 from auth.login import login_usuario
 from auth.registro import registrar_usuario
 from auth.conexion_supabase import supabase
+
+# Cargar .env
+load_dotenv(override=True)
 
 def mostrar_login():
     col_logo, col_form = st.columns([1, 2])
@@ -119,25 +124,29 @@ def mostrar_login():
             email = st.text_input("Correo registrado", key="recuperar_email")
 
             if st.button("Enviar enlace de recuperación"):
-                try:
-                    redirect_url = "https://datasmart-express-pgpecfnnlxpgmn3tkwfhi.streamlit.app?type=recovery"
-                    supabase.auth.reset_password_for_email(
-                        email,
-                        options={"redirectTo": redirect_url}
-                    )
-                    st.success("📧 Si el correo está registrado, se ha enviado un enlace de recuperación.")
-                except Exception as e:
-                    st.error(f"❌ Error técnico: {e}")
+                redirect_url = os.getenv("RESET_PASSWORD_REDIRECT")
+                if not redirect_url:
+                    st.error("⚠ La URL de redirección no está configurada en el archivo .env.")
+                else:
+                    try:
+                        supabase.auth.reset_password_for_email(
+                            email,
+                            options={"redirectTo": redirect_url}
+                        )
+                        st.success("📧 Si el correo está registrado, se ha enviado un enlace de recuperación.")
+                    except Exception as e:
+                        st.error(f"❌ Error técnico: {e}")
 
             if st.button("← Volver al login"):
                 st.session_state.modo = "login"
                 st.rerun()
 
-        # --- Auto login en caso de éxito ---
+        # --- Auto login si ya está autenticado ---
         if st.session_state.get("usuario"):
             usuario = st.session_state.usuario
             st.success(f"Bienvenido/a {usuario['nombre']}")
             st.rerun()
+
 
 # import streamlit as st
 # from PIL import Image
@@ -256,7 +265,11 @@ def mostrar_login():
 #
 #             if st.button("Enviar enlace de recuperación"):
 #                 try:
-#                     supabase.auth.reset_password_for_email(email)
+#                     redirect_url = "https://datasmart-express-pgpecfnnlxpgmn3tkwfhi.streamlit.app?type=recovery"
+#                     supabase.auth.reset_password_for_email(
+#                         email,
+#                         options={"redirectTo": redirect_url}
+#                     )
 #                     st.success("📧 Si el correo está registrado, se ha enviado un enlace de recuperación.")
 #                 except Exception as e:
 #                     st.error(f"❌ Error técnico: {e}")
@@ -270,3 +283,4 @@ def mostrar_login():
 #             usuario = st.session_state.usuario
 #             st.success(f"Bienvenido/a {usuario['nombre']}")
 #             st.rerun()
+#
