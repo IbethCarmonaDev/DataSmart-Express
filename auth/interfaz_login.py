@@ -12,6 +12,7 @@ from auth.login import login_usuario
 from auth.registro import registrar_usuario
 from auth.conexion_supabase import supabase
 
+
 # Cargar .env
 load_dotenv(override=True)
 
