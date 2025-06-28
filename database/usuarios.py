@@ -50,6 +50,7 @@ def guardar_perfil_usuario(perfil):
 
         return True
 
+
     except Exception as e:
         print("❌ Error al guardar perfil:", e)
         return False
