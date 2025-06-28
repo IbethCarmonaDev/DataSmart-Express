@@ -29,25 +29,25 @@ def mostrar_verificacion_o_reset(token: str):
         st.error("❌ Tipo de redirección desconocido. Verifica el enlace.")
 
 # Función principal que decide qué mostrar según tipo de verificación
-def OLDmostrar_verificacion_o_reset(token):
-    try:
-        user = supabase.auth.get_user(token).user
-        if not user:
-            st.error("❌ Token inválido o expirado.")
-            return
-
-        confirmed_at = user.confirmed_at
-        email_confirmed_at = user.email_confirmed_at
-
-        # Si es la primera vez que confirma su email (registro)
-        if confirmed_at == email_confirmed_at:
-            manejar_signup(token)
-        else:
-            mostrar_formulario_reset(token)
-
-    except Exception as e:
-        st.error("❌ Error al procesar el token.")
-        st.exception(e)
+# def mostrar_verificacion_o_reset(token):
+#     try:
+#         user = supabase.auth.get_user(token).user
+#         if not user:
+#             st.error("❌ Token inválido o expirado.")
+#             return
+#
+#         confirmed_at = user.confirmed_at
+#         email_confirmed_at = user.email_confirmed_at
+#
+#         # Si es la primera vez que confirma su email (registro)
+#         if confirmed_at == email_confirmed_at:
+#             manejar_signup(token)
+#         else:
+#             mostrar_formulario_reset(token)
+#
+#     except Exception as e:
+#         st.error("❌ Error al procesar el token.")
+#         st.exception(e)
 
 # Muestra pantalla de confirmación de correo después del registro y guarda en la tabla usuarios
 def manejar_signup(token):
