@@ -17,6 +17,7 @@ def mostrar_verificacion_o_reset(token: str):
     st.warning("🛠 Debug flujo")
     st.write("🔐 Token:", token)
     st.write("📦 Tipo:", tipo)
+    st.write("🔐 params:", params)
 
     if tipo == "recovery":
         mostrar_reset_password(token)
