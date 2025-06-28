@@ -2,7 +2,6 @@
 # Creador por: Ibeth Carmona.Jun 25-2025
 # Opción para verificar los Usuarios
 ############################################################
-
 from PIL import Image
 from auth.reset_password import mostrar_reset_password
 from auth.conexion_supabase import supabase
@@ -29,29 +28,9 @@ def mostrar_verificacion_o_reset(token: str):
     else:
         st.error("❌ Tipo de redirección desconocido. Verifica el enlace.")
 
-# Función principal que decide qué mostrar según tipo de verificación
-# def mostrar_verificacion_o_reset(token):
-#     try:
-#         user = supabase.auth.get_user(token).user
-#         if not user:
-#             st.error("❌ Token inválido o expirado.")
-#             return
-#
-#         confirmed_at = user.confirmed_at
-#         email_confirmed_at = user.email_confirmed_at
-#
-#         # Si es la primera vez que confirma su email (registro)
-#         if confirmed_at == email_confirmed_at:
-#             manejar_signup(token)
-#         else:
-#             mostrar_formulario_reset(token)
-#
-#     except Exception as e:
-#         st.error("❌ Error al procesar el token.")
-#         st.exception(e)
 
 # Muestra pantalla de confirmación de correo después del registro y guarda en la tabla usuarios
-def manejar_signup(token):
+def OLDmanejar_signup(token):
     try:
         user = supabase.auth.get_user(token).user
 
@@ -80,6 +59,37 @@ def manejar_signup(token):
 
     except Exception as e:
         st.error(f"❌ Error durante la verificación: {e}")
+
+def manejar_signup(token):
+    try:
+        user = supabase.auth.get_user(token).user
+
+        if not user:
+            st.error("❌ No se pudo recuperar la información del usuario.")
+            return
+
+        id_usuario = user.id
+        email = user.email
+        nombre = user.user_metadata.get("nombre", "")
+
+        # Verificar si ya existe en la tabla 'usuarios'
+        existe = supabase.table("usuarios").select("user_id").eq("user_id", id_usuario).execute()
+        if existe.data == []:  # 👈 CORREGIDO
+            perfil = {
+                "user_id": id_usuario,
+                "nombre": nombre,
+                "email": email,
+                "plan_actual": "Premium_trial",
+                "fecha_inicio_trial": datetime.now().strftime("%Y-%m-%d"),
+                "dias_trial": 7
+            }
+            guardar_perfil_usuario(perfil)
+
+        mostrar_bienvenida_post_registro()
+
+    except Exception as e:
+        st.error(f"❌ Error durante la verificación: {e}")
+
 
 # Muestra la pantalla de bienvenida tras verificar el correo
 def mostrar_bienvenida_post_registro():
@@ -132,3 +142,5 @@ def procesar_reset_password(token, nueva_clave):
             st.error("❌ No se pudo actualizar la contraseña. Intenta nuevamente.")
     except Exception as e:
         st.error(f"❌ Error al restablecer la contraseña: {e}")
+
+
