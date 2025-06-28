@@ -41,6 +41,7 @@ recovery_type = params.get("type")
 st.warning("🛠 Debug Redirección")
 st.write(f"🔑 Token: {token}")
 st.write(f"📦 Tipo: {recovery_type}")
+st.write("🔐 params:", params)
 st.write(f"🌐 URL: {st_javascript('window.location.href')}")
 
 # --- Flujo de recuperación de contraseña ---

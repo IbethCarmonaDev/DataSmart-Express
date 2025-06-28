@@ -9,6 +9,8 @@ from utilidades.errores_supabase import obtener_mensaje_error
 def mostrar_reset_password(token):
     idioma = st.session_state.get("idioma", "es")  # por defecto español
 
+    st.write("📦 OJO: Entra a mostrar_reset_password")
+
     col_logo, col_form = st.columns([1, 2])
 
     with col_logo:
