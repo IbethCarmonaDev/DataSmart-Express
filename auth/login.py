@@ -13,6 +13,8 @@ def login_usuario(email: str, password: str):
         print(auth_response)
         print("📧 Email:", email)
 
+
+
         user = auth_response.user
         if not user:
             print("⛔ Usuario no autenticado")
