@@ -43,18 +43,27 @@ params = st.query_params
 token = params.get("access_token")
 recovery_type = params.get("type")
 
+# --- Debug ---
+st.warning("🛠 Debug Redirección")
+st.write(f"🔑 Token: {token}")
+st.write(f"📦 Tipo: {recovery_type}")
+st.write(f"🌐 URL: {st_javascript('window.location.href')}")
+
 # --- Flujo de recuperación de contraseña ---
 # if token and recovery_type in ["signup", "recovery"]:
 #     mostrar_verificacion_o_reset(token)
 #     st.stop()
 
 if token and recovery_type == "recovery":
+    st.info("↪ Redirigiendo a reset_password...")
     mostrar_reset_password(token)
     st.stop()
 elif token and recovery_type == "signup":
+    st.info("✅ Confirmación de registro...")
     manejar_signup(token)
     st.stop()
 elif token:
+    st.info("🔄 Mostrando verificación genérica...")
     mostrar_verificacion_o_reset(token)  # Por si llega sin type, muestra genérico
     st.stop()
 
