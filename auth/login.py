@@ -55,7 +55,18 @@ def login_usuario(email: str, password: str):
             return None
 
         # Buscar datos en la tabla personalizada usando el user_id (no email)
-        perfil = supabase.table("usuarios").select("*").eq("user_id", user.id).single().execute()
+        ##perfil = supabase.table("usuarios").select("*").eq("user_id", user.id).single().execute()
+
+        resultado = supabase.table("usuarios").select("*").eq("user_id", user.id).limit(1).execute()
+
+        if resultado.data and len(resultado.data) > 0:
+            return resultado.data[0]
+        else:
+            print("⚠ Usuario autenticado pero no tiene perfil asociado.")
+            return None
+
+
+
         st.write("🧾 Perfil encontrado:", perfil.data)
 
         if perfil.data:
