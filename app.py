@@ -22,21 +22,15 @@ from secciones.seccion_analisis import mostrar_analisis
 from secciones.seccion_graficas_inteligente import mostrar_graficas
 from secciones.seccion_exportar import mostrar_exportacion
 from auth.verificacion import mostrar_verificacion_o_reset, manejar_signup
+from auth.redireccion_fragmento import redireccionar_fragmento_si_es_necesario
 
 # --- Configuración inicial ---
 load_dotenv(override=True)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 st.set_page_config(page_title="DataSmart Express", layout="wide")
 
-# --- Redirigir #access_token a query params ---
-fragment = st_javascript("window.location.hash")
-if fragment and "#access_token=" in fragment:
-    st.warning("📦 Entra a redirección del fragment")
-    parsed_fragment = fragment.lstrip("#")
-    base_url = st_javascript("window.location.origin")
-    new_url = f"{base_url}/?{parsed_fragment}"
-    st.markdown(f"<script>window.location.replace('{new_url}');</script>", unsafe_allow_html=True)
-    st.stop()
+# Detectar fragmento y redirigir
+redireccionar_fragmento_si_es_necesario()
 
 # --- Leer parámetros desde la URL ---
 params = st.query_params
