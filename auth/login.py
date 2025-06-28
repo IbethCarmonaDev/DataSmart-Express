@@ -64,6 +64,7 @@ def login_usuario(email: str, password: str):
             st.warning("⚠ Usuario autenticado pero no se encontró en tabla 'usuarios'")
             return None
 
+
     except Exception as e:
         st.error(f"🚨 Error en login_usuario: {e}")
         print("Error de autenticación:", e)
