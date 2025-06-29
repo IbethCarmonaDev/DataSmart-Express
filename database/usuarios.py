@@ -5,6 +5,7 @@
 # database/usuarios.py
 from auth.conexion_supabase import supabase
 
+
 def guardar_perfil_usuario(perfil):
     try:
         data = {
