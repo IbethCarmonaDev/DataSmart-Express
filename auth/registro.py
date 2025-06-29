@@ -44,6 +44,7 @@ def registrar_usuario(nombre, correo, password):
             "dias_trial": 7
         }
 
+
         guardar_perfil_usuario(perfil)
 
         return {"status": "ok"}
