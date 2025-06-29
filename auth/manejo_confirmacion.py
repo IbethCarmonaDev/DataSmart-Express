@@ -35,9 +35,9 @@ def insertar_perfil_post_signup():
         if not exito:
             return {"status": "error", "mensaje": "❌ No se pudo guardar el perfil."}
 
-        mostrar_mensaje_confirmacion(
-            titulo="🎉 ¡Registro confirmado!",
-            mensaje="Tu perfil ha sido creado exitosamente. Ya puedes iniciar sesión."
+        # mostrar_mensaje_confirmacion(
+        #     titulo="🎉 ¡Registro confirmado!",
+        #     mensaje="Tu perfil ha sido creado exitosamente. Ya puedes iniciar sesión."
         )
 
         return {"status": "ok"}
