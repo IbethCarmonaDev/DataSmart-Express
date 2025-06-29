@@ -10,6 +10,7 @@ def insertar_perfil_post_signup():
         access_token = params.get("access_token")
         recovery_type = params.get("type")
 
+
         if not access_token or recovery_type != "signup":
             return {"status": "error", "mensaje": "Token inválido o tipo incorrecto."}
 
