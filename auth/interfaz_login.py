@@ -123,6 +123,9 @@ def mostrar_login():
 
             if st.button("Registrarme"):
                 resultado = registrar_usuario(nombre, email, password)
+
+                st.write(f"🔑 resultado: {resultado}")
+
                 if resultado["status"] == "ok":
                     st.success("✅ Registro exitoso. Revisa tu correo.")
                     st.session_state.modo = "login"
