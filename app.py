@@ -1,4 +1,5 @@
-# app.py completo y corregido
+# app.py actualizado y corregido con mensaje de confirmación moderno
+
 import streamlit as st
 import pandas as pd
 from PIL import Image
@@ -23,7 +24,7 @@ from secciones.seccion_exportar import mostrar_exportacion
 from auth.verificacion import mostrar_verificacion_o_reset, manejar_signup
 from auth.redireccion_fragmento import redireccionar_fragmento_si_es_necesario
 from auth.manejo_confirmacion import insertar_perfil_post_signup
-from auth.interfaz_confirmacion import mostrar_confirmacion_registro
+from utilidades.mensajes import mostrar_mensaje_confirmacion
 
 # --- Configuración inicial ---
 load_dotenv(override=True)
@@ -36,53 +37,31 @@ redireccionar_fragmento_si_es_necesario()
 # --- Leer parámetros desde la URL ---
 params = st.query_params
 params = {k: v[0] if isinstance(v, list) else v for k, v in params.items()}
-
 token = params.get("access_token")
 recovery_type = params.get("type")
 
-# --- Debug ---
-# st.warning("🛠 Debug Redirección")
-# st.write(f"🔑 Token: {token}")
-# st.write(f"📦 Tipo: {recovery_type}")
-# st.write("🔐 params:", params)
-# st.write(f"🌐 URL: {st_javascript('window.location.href')}")
-
 # --- Flujo de recuperación de contraseña ---
 if token and recovery_type == "recovery":
-#    st.info("↪ Redirigiendo a reset_password...")
     mostrar_reset_password(token)
     st.stop()
 
+# --- Flujo de registro confirmado ---
 elif token and recovery_type == "signup":
-
     resultado = insertar_perfil_post_signup()
 
     if resultado["status"] == "ok":
-        mostrar_confirmacion_registro()
+        mostrar_mensaje_confirmacion(
+            titulo="🎉 ¡Registro confirmado!",
+            mensaje="Tu perfil ha sido creado exitosamente. Ya puedes iniciar sesión."
+        )
     else:
         st.error(f"⚠ {resultado['mensaje']}")
         st.markdown("⬅ [Volver al login](?reload=true)")
 
     st.stop()
 
-
-# elif token and recovery_type == "signup":
-#
-#     resultado = insertar_perfil_post_signup()
-#
-#     if resultado["status"] == "ok":
-#         st.success("✅ Registro confirmado y perfil creado. Ya puedes iniciar sesión.")
-#     else:
-#         st.error(f"⚠ {resultado['mensaje']}")
-#
-#     st.markdown("⬅ [Volver al login](?reload=true)")
-#     st.stop()
-#
-
-
-
+# --- Verificación genérica ---
 elif token:
-    st.info("🔄 Mostrando verificación genérica...")
     mostrar_verificacion_o_reset(token)
     st.stop()
 
@@ -130,7 +109,8 @@ if archivo_usuario:
         usar_gpt_graficas = st.checkbox("💡 Activar análisis GPT en Gráficas (puede consumir créditos)", value=False)
 
     año = st.selectbox("1️⃣ Selecciona el año", sorted(df_datos["AÑO"].unique(), reverse=True))
-    meses = {i: m for i, m in enumerate(["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"], start=1)}
+    meses = {i: m for i, m in enumerate(
+        ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"], start=1)}
     mes_nombre = st.selectbox("2️⃣ Selecciona el mes", list(meses.values()))
     mes = list(meses.keys())[list(meses.values()).index(mes_nombre)]
 
@@ -177,6 +157,7 @@ if archivo_usuario:
             elif tab == "📤 Exportar":
                 mostrar_exportacion(df_estado, df_kpis_filtrados, año, mes, config_plan)
 
+# --- Cierre de sesión ---
 st.sidebar.markdown("---")
 if st.sidebar.button("🔓 Cerrar sesión"):
     del st.session_state["usuario"]
