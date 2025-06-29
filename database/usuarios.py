@@ -17,7 +17,10 @@ def guardar_perfil_usuario(perfil):
             "dias_trial": perfil["dias_trial"]
         }
 
-        response = supabase.table("usuarios").insert([data]).execute()  # 👈 usamos lista
+        response = supabase.table("usuarios").insert([data]).execute()  # 👈 usamos listaresponse = supabase.table("usuarios").insert([data]).execute()
+        print("🔁 Respuesta Supabase INSERT:", response)
+
+
 
         if response.status_code != 201:
             raise Exception(f"Error Supabase: {response.status_code} - {response.data}")

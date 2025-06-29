@@ -89,7 +89,7 @@ def mostrar_login():
                     #     st.error("❌ Correo o contraseña incorrectos. Intenta nuevamente.")
 
                     with st.spinner("Verificando usuario..."):
-                        st.info(f"🧪 Intentando login con: {email}")
+                        #st.info(f"🧪 Intentando login con: {email}")
                         usuario = login_usuario(email, password)
 
                         if usuario:
@@ -97,7 +97,7 @@ def mostrar_login():
                             st.session_state.usuario = usuario
                             st.rerun()
                         else:
-                            st.warning("⚠ No se logró autenticar. Revisa la consola.")
+                            #st.warning("⚠ No se logró autenticar. Revisa la consola.")
                             st.error("❌ Correo o contraseña incorrectos. Intenta nuevamente.")
 
             with col2:

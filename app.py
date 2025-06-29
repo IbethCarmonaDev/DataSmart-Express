@@ -47,7 +47,7 @@ recovery_type = params.get("type")
 
 # --- Flujo de recuperación de contraseña ---
 if token and recovery_type == "recovery":
-    st.info("↪ Redirigiendo a reset_password...")
+#    st.info("↪ Redirigiendo a reset_password...")
     mostrar_reset_password(token)
     st.stop()
 elif token and recovery_type == "signup":

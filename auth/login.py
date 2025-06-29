@@ -32,7 +32,7 @@ def login_usuario(email: str, password: str):
             return None
 
     except Exception as e:
-        st.error(f"Error durante el login: {e}")
+        #st.error(f"Error durante el login: {e}")
         return None
 
 
