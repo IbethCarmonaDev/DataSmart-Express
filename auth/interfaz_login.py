@@ -93,11 +93,14 @@ def mostrar_login():
                         usuario = login_usuario(email, password)
 
                         if usuario:
-                            st.success(f"✅ Bienvenido/a {usuario['nombre']}")
-                            st.session_state.usuario = usuario
-                            st.rerun()
+                            if usuario.get("status") == "no_confirmado":
+                                st.info(
+                                    "✉ Tu correo aún no ha sido confirmado. Por favor revisa tu bandeja de entrada para confirmar tu cuenta antes de iniciar sesión.")
+                            else:
+                                st.success(f"✅ Bienvenido/a {usuario['nombre']}")
+                                st.session_state.usuario = usuario
+                                st.rerun()
                         else:
-                            #st.warning("⚠ No se logró autenticar. Revisa la consola.")
                             st.error("❌ Correo o contraseña incorrectos. Intenta nuevamente.")
 
             with col2:

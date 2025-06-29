@@ -29,7 +29,7 @@ def guardar_perfil_usuario(perfil):
         }
 
         response = supabase.table("usuarios").insert([data]).execute()
-        st.write("📥 Insert:", data)
+        #st.write("📥 Insert:", data)
 
         if response.status_code != 201:
             raise Exception(f"Error Supabase: {response.status_code} - {response.data}")
