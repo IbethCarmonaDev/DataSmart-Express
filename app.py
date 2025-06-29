@@ -39,11 +39,11 @@ token = params.get("access_token")
 recovery_type = params.get("type")
 
 # --- Debug ---
-st.warning("🛠 Debug Redirección")
-st.write(f"🔑 Token: {token}")
-st.write(f"📦 Tipo: {recovery_type}")
-st.write("🔐 params:", params)
-st.write(f"🌐 URL: {st_javascript('window.location.href')}")
+# st.warning("🛠 Debug Redirección")
+# st.write(f"🔑 Token: {token}")
+# st.write(f"📦 Tipo: {recovery_type}")
+# st.write("🔐 params:", params)
+# st.write(f"🌐 URL: {st_javascript('window.location.href')}")
 
 # --- Flujo de recuperación de contraseña ---
 if token and recovery_type == "recovery":

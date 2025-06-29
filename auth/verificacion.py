@@ -28,38 +28,7 @@ def mostrar_verificacion_o_reset(token: str):
     else:
         st.error("❌ Tipo de redirección desconocido. Verifica el enlace.")
 
-
 # Muestra pantalla de confirmación de correo después del registro y guarda en la tabla usuarios
-def OLDmanejar_signup(token):
-    try:
-        user = supabase.auth.get_user(token).user
-
-        if not user:
-            st.error("❌ No se pudo recuperar la información del usuario.")
-            return
-
-        id_usuario = user.id
-        email = user.email
-        nombre = user.user_metadata.get("nombre", "")
-
-        # Verificar si ya existe en la tabla 'usuarios'
-        existe = supabase.table("usuarios").select("user_id").eq("user_id", id_usuario).execute()
-        if not existe.data:
-            perfil = {
-                "user_id": id_usuario,
-                "nombre": nombre,
-                "email": email,
-                "plan_actual": "Premium_trial",
-                "fecha_inicio_trial": datetime.now().strftime("%Y-%m-%d"),
-                "dias_trial": 7
-            }
-            guardar_perfil_usuario(perfil)
-
-        mostrar_bienvenida_post_registro()
-
-    except Exception as e:
-        st.error(f"❌ Error durante la verificación: {e}")
-
 def manejar_signup(token):
     try:
         user = supabase.auth.get_user(token).user
@@ -90,7 +59,6 @@ def manejar_signup(token):
     except Exception as e:
         st.error(f"❌ Error durante la verificación: {e}")
 
-
 # Muestra la pantalla de bienvenida tras verificar el correo
 def mostrar_bienvenida_post_registro():
     col_logo, col_msg = st.columns([1, 2])
@@ -110,23 +78,6 @@ def mostrar_bienvenida_post_registro():
             st.session_state.modo = "login"
             st.query_params.clear()
             st.rerun()
-
-# Muestra el formulario para restablecer la contraseña
-def OLDmostrar_formulario_reset(token):
-    st.markdown("### 🔐 Restablecer contraseña")
-
-    nueva_clave = st.text_input("Nueva contraseña", type="password")
-    confirmar_clave = st.text_input("Confirmar nueva contraseña", type="password")
-
-    if st.button("Restablecer contraseña"):
-        if not nueva_clave or not confirmar_clave:
-            st.warning("Por favor completa ambos campos.")
-            return
-        if nueva_clave != confirmar_clave:
-            st.warning("Las contraseñas no coinciden.")
-            return
-
-        procesar_reset_password(token, nueva_clave)
 
 # Llama a Supabase para guardar la nueva contraseña
 def procesar_reset_password(token, nueva_clave):
