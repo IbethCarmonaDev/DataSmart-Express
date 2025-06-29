@@ -31,7 +31,15 @@ def login_usuario(email: str, password: str):
         st.write("🔑 Buscando perfil asociado con user_id:", user_id)
 
         # Paso 3: Buscar en la tabla personalizada 'usuarios'
-        resultado = supabase.table("usuarios").select("*").eq("user_id", user_id).limit(1).execute()
+        st.write("🆔 user.id:", user.id)
+        st.write("🧪 Tipo de user.id:", type(user.id))
+
+        user_id_str = str(user.id)
+        st.write("🔎 Consultando con user_id str:", user_id_str)
+
+        resultado = supabase.table("usuarios").select("*").eq("user_id", user_id_str).limit(1).execute()
+
+        st.write("🔑 Resultado:", resultado)
 
         if resultado.data and len(resultado.data) > 0:
             perfil = resultado.data[0]
