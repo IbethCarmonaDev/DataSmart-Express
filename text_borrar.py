@@ -3,7 +3,7 @@ import requests
 # Solo el subdominio del proyecto (sin "https://")
 SUPABASE_PROJECT_ID = "mjstmccvyewdlcariipk"  # ← ojo: solo esto
 SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qc3RtY2N2eWV3ZGxjYXJpaXBrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDI0MDYzNSwiZXhwIjoyMDY1ODE2NjM1fQ.OtClILKD1yVN7RGxuDMMoiHJUiVEhploYoY_M6lBQe4"
-email_a_borrar = "ibeth.carmona@techinfo.com.co"
+email_a_borrar = "ibeth+4@hotmail.com"
 
 headers = {
     "apikey": SERVICE_ROLE_KEY,

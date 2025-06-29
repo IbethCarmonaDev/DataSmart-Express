@@ -4,10 +4,12 @@
 ############################################################
 # database/usuarios.py
 from auth.conexion_supabase import supabase
-
+import streamlit as st
 
 def guardar_perfil_usuario(perfil):
     try:
+
+
         data = {
             "user_id": perfil["user_id"],
             "nombre": perfil["nombre"],
@@ -19,7 +21,8 @@ def guardar_perfil_usuario(perfil):
         }
 
         response = supabase.table("usuarios").insert([data]).execute()
-        print("🔁 Respuesta Supabase INSERT:", response)
+        #print("🔁 Respuesta Supabase INSERT:", response)
+        st.write(f"🔑 Respuesta Supabase INSERT: {response}")
 
         if response.status_code != 201:
             raise Exception(f"Error Supabase: {response.status_code} - {response.data}")
