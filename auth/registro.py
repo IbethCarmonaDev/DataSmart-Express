@@ -8,8 +8,7 @@ from database.usuarios import guardar_perfil_usuario
 
 def registrar_usuario(nombre, correo, password):
     try:
-        # 1. Crear cuenta en Supabase Auth
-
+        # 1. Crear usuario en Supabase Auth
         response = supabase.auth.sign_up({
             "email": correo,
             "password": password,
@@ -21,11 +20,21 @@ def registrar_usuario(nombre, correo, password):
         })
 
         if response.user is None:
-            return {"status": "error", "mensaje": str(response)}
+            return {"status": "error", "mensaje": "Error creando el usuario"}
 
-        user_id = response.user.id
+        # 2. Activar la sesión si es posible (para que funcione auth.uid())
+        session = response.session
+        if session:
+            supabase.auth.set_session(session.access_token, session.refresh_token)
 
-        # 2. Guardar perfil extendido en tabla personalizada
+        # 3. Verificar que la sesión esté activa antes de insertar
+        user = supabase.auth.get_user()
+        if not user or not user.user:
+            return {"status": "error", "mensaje": "Sesión no activa. No se puede guardar perfil."}
+
+        user_id = user.user.id
+
+        # 4. Guardar perfil personalizado
         perfil = {
             "user_id": user_id,
             "nombre": nombre,
@@ -41,3 +50,45 @@ def registrar_usuario(nombre, correo, password):
 
     except Exception as e:
         return {"status": "error", "mensaje": str(e)}
+
+
+
+# from auth.conexion_supabase import supabase
+# from datetime import datetime
+# from database.usuarios import guardar_perfil_usuario
+#
+# def registrar_usuario(nombre, correo, password):
+#     try:
+#         # 1. Crear cuenta en Supabase Auth
+#
+#         response = supabase.auth.sign_up({
+#             "email": correo,
+#             "password": password,
+#             "options": {
+#                 "data": {
+#                     "nombre": nombre
+#                 }
+#             }
+#         })
+#
+#         if response.user is None:
+#             return {"status": "error", "mensaje": str(response)}
+#
+#         user_id = response.user.id
+#
+#         # 2. Guardar perfil extendido en tabla personalizada
+#         perfil = {
+#             "user_id": user_id,
+#             "nombre": nombre,
+#             "email": correo,
+#             "plan_actual": "Premium_trial",
+#             "fecha_inicio_trial": datetime.now().strftime("%Y-%m-%d"),
+#             "dias_trial": 7
+#         }
+#
+#         guardar_perfil_usuario(perfil)
+#
+#         return {"status": "ok"}
+#
+#     except Exception as e:
+#         return {"status": "error", "mensaje": str(e)}
