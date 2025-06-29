@@ -22,8 +22,8 @@ def guardar_perfil_usuario(perfil):
 
         response = supabase.table("usuarios").insert([data]).execute()
         #print("🔁 Respuesta Supabase INSERT:", response)
-        st.write(f"🔑 Respuesta Supabase INSERT: {response}")
-        st.stop()
+#        st.write(f"🔑 Respuesta Supabase INSERT: {response}")
+#        st.stop()
 
 
 
