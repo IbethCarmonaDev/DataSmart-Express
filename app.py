@@ -23,6 +23,7 @@ from secciones.seccion_exportar import mostrar_exportacion
 from auth.verificacion import mostrar_verificacion_o_reset, manejar_signup
 from auth.redireccion_fragmento import redireccionar_fragmento_si_es_necesario
 from auth.manejo_confirmacion import insertar_perfil_post_signup
+from auth.interfaz_confirmacion import mostrar_confirmacion_registro
 
 # --- Configuración inicial ---
 load_dotenv(override=True)
@@ -57,17 +58,26 @@ elif token and recovery_type == "signup":
     resultado = insertar_perfil_post_signup()
 
     if resultado["status"] == "ok":
-        st.success("✅ Registro confirmado y perfil creado. Ya puedes iniciar sesión.")
+        mostrar_confirmacion_registro()
     else:
         st.error(f"⚠ {resultado['mensaje']}")
+        st.markdown("⬅ [Volver al login](?reload=true)")
 
-    st.markdown("⬅ [Volver al login](?reload=true)")
     st.stop()
 
+
 # elif token and recovery_type == "signup":
-#     st.info("✅ Confirmación de registro...")
-#     manejar_signup(token)
+#
+#     resultado = insertar_perfil_post_signup()
+#
+#     if resultado["status"] == "ok":
+#         st.success("✅ Registro confirmado y perfil creado. Ya puedes iniciar sesión.")
+#     else:
+#         st.error(f"⚠ {resultado['mensaje']}")
+#
+#     st.markdown("⬅ [Volver al login](?reload=true)")
 #     st.stop()
+#
 
 
 
