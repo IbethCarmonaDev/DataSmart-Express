@@ -38,7 +38,7 @@ def insertar_perfil_post_signup():
         # mostrar_mensaje_confirmacion(
         #     titulo="🎉 ¡Registro confirmado!",
         #     mensaje="Tu perfil ha sido creado exitosamente. Ya puedes iniciar sesión."
-        )
+        #)
 
         return {"status": "ok"}
 
