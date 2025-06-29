@@ -1,22 +1,35 @@
+# utilidades/mensajes.py
+
 import streamlit as st
 from PIL import Image
 
-def mostrar_mensaje_exito(titulo="✅ Registro exitoso", mensaje="Tu cuenta ha sido confirmada. Ya puedes iniciar sesión."):
-    col1, col2 = st.columns([1, 3])
+def mostrar_mensaje_confirmacion(titulo: str = "✔ Registro confirmado", mensaje: str = "Tu perfil ha sido creado exitosamente. Ya puedes iniciar sesión."):
+    try:
+        logo = Image.open("Logo.png")
+        st.image(logo, width=200)
+    except:
+        pass
 
-    with col1:
-        try:
-            logo = Image.open("Logo.png")
-            st.image(logo, width=120)
-        except:
-            st.write("")
+    st.markdown(f"<h2 style='text-align: center; color: green;'>{titulo}</h2>", unsafe_allow_html=True)
+    st.success(mensaje)
 
-    with col2:
-        st.markdown(f"""
-        <div style='margin-top: 15px;'>
-            <h3 style='color: #2b85ff;'>{titulo}</h3>
-            <p style='font-size: 16px; color: #444;'>{mensaje}</p>
+    st.markdown(
+        """
+        <div style='text-align: center; margin-top: 20px;'>
+            <a href='/?reload=true' style='
+                background-color: #4CAF50;
+                color: white;
+                padding: 10px 20px;
+                text-decoration: none;
+                border-radius: 5px;
+                font-weight: bold;
+            '>🔑 Iniciar sesión</a>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+        unsafe_allow_html=True
+    )
 
-    st.markdown("⬅ [Volver al login](?reload=true)")
+    st.markdown(
+        "<p style='text-align: center; margin-top: 30px;'>Gracias por unirte a <strong>DataSmart Express</strong>. Tu análisis financiero inteligente comienza ahora 🚀</p>",
+        unsafe_allow_html=True
+    )
