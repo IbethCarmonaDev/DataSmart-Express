@@ -1,5 +1,7 @@
 # app.py actualizado y corregido con mensaje de confirmación moderno
 
+
+
 import streamlit as st
 import pandas as pd
 from PIL import Image
