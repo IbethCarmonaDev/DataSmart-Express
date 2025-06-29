@@ -1,40 +1,41 @@
 from auth.conexion_supabase import supabase
 from database.usuarios import guardar_perfil_usuario
 from datetime import datetime
+import streamlit as st
 
 def insertar_perfil_post_signup():
     try:
-        session = supabase.auth.get_session()
-        if not session or not session.access_token:
-            return {"status": "error", "mensaje": "Sesión inactiva. No se puede crear perfil."}
+        params = st.query_params
+        access_token = params.get("access_token")
+        recovery_type = params.get("type")
 
-        # Asegurar sesión activa con token (opcional si ya lo tienes activo)
-        token = session.access_token
-        supabase.auth.set_session(token, token)
+        if not access_token or recovery_type != "signup":
+            return {"status": "error", "mensaje": "Token inválido o tipo incorrecto."}
 
-        user = supabase.auth.get_user()
-        if not user or not user.user:
-            return {"status": "error", "mensaje": "No se pudo obtener el usuario autenticado."}
+        # ✅ Activar sesión manualmente usando el token
+        session_response = supabase.auth.set_session(access_token, access_token)
 
-        user_id = user.user.id
-        email = user.user.email
-        nombre = user.user.user_metadata.get("nombre", "Usuario")
+        if not session_response.session:
+            return {"status": "error", "mensaje": "⚠ Sesión inactiva. No se pudo crear perfil."}
 
-        # Verificar si ya tiene perfil
-        ya_existe = supabase.table("usuarios").select("*").eq("user_id", user_id).execute()
-        if ya_existe.data:
-            return {"status": "error", "mensaje": "Ya habías confirmado tu cuenta."}
+        user = session_response.user
+        if not user:
+            return {"status": "error", "mensaje": "⚠ No se obtuvo el usuario."}
 
         perfil = {
-            "user_id": user_id,
-            "nombre": nombre,
-            "email": email,
+            "user_id": user.id,
+            "nombre": user.user_metadata.get("nombre", "Sin nombre"),
+            "email": user.email,
             "plan_actual": "Premium_trial",
             "fecha_inicio_trial": datetime.now().strftime("%Y-%m-%d"),
             "dias_trial": 7
         }
 
-        guardar_perfil_usuario(perfil)
+        exito = guardar_perfil_usuario(perfil)
+
+        if not exito:
+            return {"status": "error", "mensaje": "❌ No se pudo guardar el perfil."}
+
         return {"status": "ok"}
 
     except Exception as e:
