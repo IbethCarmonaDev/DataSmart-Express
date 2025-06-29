@@ -8,8 +8,8 @@ from database.usuarios import guardar_perfil_usuario
 
 def registrar_usuario(nombre, correo, password):
     try:
-        # 1. Crear usuario en Supabase Auth
-        response = supabase.auth.sign_up({
+        # 1. Crear usuario en Auth
+        signup_response = supabase.auth.sign_up({
             "email": correo,
             "password": password,
             "options": {
@@ -19,22 +19,26 @@ def registrar_usuario(nombre, correo, password):
             }
         })
 
-        if response.user is None:
+        if signup_response.user is None:
             return {"status": "error", "mensaje": "Error creando el usuario"}
 
-        # 2. Activar la sesión si es posible (para que funcione auth.uid())
-        session = response.session
-        if session:
-            supabase.auth.set_session(session.access_token, session.refresh_token)
+        # 2. Forzar login después del sign_up para activar la sesión
+        login_response = supabase.auth.sign_in_with_password({
+            "email": correo,
+            "password": password
+        })
 
-        # 3. Verificar que la sesión esté activa antes de insertar
+        if not login_response.session:
+            return {"status": "error", "mensaje": "Login fallido. No se activó la sesión."}
+
+        # 3. Obtener el user_id con sesión activa (para RLS)
         user = supabase.auth.get_user()
         if not user or not user.user:
             return {"status": "error", "mensaje": "Sesión no activa. No se puede guardar perfil."}
 
         user_id = user.user.id
 
-        # 4. Guardar perfil personalizado
+        # 4. Guardar en tabla 'usuarios'
         perfil = {
             "user_id": user_id,
             "nombre": nombre,
@@ -44,14 +48,12 @@ def registrar_usuario(nombre, correo, password):
             "dias_trial": 7
         }
 
-
         guardar_perfil_usuario(perfil)
 
         return {"status": "ok"}
 
     except Exception as e:
         return {"status": "error", "mensaje": str(e)}
-
 
 
 # from auth.conexion_supabase import supabase
