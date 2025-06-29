@@ -53,9 +53,13 @@ elif token and recovery_type == "signup":
 
     if resultado["status"] == "ok":
         mostrar_mensaje_confirmacion(
-            titulo="🎉 ¡Registro confirmado!",
-            mensaje="Tu perfil ha sido creado exitosamente. Ya puedes iniciar sesión."
+            titulo="✅ ¡Registro confirmado!",
+            mensaje="Tu perfil ha sido creado exitosamente. Ya puedes iniciar sesión.",
+            tipo="success",  # Opcional, por defecto es "success"
+            boton_texto="Iniciar sesión",
+            boton_callback=ir_a_login  # Esta debe ser una función que lleva al login
         )
+
     else:
         st.error(f"⚠ {resultado['mensaje']}")
         st.markdown("⬅ [Volver al login](?reload=true)")
