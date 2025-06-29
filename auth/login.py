@@ -45,7 +45,18 @@ def login_usuario(email: str, password: str):
             .limit(1) \
             .execute()
 
-        st.write("🔑 Resultado:", resultado)
+        st.write("🔑 Resultado con user_id_str:", resultado)
+
+        st.write("🔍 Buscando por correo en usuarios...")
+
+        resultado_email = supabase.table("usuarios") \
+            .select("*") \
+            .eq("email", email) \
+            .limit(5) \
+            .execute()
+
+        st.write("📬 Resultado por email:", resultado_email)
+
 
         if resultado.data and len(resultado.data) > 0:
             perfil = resultado.data[0]
