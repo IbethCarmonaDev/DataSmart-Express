@@ -51,7 +51,7 @@ def login_usuario(email: str, password: str):
         #st.error(f"Error técnico durante el login: {e}")
         return None
 
-def validar_plan_trial(usuario):
+def OLDvalidar_plan_trial(usuario):
     usuario["dias_restantes_trial"] = None
     usuario["dias_transcurridos"] = None
 
@@ -89,3 +89,42 @@ def validar_plan_trial(usuario):
     return usuario
 
 
+def validar_plan_trial(usuario):
+    usuario["dias_restantes_trial"] = None
+    usuario["dias_transcurridos"] = None
+    usuario["fecha_fin_trial"] = None
+
+    if usuario.get("plan_actual") == "Premium_trial":
+        fecha_inicio_str = usuario.get("fecha_inicio_trial")
+        dias_trial = usuario.get("dias_trial", 7)
+
+        if fecha_inicio_str:
+            try:
+                # Parseo robusto compatible con ISO 8601 y timestamptz
+                fecha_inicio = datetime.fromisoformat(str(fecha_inicio_str)).date()
+                hoy = datetime.utcnow().date()
+
+                dias_transcurridos = (hoy - fecha_inicio).days
+                usuario["dias_transcurridos"] = dias_transcurridos
+
+                if dias_transcurridos > dias_trial:
+                    usuario["plan_actual"] = "Free"
+                    usuario["dias_restantes_trial"] = 0
+                    usuario["fecha_fin_trial"] = hoy.isoformat()
+
+                    # ✅ Actualiza en Supabase la expiración
+                    actualizar_plan_usuario(
+                        user_id=usuario["user_id"],
+                        nuevo_plan="Free",
+                        fecha_fin=hoy.isoformat()
+                    )
+                else:
+                    usuario["dias_restantes_trial"] = dias_trial - dias_transcurridos
+
+            except Exception as e:
+                st.warning(f"⚠️ Error en el cálculo de días de trial: {e}")
+                usuario["dias_restantes_trial"] = None
+                usuario["dias_transcurridos"] = None
+                usuario["fecha_fin_trial"] = None
+
+    return usuario
