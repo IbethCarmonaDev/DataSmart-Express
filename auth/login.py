@@ -50,8 +50,6 @@ def login_usuario(email: str, password: str):
         #st.error(f"Error técnico durante el login: {e}")
         return None
 
-from datetime import datetime
-
 def validar_plan_trial(usuario):
     usuario["dias_restantes_trial"] = None
     usuario["dias_transcurridos"] = None

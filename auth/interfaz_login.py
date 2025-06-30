@@ -113,7 +113,6 @@ def mostrar_login():
                                 st.session_state.usuario = usuario
 
                                 st.write("st.session_state.usuario;",st.session_state.usuario)
-                                st.stop()
 
                                 st.success(f"✅ Bienvenido/a {usuario['nombre']}")
                                 st.rerun()
