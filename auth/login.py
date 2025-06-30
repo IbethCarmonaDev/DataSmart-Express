@@ -70,6 +70,7 @@ def validar_plan_trial(usuario):
             except Exception as e:
                 usuario["dias_restantes_trial"] = None  # Fallback si falla parseo
 
+    usuario["dias_restantes_trial"] = 0
     #st.write("Usuario:", st.session_state.usuario)
 
     return usuario
