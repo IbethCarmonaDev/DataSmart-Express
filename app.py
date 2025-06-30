@@ -79,10 +79,6 @@ usuario = st.session_state["usuario"]
 plan = usuario.get("plan_actual")
 dias_restantes = usuario.get("dias_restantes_trial")
 
-st.write("Usuario:", st.session_state.usuario)
-#st.write("dias_restantes", dias_restantes)
-
-
 if plan == "Premium_trial" and dias_restantes is not None and dias_restantes > 0:
     mostrar_mensaje_confirmacion(
         titulo="¡Estás usando el plan Premium Trial!",

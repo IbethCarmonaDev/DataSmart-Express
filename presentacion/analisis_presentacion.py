@@ -7,8 +7,6 @@ def formato_moneda(valor):
         return "0"
     return f"$ {valor:,.0f}"
 
-
-
 def generar_html_estado_resultados(df: pd.DataFrame, df_kpis: pd.DataFrame) -> str:
     df_formateado = df.copy()
     df_formateado = df_formateado.drop(columns=[col for col in ["AÑO", "MES"] if col in df_formateado.columns])
@@ -140,7 +138,6 @@ def generar_html_estado_resultados(df: pd.DataFrame, df_kpis: pd.DataFrame) -> s
                 print("   ➤", kpi)
 
     return html
-
 
 def generar_html_estado_resultados_anual(df: pd.DataFrame, kpi_destacados: list = []) -> str:
     df_formateado = df.copy()
@@ -284,7 +281,6 @@ def generar_html_estado_resultados_anual(df: pd.DataFrame, kpi_destacados: list 
 
     html += "</tbody></table></div>"
     return html
-
 
 def generar_html_estado_resumido(df_estado, df_kpis_filtrados=None):
     import pandas as pd

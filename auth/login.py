@@ -1,6 +1,7 @@
 from auth.conexion_supabase import supabase
 import streamlit as st
 from datetime import datetime
+from database.usuarios import actualizar_plan_usuario  # Asegúrate de tener este import
 
 def login_usuario(email: str, password: str):
     try:
@@ -60,20 +61,31 @@ def validar_plan_trial(usuario):
 
         if fecha_inicio_str:
             try:
-                # Asegurar formato correcto sin zona horaria
                 fecha_inicio = datetime.fromisoformat(str(fecha_inicio_str).split("T")[0]).date()
-                dias_transcurridos = (datetime.today().date() - fecha_inicio).days
+                hoy = datetime.today().date()
+                dias_transcurridos = (hoy - fecha_inicio).days
 
                 usuario["dias_transcurridos"] = dias_transcurridos
 
                 if dias_transcurridos > dias_trial:
                     usuario["plan_actual"] = "Free"
                     usuario["dias_restantes_trial"] = 0
+                    usuario["fecha_fin_trial"] = hoy.isoformat()
+
+                    # ✅ Actualiza en Supabase
+                    actualizar_plan_usuario(usuario["user_id"], "Free", hoy.isoformat())
                 else:
                     usuario["dias_restantes_trial"] = dias_trial - dias_transcurridos
 
             except Exception as e:
                 usuario["dias_restantes_trial"] = None
                 usuario["dias_transcurridos"] = None
+                usuario["fecha_fin_trial"] = None
+        else:
+            usuario["fecha_fin_trial"] = None
+    else:
+        usuario["fecha_fin_trial"] = None
 
     return usuario
+
+

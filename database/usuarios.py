@@ -40,55 +40,13 @@ def guardar_perfil_usuario(perfil):
         st.error(f"❌ Error al guardar perfil: {e}")
         return False
 
+def actualizar_plan_usuario(user_id, nuevo_plan, fecha_fin_trial=None):
+    data_update = {"plan_actual": nuevo_plan}
+    if fecha_fin_trial:
+        data_update["fecha_fin_trial"] = fecha_fin_trial
 
-def OLDguardar_perfil_usuario(perfil):
     try:
-        data = {
-            "user_id": perfil["user_id"],
-            "nombre": perfil["nombre"],
-            "email": perfil["email"],
-            "plan_actual": perfil["plan_actual"],
-            "fecha_registro": perfil["fecha_inicio_trial"],
-            "fecha_inicio_trial": perfil["fecha_inicio_trial"],
-            "dias_trial": perfil["dias_trial"]
-        }
-
-        response = supabase.table("usuarios").insert([data]).execute()
-        st.write(f"🔑 response: {response}")
-
-        if response.status_code != 201:
-            raise Exception(f"Error Supabase: {response.status_code} - {response.data}")
-
-        return True
-
+        supabase.table("usuarios").update(data_update).eq("user_id", user_id).execute()
     except Exception as e:
-        print("❌ Error al guardar perfil:", e)
-        return False
-
-def OLD2guardar_perfil_usuario(perfil):
-    try:
-        data = {
-            "user_id": perfil["user_id"],
-            "nombre": perfil["nombre"],
-            "email": perfil["email"],
-            "plan_actual": perfil["plan_actual"],
-            "fecha_registro": perfil["fecha_inicio_trial"],
-            "fecha_inicio_trial": perfil["fecha_inicio_trial"],
-            "dias_trial": perfil["dias_trial"]
-        }
-
-        response = supabase.table("usuarios").insert([data]).execute()
-        st.write("🔍 Payload insert:", data)
-        st.write("📥 Respuesta Supabase:", response)
-
-        if response.status_code != 201:
-            raise Exception(f"Error Supabase: {response.status_code} - {response.data}")
-
-        return True
-
-    except Exception as e:
-        st.error(f"❌ Error al guardar perfil: {e}")
-        return False
-
-
+        print(f"Error al actualizar plan: {e}")
 
