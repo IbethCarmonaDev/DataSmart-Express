@@ -53,6 +53,9 @@ def login_usuario(email: str, password: str):
             registrar_evento_usuario(user_id, "inicio_sesion", "Inicio de sesión exitoso")
             st.write("despues de registrar_evento_usuario")
 
+            st.stop()
+
+
             return perfil
         else:
             st.warning("Usuario autenticado pero no tiene perfil registrado.")
