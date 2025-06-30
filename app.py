@@ -58,7 +58,7 @@ elif token and recovery_type == "signup":
             tipo="success",  # Opcional, por defecto es "success"
             boton_texto="Iniciar sesión",
             boton_callback= mostrar_login(),  # Esta debe ser una función que lleva al login
-            mensaje_final = "Gracias por unirse a DataSmart Express. Tu análisis financiero inteligente comienza ahora"
+            mensaje_final = "¡ Gracias por unirte a DataSmart Express. Tu análisis financiero inteligente comienza ahora !"
         )
 
 
