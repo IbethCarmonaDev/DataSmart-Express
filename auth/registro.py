@@ -10,7 +10,7 @@ from utilidades.errores_supabase import obtener_mensaje_error
 import re
 
 def es_email_valido(email: str) -> bool:
-    patron = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+    patron = r"^[\w\.\+-]+@[\w\.-]+\.\w+$"
     return re.match(patron, email) is not None
 
 def es_password_valida(password: str) -> bool:
