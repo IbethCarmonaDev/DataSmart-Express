@@ -28,6 +28,10 @@ errores_supabase = {
     "user_exists": {
         "es": "❌ Ya existe una cuenta con ese correo. Usa otro o inicia sesión.",
         "en": "❌ An account with this email already exists. Use another or sign in."
+    },
+    "invalid_email_format": {
+        "es": "❌ El correo electrónico no es válido. Asegúrate de que tenga el formato correcto (ej: usuario@dominio.com).",
+        "en": "❌ The email address is invalid. Make sure it's in the correct format (e.g., user@domain.com)."
     }
 }
 
