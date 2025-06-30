@@ -53,27 +53,29 @@ def login_usuario(email: str, password: str):
 from datetime import datetime
 
 def validar_plan_trial(usuario):
+    usuario["dias_restantes_trial"] = None
+    usuario["dias_transcurridos"] = None
+
     if usuario.get("plan") == "Premium_trial":
         fecha_inicio_str = usuario.get("fecha_inicio_trial")
         dias_trial = usuario.get("dias_trial", 7)
 
         if fecha_inicio_str:
             try:
-                # Forzar parse de solo la fecha si viene con hora o zona
+                # Parsear solo la fecha
                 fecha_inicio = datetime.fromisoformat(str(fecha_inicio_str).split("T")[0]).date()
                 dias_transcurridos = (datetime.today().date() - fecha_inicio).days
 
+                usuario["dias_transcurridos"] = dias_transcurridos
+
                 if dias_transcurridos > dias_trial:
                     usuario["plan"] = "Free"
+                    usuario["dias_restantes_trial"] = 0
                 else:
                     usuario["dias_restantes_trial"] = dias_trial - dias_transcurridos
+
             except Exception as e:
-                usuario["dias_restantes_trial"] = None  # Fallback si falla parseo
-
-
-    usuario["dias_restantes_trial"] = 0
-    usuario["dias_transcurridos"] = dias_transcurridos
-
-    #st.write("Usuario:", st.session_state.usuario)
+                usuario["dias_restantes_trial"] = None
+                usuario["dias_transcurridos"] = None
 
     return usuario
