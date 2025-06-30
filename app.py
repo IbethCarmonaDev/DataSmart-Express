@@ -81,6 +81,7 @@ dias_restantes = usuario.get("dias_restantes_trial")
 
 st.write("dias_restantes", dias_restantes)
 
+
 if plan == "Premium_trial" and dias_restantes is not None and dias_restantes > 0:
     mostrar_mensaje_confirmacion(
         titulo="¡Estás usando el plan Premium Trial!",

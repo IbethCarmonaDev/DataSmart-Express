@@ -111,13 +111,9 @@ def mostrar_login():
                             else:
                                 usuario = validar_plan_trial(usuario)
                                 st.session_state.usuario = usuario
-
-                                st.write("usuario:", usuario)
-
                                 st.success(f"✅ Bienvenido/a {usuario['nombre']}")
-                                #st.rerun()
+                                st.rerun()
 
-                                st.stop()
                         else:
                             mostrar_mensaje_confirmacion(
                                 titulo="Error de inicio de sesión",
