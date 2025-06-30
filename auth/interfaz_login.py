@@ -101,20 +101,6 @@ def mostrar_login():
                     with st.spinner("Verificando usuario..."):
                         usuario = login_usuario(email, password)
 
-                        # if usuario:
-                        #     if usuario.get("status") == "no_confirmado":
-                        #         mostrar_mensaje_confirmacion(
-                        #             titulo="Correo no confirmado",
-                        #             mensaje="✉ Tu correo aún no ha sido confirmado. Revisa tu bandeja de entrada para activarlo.",
-                        #             tipo="warning"
-                        #         )
-                        #     else:
-                        #         st.success(f"✅ Bienvenido/a {usuario['nombre']}")
-                        #         st.session_state.usuario = usuario
-                        #         st.rerun()
-
-
-
                         if usuario:
                             if usuario.get("status") == "no_confirmado":
                                 mostrar_mensaje_confirmacion(
