@@ -7,6 +7,9 @@ from datetime import datetime, timedelta, timezone
 
 def registrar_evento_usuario(user_id: str, tipo_evento: str, descripcion: str = ""):
     try:
+
+        streamlit.write("entró a registrar_evento_usuario")
+
         evento = {
             "user_id": user_id,
             "tipo_evento": tipo_evento,
