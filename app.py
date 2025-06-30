@@ -53,12 +53,14 @@ elif token and recovery_type == "signup":
 
     if resultado["status"] == "ok":
         mostrar_mensaje_confirmacion(
-            titulo="✅ ¡Registro confirmado!",
+            titulo="¡Registro confirmado!",
             mensaje="Tu perfil ha sido creado exitosamente. Ya puedes iniciar sesión.",
             tipo="success",  # Opcional, por defecto es "success"
             boton_texto="Iniciar sesión",
-            boton_callback= mostrar_login()  # Esta debe ser una función que lleva al login
+            boton_callback= mostrar_login(),  # Esta debe ser una función que lleva al login
+            mensaje_final = "Gracias por unirse a DataSmart Express. Tu análisis financiero inteligente comienza ahora"
         )
+
 
     else:
         st.error(f"⚠ {resultado['mensaje']}")
