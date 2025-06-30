@@ -20,11 +20,7 @@ def es_password_valida(password: str) -> bool:
 def registrar_usuario(nombre, correo, password, idioma="es"):
     try:
         # 🛡 Validar formato de correo
-        streamlit.write("correo: ", correo)
-
         if not es_email_valido(correo):
-            streamlit.write("entro a es_email_valido: ", correo)
-
             return {"status": "error", "mensaje": obtener_mensaje_error("invalid_email_format", idioma)}
 
         # 🔐 Validar fortaleza mínima de contraseña
