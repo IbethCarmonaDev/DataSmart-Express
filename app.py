@@ -57,7 +57,7 @@ elif token and recovery_type == "signup":
             mensaje="Tu perfil ha sido creado exitosamente. Ya puedes iniciar sesión.",
             tipo="success",  # Opcional, por defecto es "success"
             boton_texto="Iniciar sesión",
-            boton_callback=ir_a_login  # Esta debe ser una función que lleva al login
+            boton_callback= mostrar_login()  # Esta debe ser una función que lleva al login
         )
 
     else:
