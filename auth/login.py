@@ -50,15 +50,27 @@ def login_usuario(email: str, password: str):
         #st.error(f"Error técnico durante el login: {e}")
         return None
 
+from datetime import datetime
+
 def validar_plan_trial(usuario):
     if usuario.get("plan") == "Premium_trial":
-        fecha_inicio = usuario.get("fecha_inicio_trial")
+        fecha_inicio_str = usuario.get("fecha_inicio_trial")
         dias_trial = usuario.get("dias_trial", 7)
 
-        if fecha_inicio:
-            dias_transcurridos = (datetime.today().date() - datetime.fromisoformat(fecha_inicio).date()).days
-            if dias_transcurridos > dias_trial:
-                usuario["plan"] = "Free"
-            else:
-                usuario["dias_restantes_trial"] = dias_trial - dias_transcurridos
+        if fecha_inicio_str:
+            try:
+                # Forzar parse de solo la fecha si viene con hora o zona
+                fecha_inicio = datetime.fromisoformat(str(fecha_inicio_str).split("T")[0]).date()
+                dias_transcurridos = (datetime.today().date() - fecha_inicio).days
+
+                if dias_transcurridos > dias_trial:
+                    usuario["plan"] = "Free"
+                else:
+                    usuario["dias_restantes_trial"] = dias_trial - dias_transcurridos
+            except Exception as e:
+                usuario["dias_restantes_trial"] = None  # Fallback si falla parseo
+
+    st.write("Usuario:", st.session_state.usuario)
+    st.stop()
+
     return usuario
