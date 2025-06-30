@@ -56,20 +56,20 @@ def validar_plan_trial(usuario):
     usuario["dias_restantes_trial"] = None
     usuario["dias_transcurridos"] = None
 
-    if usuario.get("plan") == "Premium_trial":
+    if usuario.get("plan_actual") == "Premium_trial":
         fecha_inicio_str = usuario.get("fecha_inicio_trial")
         dias_trial = usuario.get("dias_trial", 7)
 
         if fecha_inicio_str:
             try:
-                # Parsear solo la fecha
+                # Asegurar formato correcto sin zona horaria
                 fecha_inicio = datetime.fromisoformat(str(fecha_inicio_str).split("T")[0]).date()
                 dias_transcurridos = (datetime.today().date() - fecha_inicio).days
 
                 usuario["dias_transcurridos"] = dias_transcurridos
 
                 if dias_transcurridos > dias_trial:
-                    usuario["plan"] = "Free"
+                    usuario["plan_actual"] = "Free"
                     usuario["dias_restantes_trial"] = 0
                 else:
                     usuario["dias_restantes_trial"] = dias_trial - dias_transcurridos
