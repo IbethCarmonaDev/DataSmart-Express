@@ -76,7 +76,7 @@ if "usuario" not in st.session_state:
 
 # --- Mostrar mensaje según plan ---
 usuario = st.session_state["usuario"]
-plan = usuario.get("plan")
+plan = usuario.get("plan_actual")
 dias_restantes = usuario.get("dias_restantes_trial")
 
 st.write("Usuario:", st.session_state.usuario)
