@@ -1,7 +1,3 @@
-# app.py actualizado y corregido con mensaje de confirmación moderno
-
-
-
 import streamlit as st
 import pandas as pd
 from PIL import Image
@@ -77,6 +73,25 @@ elif token:
 if "usuario" not in st.session_state:
     mostrar_login()
     st.stop()
+
+# --- Mostrar mensaje según plan ---
+usuario = st.session_state["usuario"]
+plan = usuario.get("plan")
+dias_restantes = usuario.get("dias_restantes_trial")
+
+if plan == "Premium_trial" and dias_restantes is not None and dias_restantes > 0:
+    mostrar_mensaje_confirmacion(
+        titulo="¡Estás usando el plan Premium Trial!",
+        mensaje=f"📆 Te quedan {dias_restantes} días para disfrutar todas las funcionalidades.",
+        tipo="info"
+    )
+elif plan == "Free" and usuario.get("fecha_inicio_trial"):
+    mostrar_mensaje_confirmacion(
+        titulo="⛔ Tu periodo de prueba ha finalizado",
+        mensaje="Has pasado al plan Free. Algunas funcionalidades estarán limitadas.",
+        tipo="warning"
+    )
+
 
 # --- Encabezado general ---
 try:

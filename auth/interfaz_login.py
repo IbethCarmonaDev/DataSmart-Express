@@ -126,15 +126,6 @@ def mostrar_login():
                                 usuario = validar_plan_trial(usuario)
                                 st.session_state.usuario = usuario
 
-                                # Mostrar mensaje visual si está en trial y aún no venció
-                                if usuario.get("plan") == "Premium_trial" and usuario.get("dias_restantes_trial",
-                                                                                          0) > 0:
-                                    mostrar_mensaje_confirmacion(
-                                        titulo="¡Estás usando el plan Premium Trial!",
-                                        mensaje=f"📆 Te quedan {usuario['dias_restantes_trial']} días para disfrutar todas las funcionalidades.",
-                                        tipo="info"
-                                    )
-
                                 st.success(f"✅ Bienvenido/a {usuario['nombre']}")
                                 st.rerun()
 
@@ -145,6 +136,7 @@ def mostrar_login():
                                 mensaje="❌ Correo o contraseña incorrectos. Intenta nuevamente.",
                                 tipo="error"
                             )
+
 
             with col2:
                 if st.button("¿Olvidaste tu contraseña?"):
