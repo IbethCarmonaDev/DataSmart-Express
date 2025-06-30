@@ -14,6 +14,7 @@ def es_email_valido(email: str) -> bool:
 def es_password_valida(password: str) -> bool:
     return len(password) >= 6  # Puedes hacerla más exigente si quieres
 
+
 def registrar_usuario(nombre, correo, password, idioma="es"):
     try:
         # 🛡 Validar formato de correo
