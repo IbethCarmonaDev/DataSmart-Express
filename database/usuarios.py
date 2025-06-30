@@ -62,6 +62,7 @@ def guardar_perfil_usuario(perfil):
         )
         return True
 
+
     except Exception as e:
         st.error(f"❌ Error al guardar perfil: {e}")
         return False
