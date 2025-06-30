@@ -1,5 +1,6 @@
 from datetime import datetime
 from auth.conexion_supabase import supabase
+from datetime import datetime, timedelta, timezone
 
 def registrar_evento_usuario(user_id: str, tipo_evento: str, descripcion: str = ""):
     try:
@@ -7,7 +8,7 @@ def registrar_evento_usuario(user_id: str, tipo_evento: str, descripcion: str = 
             "user_id": user_id,
             "tipo_evento": tipo_evento,
             "descripcion": descripcion,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat()
         }
 
         respuesta = supabase.table("eventos_usuarios").insert([evento]).execute()
