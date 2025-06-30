@@ -1,5 +1,6 @@
 from auth.conexion_supabase import supabase
 import streamlit as st
+from datetime import datetime
 
 def login_usuario(email: str, password: str):
     try:
@@ -48,7 +49,15 @@ def login_usuario(email: str, password: str):
         #st.error(f"Error técnico durante el login: {e}")
         return None
 
+def validar_plan_trial(usuario):
+    if usuario.get("plan") == "Premium_trial":
+        fecha_inicio = usuario.get("fecha_inicio_trial")
+        dias_trial = usuario.get("dias_trial", 7)
 
-
-
-
+        if fecha_inicio:
+            dias_transcurridos = (datetime.today().date() - datetime.fromisoformat(fecha_inicio).date()).days
+            if dias_transcurridos > dias_trial:
+                usuario["plan"] = "Free"
+            else:
+                usuario["dias_restantes_trial"] = dias_trial - dias_transcurridos
+    return usuario
