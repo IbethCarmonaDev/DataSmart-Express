@@ -2,7 +2,7 @@ from database.usuarios import actualizar_plan_usuario  # Asegúrate de tener est
 from datetime import datetime, timezone
 import streamlit as st
 from auth.conexion_supabase import supabase
-from auth.login import validar_plan_trial
+##from auth.login import validar_plan_trial
 
 from utilidades.eventos import registrar_evento_usuario  # Asegúrate que esta función esté lista
 
@@ -68,7 +68,6 @@ def login_usuario(email: str, password: str):
         st.error(f"Error técnico durante el login: {e}")
         return None
 
-
 def validar_plan_trial(usuario):
     usuario["dias_restantes_trial"] = None
     usuario["dias_transcurridos"] = None
@@ -108,8 +107,6 @@ def validar_plan_trial(usuario):
                 usuario["fecha_fin_trial"] = None
 
     return usuario
-
-
 
 def OLD3login_usuario(email: str, password: str):
     try:
@@ -195,8 +192,6 @@ def OLDvalidar_plan_trial(usuario):
         usuario["fecha_fin_trial"] = None
 
     return usuario
-
-
 
 def OLD5login_usuario(email: str, password: str):
     try:
