@@ -37,6 +37,7 @@ def login_usuario(email: str, password: str):
         if resultado.data and len(resultado.data) > 0:
             perfil = resultado.data[0]
             perfil["status"] = "ok"
+            perfil = validar_plan_trial(perfil)
             return perfil
         else:
             st.warning("Usuario autenticado pero no tiene perfil registrado.")

@@ -79,7 +79,8 @@ usuario = st.session_state["usuario"]
 plan = usuario.get("plan")
 dias_restantes = usuario.get("dias_restantes_trial")
 
-st.write("dias_restantes", dias_restantes)
+st.write("Usuario:", st.session_state.usuario)
+#st.write("dias_restantes", dias_restantes)
 
 
 if plan == "Premium_trial" and dias_restantes is not None and dias_restantes > 0:
