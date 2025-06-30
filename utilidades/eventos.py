@@ -1,4 +1,7 @@
 from datetime import datetime
+
+import streamlit
+
 from auth.conexion_supabase import supabase
 from datetime import datetime, timedelta, timezone
 
@@ -12,6 +15,8 @@ def registrar_evento_usuario(user_id: str, tipo_evento: str, descripcion: str = 
         }
 
         respuesta = supabase.table("eventos_usuarios").insert([evento]).execute()
+
+        streamlit.write("respuesta:", respuesta)
 
         if respuesta.status_code != 201:
             print("❌ Error registrando evento:", respuesta.data)
