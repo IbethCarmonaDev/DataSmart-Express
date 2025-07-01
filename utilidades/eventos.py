@@ -21,6 +21,7 @@ def registrar_evento_usuario(user_id: str, tipo_evento: str, descripcion: str = 
 
         streamlit.write("respuesta:", respuesta.model_dump())
 
+
         if respuesta.status_code != 201:
             print("❌ Error registrando evento:", respuesta.data)
         else:
