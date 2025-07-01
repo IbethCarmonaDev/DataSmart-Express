@@ -29,10 +29,16 @@ def registrar_evento_usuario(user_id: str, tipo_evento: str, descripcion: str = 
         streamlit.write("antes de write respuesta")
         streamlit.write("respuesta:", respuesta.model_dump())
 
+        if respuesta.status_code != 201:
+            streamlit.error(f"❌ Error Supabase: {respuesta.status_code} - {respuesta.data}")
+        else:
+            streamlit.success("✅ Evento insertado correctamente")
 
         if respuesta.status_code != 201:
             print("❌ Error registrando evento:", respuesta.data)
         else:
             print(f"✅ Evento '{tipo_evento}' registrado.")
+
+
     except Exception as e:
         print(f"❌ Excepción al registrar evento: {e}")
