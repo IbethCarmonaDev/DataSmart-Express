@@ -17,12 +17,19 @@ def registrar_evento_usuario(user_id: str, tipo_evento: str, descripcion: str = 
         #     "timestamp": datetime.now(timezone.utc).isoformat()
         # }
 
+        fecha_actual_utc = datetime.now(timezone.utc)
+        fecha_actual_str = fecha_actual_utc.isoformat()
+
         evento = {
             "user_id": "UID_DE_PRUEBA",  # Reemplaza con un UID real de un usuario
             "tipo_evento": "prueba_manual",
             "detalle": {"mensaje": "Evento insertado manualmente"},
-            "fecha_evento": datetime.now(timezone.utc).isoformat()
+            "fecha_evento": fecha_actual_str
+
+
         }
+
+
 
         respuesta = supabase.table("eventos_usuarios").insert([evento]).execute()
 
