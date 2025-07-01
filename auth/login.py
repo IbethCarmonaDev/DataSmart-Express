@@ -52,7 +52,6 @@ def login_usuario(email: str, password: str):
             # 📝 Registrar evento de login exitoso
             registrar_evento_usuario(user_id, "inicio_sesion", "Inicio de sesión exitoso")
             st.write("despues de registrar_evento_usuario")
-
             st.stop()
 
 
