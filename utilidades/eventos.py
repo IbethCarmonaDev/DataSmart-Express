@@ -5,7 +5,7 @@ import streamlit
 from auth.conexion_supabase import supabase
 from datetime import datetime, timedelta, timezone
 
-def registrar_evento_usuario_test():
+def registrar_evento_usuario():
     import streamlit as st
     from auth.conexion_supabase import supabase
     from datetime import datetime, timezone

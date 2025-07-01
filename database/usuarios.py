@@ -7,7 +7,7 @@ import streamlit as st
 import json
 
 from auth.conexion_supabase import supabase
-from utilidades.eventos import registrar_evento_usuario  # Asegúrate de importar esto
+from utilidades.eventos import registrar_evento_usuario
 from datetime import datetime, timedelta, timezone
 
 def guardar_perfil_usuario(perfil):
