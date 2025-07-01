@@ -13,12 +13,16 @@ def registrar_evento_usuario_test():
     try:
         st.write("🔍 Ejecutando test manual de inserción...")
 
+        user_id = supabase.auth.get_user().user.id  # ✅ Obtiene el UID del usuario autenticado
+        st.write("📤 user_id:", user_id)
+
         evento = {
-            "user_id": "8f24190f-0ec2-4e7e-bc7f-12493d22a5d5",  # 👈 Usa un user_id real de la tabla usuarios
+            "user_id": user_id,  # 👈 Usa un user_id real de la tabla usuarios
             "evento": "test_insercion_manual",
             "detalle": {"mensaje": "Test desde función aislada"},
             "fecha_evento": datetime.now(timezone.utc).isoformat()
         }
+
 
         respuesta = supabase.table("eventos_usuarios").insert([evento]).execute()
 
