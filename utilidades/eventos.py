@@ -22,7 +22,7 @@ def registrar_evento_usuario(user_id: str, tipo_evento: str, descripcion: str = 
 
         evento = {
             "user_id": "UID_DE_PRUEBA",  # Reemplaza con un UID real de un usuario
-            "tipo_evento": "prueba_manual",
+            "evento": "prueba_manual",
             "detalle": {"mensaje": "Evento insertado manualmente"},
             "fecha_evento": fecha_actual_str
 
@@ -35,6 +35,7 @@ def registrar_evento_usuario(user_id: str, tipo_evento: str, descripcion: str = 
 
         streamlit.write("antes de write respuesta")
         streamlit.write("respuesta:", respuesta.model_dump())
+        print("📤 Supabase response:", respuesta.model_dump())
 
         if respuesta.status_code != 201:
             streamlit.error(f"❌ Error Supabase: {respuesta.status_code} - {respuesta.data}")
