@@ -19,6 +19,7 @@ def registrar_evento_usuario(user_id: str, tipo_evento: str, descripcion: str = 
 
         respuesta = supabase.table("eventos_usuarios").insert([evento]).execute()
 
+        streamlit.write("antes de write respuesta")
         streamlit.write("respuesta:", respuesta.model_dump())
 
 
