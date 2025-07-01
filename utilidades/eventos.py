@@ -5,7 +5,7 @@ import streamlit
 from auth.conexion_supabase import supabase
 from datetime import datetime, timedelta, timezone
 
-def registrar_evento_usuario():
+def registrar_evento_usuario_test():
     import streamlit as st
     from auth.conexion_supabase import supabase
     from datetime import datetime, timezone
@@ -32,7 +32,8 @@ def registrar_evento_usuario():
     except Exception as e:
         st.error(f"❌ Excepción al registrar evento: {e}")
 
-def OLD50registrar_evento_usuario(user_id: str, tipo_evento: str, descripcion: str = ""):
+
+def registrar_evento_usuario(user_id: str, tipo_evento: str, descripcion: str = ""):
     try:
 
         streamlit.write("entró a registrar_evento_usuario")
