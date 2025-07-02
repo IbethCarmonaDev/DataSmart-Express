@@ -19,17 +19,23 @@ def registrar_evento_usuario_test():
         session = supabase.auth.get_session()
         st.write("Rol activo:", session)
 
+        from supabase import create_client
+
         user_id = session.user.id
 
         st.write("user_id:", user_id)
         st.write("Tipo:", type(user_id))
+        st.write("Rol activo:", supabase.auth.get_session())
 
+        session = supabase.auth.get_session()
+        access_token = session.access_token
+
+        # Ahora sí, haz el insert
         supabase.table("eventos_usuarios").insert({
-            "user_id": user_id,
+            "user_id": session.user.id,
             "evento": "inicio_sesion",
             "fecha_evento": datetime.now().isoformat()
         }).execute()
-
         #
         # evento = {
         #     "user_id": user_id,  # 👈 Usa un user_id real de la tabla usuarios
