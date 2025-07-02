@@ -27,15 +27,42 @@ def registrar_evento_usuario_test():
         st.write("Tipo:", type(user_id))
         st.write("Rol activo:", supabase.auth.get_session())
 
+        from supabase import create_client
+
+        # Asume que ya hiciste login y tienes la sesión
         session = supabase.auth.get_session()
         access_token = session.access_token
 
-        # Ahora sí, haz el insert
-        supabase.table("eventos_usuarios").insert({
+        from supabase import create_client
+        import os
+        import streamlit as st
+
+        # Detectar entorno y obtener las variables
+        if "SUPABASE_URL" in st.secrets:
+            SUPABASE_URL = st.secrets["SUPABASE_URL"]
+            SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+        else:
+            from dotenv import load_dotenv
+            load_dotenv()
+            SUPABASE_URL = os.getenv("SUPABASE_URL")
+            SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
+        # 💡 Re-crear el cliente con el token activo del usuario
+        supabase_autenticado = create_client(SUPABASE_URL, SUPABASE_KEY, options={
+            "global": {
+                "headers": {
+                    "Authorization": f"Bearer {access_token}"
+                }
+            }
+        })
+
+        # ✅ Ahora usa este cliente para insertar
+        supabase_autenticado.table("eventos_usuarios").insert({
             "user_id": session.user.id,
             "evento": "inicio_sesion",
             "fecha_evento": datetime.now().isoformat()
         }).execute()
+
         #
         # evento = {
         #     "user_id": user_id,  # 👈 Usa un user_id real de la tabla usuarios
