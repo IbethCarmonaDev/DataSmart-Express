@@ -19,11 +19,10 @@ def registrar_evento_usuario_test():
         session = supabase.auth.get_session()
         st.write("Rol activo:", session)
 
-
         user_id = session.user.id
 
-        print("user_id:", user_id)
-        print("Tipo:", type(user_id))
+        st.write("user_id:", user_id)
+        st.write("Tipo:", type(user_id))
 
         supabase.table("eventos_usuarios").insert({
             "user_id": user_id,
