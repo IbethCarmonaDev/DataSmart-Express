@@ -19,22 +19,29 @@ def registrar_evento_usuario_test():
         session = supabase.auth.get_session()
         st.write("Rol activo:", session)
 
-        evento = {
-            "user_id": user_id,  # 👈 Usa un user_id real de la tabla usuarios
-            "evento": "test_insercion_manual",
-            "detalle": {"mensaje": "Test desde función aislada"},
-            "fecha_evento": datetime.now(timezone.utc).isoformat()
-        }
+        user_id = session.user.id
+        supabase.table("eventos_usuarios").insert({
+            "user_id": user_id,
+            "evento": "inicio_sesion",
+            "fecha": datetime.now().isoformat()
+        }).execute()
+        #
+        # evento = {
+        #     "user_id": user_id,  # 👈 Usa un user_id real de la tabla usuarios
+        #     "evento": "test_insercion_manual",
+        #     "detalle": {"mensaje": "Test desde función aislada"},
+        #     "fecha_evento": datetime.now(timezone.utc).isoformat()
+        # }
+        #
+        #
+        # respuesta = supabase.table("eventos_usuarios").insert([evento]).execute()
+        #
+        # st.write("📤 Respuesta Supabase:", respuesta.model_dump())
 
-
-        respuesta = supabase.table("eventos_usuarios").insert([evento]).execute()
-
-        st.write("📤 Respuesta Supabase:", respuesta.model_dump())
-
-        if respuesta.status_code != 201:
-            st.error(f"❌ Error Supabase: {respuesta.status_code} - {respuesta.data}")
-        else:
-            st.success("✅ Inserción de prueba exitosa")
+        # if respuesta.status_code != 201:
+        #     st.error(f"❌ Error Supabase: {respuesta.status_code} - {respuesta.data}")
+        # else:
+        #     st.success("✅ Inserción de prueba exitosa")
 
     except Exception as e:
         st.error(f"❌ Excepción al registrar evento: {e}")
