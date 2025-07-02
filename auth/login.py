@@ -51,11 +51,10 @@ def login_usuario(email: str, password: str):
 
             # 📝 Registrar evento de login exitoso
             registrar_evento_usuario(user_id, "inicio_sesion", "Inicio de sesión exitoso")
-            registrar_evento_usuario_test()
+            ## registrar_evento_usuario_test()
 
-            st.write("despues de registrar_evento_usuario")
-            st.stop()
-
+            ##st.write("despues de registrar_evento_usuario")
+            ##st.stop()
 
             return perfil
         else:
