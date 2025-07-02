@@ -8,6 +8,33 @@ from datetime import datetime, timedelta, timezone
 def registrar_evento_usuario_test():
     import streamlit as st
     from auth.conexion_supabase import supabase
+    from datetime import datetime
+
+    try:
+        st.write("🔍 Ejecutando test manual de inserción...")
+
+        user_id = supabase.auth.get_user().user.id
+        st.write("📤 user_id:", user_id)
+
+        session = supabase.auth.get_session()
+        st.write("Rol activo:", session)
+
+        # ✅ Inserta directamente con el cliente autenticado
+        response = supabase.table("eventos_usuarios").insert({
+            "user_id": user_id,
+            "evento": "inicio_sesion",
+            "fecha_evento": datetime.now().isoformat()
+        }).execute()
+
+        st.success("✅ Evento registrado correctamente")
+        st.write(response)
+
+    except Exception as e:
+        st.error(f"❌ Excepción al registrar evento: {e}")
+
+def OLDregistrar_evento_usuario_test():
+    import streamlit as st
+    from auth.conexion_supabase import supabase
     from datetime import datetime, timezone
 
     try:
