@@ -12,6 +12,7 @@ def registrar_evento_usuario_test():
     from auth.conexion_supabase import supabase
     import os
 
+
     try:
         st.write("🔍 Ejecutando test manual de inserción...")
 
