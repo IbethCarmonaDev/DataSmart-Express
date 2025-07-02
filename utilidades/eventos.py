@@ -24,7 +24,7 @@ def registrar_evento_usuario_test():
         supabase.table("eventos_usuarios").insert({
             "user_id": user_id,
             "evento": "inicio_sesion",
-            "fecha": datetime.now().isoformat()
+            "fecha_evento": datetime.now().isoformat()
         }).execute()
 
         #
