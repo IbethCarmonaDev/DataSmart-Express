@@ -16,6 +16,9 @@ def registrar_evento_usuario_test():
         user_id = supabase.auth.get_user().user.id  # ✅ Obtiene el UID del usuario autenticado
         st.write("📤 user_id:", user_id)
 
+        session = supabase.auth.get_session()
+        st.write("Rol activo:", session)
+
         evento = {
             "user_id": user_id,  # 👈 Usa un user_id real de la tabla usuarios
             "evento": "test_insercion_manual",
