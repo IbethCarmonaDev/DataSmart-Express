@@ -59,6 +59,7 @@ def registrar_evento_usuario_test():
             "fecha_evento": datetime.now().isoformat()
         }
 
+
         response = requests.post(url, json=payload, headers=headers)
 
         if response.status_code in (200, 201):
