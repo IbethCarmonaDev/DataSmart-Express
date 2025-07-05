@@ -41,6 +41,7 @@ def registrar_evento_usuario_test():
         if SUPABASE_KEY and SUPABASE_KEY.startswith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"):  # solo detecta algunas
             st.warning("⚠️ Asegúrate de usar la API Key 'anon' (pública), no 'service_role'.")
 
+
         # 📡 Inserción manual con token
         url = f"{SUPABASE_URL}/rest/v1/eventos_usuarios"
         headers = {
