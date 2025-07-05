@@ -56,7 +56,7 @@ def registrar_evento_usuario_test():
         else:
             st.error(f"❌ Error al insertar: {response.status_code}")
             st.code(response.text)
-}
+
     except Exception as e:
         st.error(f"❌ Excepción: {e}")
 
