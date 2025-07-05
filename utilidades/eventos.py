@@ -15,6 +15,69 @@ def registrar_evento_usuario_test():
     try:
         st.write("🔍 Ejecutando test manual de inserción...")
 
+        # 🔐 Obtener sesión y verificar que esté activa
+        session = supabase.auth.get_session()
+        if not session or not session.access_token:
+            st.error("❌ No se encontró una sesión activa o el token está ausente.")
+            return
+
+        access_token = session.access_token
+        user_id = session.user.id
+
+        st.write("🧾 user_id:", user_id)
+
+        # 🌍 Leer SUPABASE_URL y SUPABASE_KEY
+        if "SUPABASE_URL" in st.secrets:
+            SUPABASE_URL = st.secrets["SUPABASE_URL"]
+            SUPABASE_KEY = st.secrets["SUPABASE_KEY"]  # ✅ Debe ser la clave `anon`
+        else:
+            from dotenv import load_dotenv
+            load_dotenv()
+            SUPABASE_URL = os.getenv("SUPABASE_URL")
+            SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
+        # ⚠️ Validación rápida: advertencia si se usa la clave service_role
+        if SUPABASE_KEY and SUPABASE_KEY.startswith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"):  # solo detecta algunas
+            st.warning("⚠️ Asegúrate de usar la API Key 'anon' (pública), no 'service_role'.")
+
+        # 📡 Inserción manual con token
+        url = f"{SUPABASE_URL}/rest/v1/eventos_usuarios"
+        headers = {
+            "apikey": SUPABASE_KEY,
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
+            "Prefer": "return=representation"
+        }
+
+        payload = {
+            "user_id": user_id,
+            "evento": "inicio_sesion",
+            "fecha_evento": datetime.now().isoformat()
+        }
+
+        response = requests.post(url, json=payload, headers=headers)
+
+        if response.status_code in (200, 201):
+            st.success("✅ Inserción con token exitosa")
+            st.write(response.json())
+        else:
+            st.error(f"❌ Error al insertar: {response.status_code}")
+            st.code(response.text)
+
+    except Exception as e:
+        st.error(f"❌ Excepción: {e}")
+
+
+def OLD40registrar_evento_usuario_test():
+    import streamlit as st
+    import requests
+    from datetime import datetime
+    from auth.conexion_supabase import supabase
+    import os
+
+    try:
+        st.write("🔍 Ejecutando test manual de inserción...")
+
         # 🔐 Obtener sesión actual
         session = supabase.auth.get_session()
 
