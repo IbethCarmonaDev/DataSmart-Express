@@ -102,6 +102,7 @@ def OL5registrar_evento_usuario_test():
             "Prefer": "return=representation"
         }
 
+
         payload = {
             "user_id": user_id,
             "evento": "inicio_sesion",
