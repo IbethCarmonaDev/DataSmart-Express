@@ -37,7 +37,9 @@ def registrar_evento_usuario_test():
             SUPABASE_URL = os.getenv("SUPABASE_URL")
             SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
+
         # ⚠️ Validación rápida: advertencia si se usa la clave service_role
+        st.write("🧾 SUPABASE_KEY:", SUPABASE_KEY)
         if SUPABASE_KEY and SUPABASE_KEY.startswith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"):  # solo detecta algunas
             st.warning("⚠️ Asegúrate de usar la API Key 'anon' (pública), no 'service_role'.")
 
