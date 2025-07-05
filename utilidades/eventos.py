@@ -5,6 +5,7 @@ import streamlit
 from auth.conexion_supabase import supabase
 from datetime import datetime, timedelta, timezone
 
+
 def registrar_evento_usuario_test():
     import streamlit as st
     import requests
@@ -17,34 +18,36 @@ def registrar_evento_usuario_test():
 
         # 🔐 Obtener sesión y verificar que esté activa
         session = supabase.auth.get_session()
-        if not session or not session.access_token:
-            st.error("❌ No se encontró una sesión activa o el token está ausente.")
+        if not session or not session.access_token or not session.user:
+            st.error("❌ No se encontró una sesión activa válida.")
             return
-
 
         access_token = session.access_token
         user_id = session.user.id
-
         st.write("🧾 user_id:", user_id)
 
-        # 🌍 Leer SUPABASE_URL y SUPABASE_KEY
+        # 🌍 Leer variables de entorno
         if "SUPABASE_URL" in st.secrets:
             SUPABASE_URL = st.secrets["SUPABASE_URL"]
-            SUPABASE_KEY = st.secrets["SUPABASE_KEY"]  # ✅ Debe ser la clave `anon`
+            SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
         else:
             from dotenv import load_dotenv
             load_dotenv()
             SUPABASE_URL = os.getenv("SUPABASE_URL")
             SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
+        # ⚠️ Validación rápida de clave incorrecta
+        if SUPABASE_KEY and "service_role" in SUPABASE_KEY:
+            st.warning("⚠️ No uses la 'service_role' aquí. Usa la clave pública 'anon'.")
 
-        # ⚠️ Validación rápida: advertencia si se usa la clave service_role
-        st.write("🧾 SUPABASE_KEY:", SUPABASE_KEY)
-        if SUPABASE_KEY and SUPABASE_KEY.startswith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"):  # solo detecta algunas
-            st.warning("⚠️ Asegúrate de usar la API Key 'anon' (pública), no 'service_role'.")
+        # ✅ Usar auth.uid() desde Supabase para asociar el evento
+        # Por tanto, NO enviamos user_id desde el cliente
+        payload = {
+            "evento": "inicio_sesion",
+            "fecha_evento": datetime.now().isoformat()
+        }
 
-
-        # 📡 Inserción manual con token
+        # 📡 Realizar la inserción con token de sesión (autenticado)
         url = f"{SUPABASE_URL}/rest/v1/eventos_usuarios"
         headers = {
             "apikey": SUPABASE_KEY,
@@ -52,13 +55,6 @@ def registrar_evento_usuario_test():
             "Content-Type": "application/json",
             "Prefer": "return=representation"
         }
-
-        payload = {
-            "user_id": user_id,
-            "evento": "inicio_sesion",
-            "fecha_evento": datetime.now().isoformat()
-        }
-
 
         response = requests.post(url, json=payload, headers=headers)
 
