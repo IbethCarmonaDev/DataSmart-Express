@@ -21,6 +21,7 @@ def registrar_evento_usuario_test():
             st.error("❌ No se encontró una sesión activa o el token está ausente.")
             return
 
+
         access_token = session.access_token
         user_id = session.user.id
 
