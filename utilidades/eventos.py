@@ -56,7 +56,7 @@ def registrar_evento_usuario_test():
         else:
             st.error(f"❌ Error al insertar: {response.status_code}")
             st.code(response.text)
-
+}
     except Exception as e:
         st.error(f"❌ Excepción: {e}")
 
@@ -75,6 +75,7 @@ def OLDregistrar_evento_usuario_test():
         st.write("Rol activo:", session)
 
         from supabase import create_client
+
 
         user_id = session.user.id
 
