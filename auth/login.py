@@ -46,6 +46,7 @@ def login_usuario(email: str, password: str):
             perfil = resultado.data[0]
             perfil["status"] = "ok"
 
+
             registrar_evento_usuario("login_exitoso", {"email": email, "plan": perfil.get("plan_actual", "Desconocido")})
 
             registrar_evento_usuario("prueba_manual", {"mensaje": "esto es una prueba"})
