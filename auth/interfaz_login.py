@@ -16,6 +16,7 @@ from auth.conexion_supabase import supabase
 from utilidades.mensajes import mostrar_mensaje_confirmacion
 from auth.login import validar_plan_trial
 
+
 # Cargar variables de entorno
 load_dotenv(override=True)
 
