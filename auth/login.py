@@ -84,11 +84,7 @@ def login_usuario(email: str, password: str):
             return {"status": "no_confirmado"}
 
         registrar_evento_usuario("login_error_tecnico", {"email": email, "error": error_str})
-        mostrar_mensaje_confirmacion(
-            titulo="Problema técnico",
-            mensaje=f"Ocurrió un error inesperado durante el inicio de sesión. Detalle técnico: {error_str}",
-            tipo="error"
-        )
+
         return None
 
 # ---------------------------------------------------------------

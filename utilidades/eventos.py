@@ -20,7 +20,7 @@ def registrar_evento_usuario(evento: str, detalle: dict = None):
     try:
         session = supabase.auth.get_session()
         if not session or not session.access_token or not session.user:
-            st.warning("⚠️ No hay sesión activa. No se registró el evento.")
+            #st.warning("⚠️ No hay sesión activa. No se registró el evento.")
             return
 
         access_token = session.access_token
