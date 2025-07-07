@@ -24,8 +24,10 @@ def registrar_evento_usuario_test():
         access_token = session.access_token
         user_id = session.user.id
         st.write("🧾 user_id:", user_id)
+        st.write("🧾 access_token :", access_token )
 
         st.code(access_token)  # 👈 AQUI
+
 
         # Leer las variables desde secrets o .env
         if "SUPABASE_URL" in st.secrets:
