@@ -94,7 +94,19 @@ def registrar_evento_con_lib():
             "fecha_evento": datetime.now().isoformat()
         }
 
-        result = supabase.table("eventos_usuarios").insert(data).execute()
+        #result = supabase.table("eventos_usuarios").insert(data).execute()from auth.conexion_supabase import crear_cliente_autenticado
+
+        from auth.conexion_supabase import crear_cliente_autenticado
+
+        session = supabase.auth.get_session()
+        if not session or not session.access_token or not session.user:
+            st.error("❌ No se encontró una sesión activa válida.")
+            return
+
+        access_token = session.access_token
+
+        cliente = crear_cliente_autenticado(access_token)
+        result = cliente.table("eventos_usuarios").insert(data).execute()
 
         if result.status_code in [200, 201]:
             st.success("✅ Inserción con Supabase Client exitosa")
