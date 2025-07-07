@@ -123,6 +123,10 @@ def registrar_evento_con_lib():
     except Exception as e:
         st.error(f"❌ Excepción: {e}")
 
+import streamlit as st
+import requests
+from datetime import datetime
+from auth.conexion_supabase import supabase, SUPABASE_URL
 
 def registrar_evento_usuario_requests():
     st.write("🔍 Test de inserción manual con token")
@@ -135,9 +139,7 @@ def registrar_evento_usuario_requests():
     access_token = session.access_token
     user_id = session.user.id
     st.write("🧾 user_id:", user_id)
-
-    # ⚠️ Cargar URL desde cliente actual (o manual si prefieres)
-    SUPABASE_URL = supabase._supabase_url
+    st.write("entró a registrar_evento_usuario")
 
     payload = {
         "user_id": user_id,
@@ -146,7 +148,7 @@ def registrar_evento_usuario_requests():
     }
 
     headers = {
-        "Authorization": f"Bearer {access_token}",  # ⚠️ Solo esto, sin apikey
+        "Authorization": f"Bearer {access_token}",
         "Content-Type": "application/json",
         "Prefer": "return=representation"
     }
