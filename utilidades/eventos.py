@@ -29,6 +29,7 @@ def registrar_evento_usuario_test():
         st.code(access_token)  # 👈 AQUI
 
 
+
         # Leer las variables desde secrets o .env
         if "SUPABASE_URL" in st.secrets:
             SUPABASE_URL = st.secrets["SUPABASE_URL"]
@@ -67,6 +68,40 @@ def registrar_evento_usuario_test():
         else:
             st.error(f"❌ Error al insertar: {response.status_code}")
             st.code(response.text)
+
+    except Exception as e:
+        st.error(f"❌ Excepción: {e}")
+
+from auth.conexion_supabase import supabase
+
+def registrar_evento_con_lib():
+    import streamlit as st
+    from datetime import datetime
+
+    try:
+        session = supabase.auth.get_session()
+        if not session or not session.user:
+            st.error("❌ No hay sesión activa.")
+            return
+
+        user_id = session.user.id
+        st.write("🧾 user_id:", user_id)
+
+        # Inserción usando la librería oficial
+        data = {
+            "user_id": user_id,
+            "evento": "inicio_sesion",
+            "fecha_evento": datetime.now().isoformat()
+        }
+
+        result = supabase.table("eventos_usuarios").insert(data).execute()
+
+        if result.status_code in [200, 201]:
+            st.success("✅ Inserción con Supabase Client exitosa")
+            st.write(result.data)
+        else:
+            st.error(f"❌ Error al insertar: {result.status_code}")
+            st.code(result)
 
     except Exception as e:
         st.error(f"❌ Excepción: {e}")
