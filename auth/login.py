@@ -7,6 +7,10 @@ from utilidades.eventos import registrar_evento_usuario
 
 def login_usuario(email: str, password: str):
     try:
+
+        registrar_evento_usuario("prueba_manual", {"mensaje": "esto es una prueba"})
+
+
         # 🔐 Autenticación con Supabase Auth
         auth_response = supabase.auth.sign_in_with_password({
             "email": email,
