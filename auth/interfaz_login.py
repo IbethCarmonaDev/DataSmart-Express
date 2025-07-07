@@ -113,7 +113,7 @@ def mostrar_login():
                                 usuario = validar_plan_trial(usuario)
                                 st.session_state.usuario = usuario
 
-                                st.write("st.session_state.usuario;",st.session_state.usuario)
+                                #st.write("st.session_state.usuario;",st.session_state.usuario)
 
                                 st.success(f"✅ Bienvenido/a {usuario['nombre']}")
                                 st.rerun()
