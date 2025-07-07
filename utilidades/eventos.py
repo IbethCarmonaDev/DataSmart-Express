@@ -15,7 +15,7 @@ def registrar_evento_usuario_test():
     try:
         st.write("🔍 Ejecutando test manual de inserción...")
 
-        # 🔐 Obtener sesión y verificar que esté activa
+        # 🔐 Obtener sesión actual del usuario autenticado
         session = supabase.auth.get_session()
         if not session or not session.access_token or not session.user:
             st.error("❌ No se encontró una sesión activa válida.")
@@ -25,7 +25,7 @@ def registrar_evento_usuario_test():
         user_id = session.user.id
         st.write("🧾 user_id:", user_id)
 
-        # 🌍 Leer variables de entorno
+        # Leer las variables desde secrets o .env
         if "SUPABASE_URL" in st.secrets:
             SUPABASE_URL = st.secrets["SUPABASE_URL"]
             SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
@@ -35,18 +35,18 @@ def registrar_evento_usuario_test():
             SUPABASE_URL = os.getenv("SUPABASE_URL")
             SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
-        # ⚠️ Validación rápida de clave incorrecta
+        # Validación rápida
         if SUPABASE_KEY and "service_role" in SUPABASE_KEY:
             st.warning("⚠️ No uses la 'service_role' aquí. Usa la clave pública 'anon'.")
 
-        # ✅ Usar auth.uid() desde Supabase para asociar el evento
-        # Por tanto, NO enviamos user_id desde el cliente
+        # 🔁 Payload incluyendo el user_id
         payload = {
+            "user_id": user_id,
             "evento": "inicio_sesion",
             "fecha_evento": datetime.now().isoformat()
         }
 
-        # 📡 Realizar la inserción con token de sesión (autenticado)
+        # 📡 Realizar inserción
         url = f"{SUPABASE_URL}/rest/v1/eventos_usuarios"
         headers = {
             "apikey": SUPABASE_KEY,
