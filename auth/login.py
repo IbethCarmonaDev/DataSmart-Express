@@ -8,9 +8,6 @@ from utilidades.eventos import registrar_evento_usuario
 def login_usuario(email: str, password: str):
     try:
 
-        registrar_evento_usuario("prueba_manual", {"mensaje": "esto es una prueba"})
-        st.write("despues de prueba")
-        st.stop()
 
         # 🔐 Autenticación con Supabase Auth
         auth_response = supabase.auth.sign_in_with_password({
@@ -50,6 +47,10 @@ def login_usuario(email: str, password: str):
             perfil["status"] = "ok"
 
             registrar_evento_usuario("login_exitoso", {"email": email, "plan": perfil.get("plan_actual", "Desconocido")})
+
+            registrar_evento_usuario("prueba_manual", {"mensaje": "esto es una prueba"})
+            st.write("despues de prueba")
+            st.stop()
 
             # 🔄 Validar plan (y posiblemente actualizarlo si expiró)
             perfil = validar_plan_trial(perfil)
