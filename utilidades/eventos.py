@@ -126,7 +126,8 @@ def registrar_evento_con_lib():
 import streamlit as st
 import requests
 from datetime import datetime
-from auth.conexion_supabase import supabase, SUPABASE_URL
+from auth.conexion_supabase import supabase,  SUPABASE_URL, SUPABASE_KEY
+
 
 def registrar_evento_usuario_requests():
     st.write("🔍 Test de inserción manual con token")
@@ -147,8 +148,10 @@ def registrar_evento_usuario_requests():
         "fecha_evento": datetime.now().isoformat()
     }
 
+
     headers = {
         "Authorization": f"Bearer {access_token}",
+        "apikey": SUPABASE_KEY,
         "Content-Type": "application/json",
         "Prefer": "return=representation"
     }
