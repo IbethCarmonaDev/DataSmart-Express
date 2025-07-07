@@ -3,6 +3,8 @@ from datetime import datetime
 import streamlit as st
 from auth.conexion_supabase import supabase
 from utilidades.eventos import registrar_evento_usuario
+from supabase import Client
+from auth.conexion_supabase import supabase
 
 
 def login_usuario(email: str, password: str):
@@ -47,6 +49,11 @@ def login_usuario(email: str, password: str):
             perfil["status"] = "ok"
 
             registrar_evento_usuario("login_exitoso", {"email": email, "plan": perfil.get("plan_actual", "Desconocido")})
+
+            try:
+                supabase.rpc("eliminar_eventos_antiguos", {"uid": user_id}).execute()
+            except Exception as e:
+                print(f"⚠️ Error al depurar eventos del usuario en login: {e}")
 
             # 🔄 Validar plan (y posiblemente actualizarlo si expiró)
             perfil = validar_plan_trial(perfil)
