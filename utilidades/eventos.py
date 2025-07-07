@@ -2,6 +2,11 @@ from datetime import datetime
 
 import streamlit
 
+import streamlit as st
+import requests
+from datetime import datetime
+from auth.conexion_supabase import supabase
+
 from auth.conexion_supabase import supabase
 from datetime import datetime, timedelta, timezone
 
@@ -118,6 +123,43 @@ def registrar_evento_con_lib():
     except Exception as e:
         st.error(f"❌ Excepción: {e}")
 
+
+def registrar_evento_usuario_requests():
+    st.write("🔍 Test de inserción manual con token")
+
+    session = supabase.auth.get_session()
+    if not session or not session.access_token or not session.user:
+        st.error("❌ No hay sesión válida")
+        return
+
+    access_token = session.access_token
+    user_id = session.user.id
+    st.write("🧾 user_id:", user_id)
+
+    # ⚠️ Cargar URL desde cliente actual (o manual si prefieres)
+    SUPABASE_URL = supabase._supabase_url
+
+    payload = {
+        "user_id": user_id,
+        "evento": "inicio_sesion",
+        "fecha_evento": datetime.now().isoformat()
+    }
+
+    headers = {
+        "Authorization": f"Bearer {access_token}",  # ⚠️ Solo esto, sin apikey
+        "Content-Type": "application/json",
+        "Prefer": "return=representation"
+    }
+
+    url = f"{SUPABASE_URL}/rest/v1/eventos_usuarios"
+    response = requests.post(url, json=payload, headers=headers)
+
+    if response.status_code in (200, 201):
+        st.success("✅ Inserción exitosa con token")
+        st.write(response.json())
+    else:
+        st.error(f"❌ Error {response.status_code}")
+        st.code(response.text)
 
 def OLD40registrar_evento_usuario_test():
     import streamlit as st

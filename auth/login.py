@@ -4,7 +4,8 @@ import streamlit as st
 from auth.conexion_supabase import supabase
 ##from auth.login import validar_plan_trial
 
-from utilidades.eventos import registrar_evento_usuario, registrar_evento_usuario_test, registrar_evento_con_lib
+from utilidades.eventos import (registrar_evento_usuario, registrar_evento_usuario_test, registrar_evento_con_lib,
+                                registrar_evento_usuario_requests)
 
 
 def login_usuario(email: str, password: str):
@@ -53,8 +54,8 @@ def login_usuario(email: str, password: str):
             # 📝 Registrar evento de login exitoso
             #registrar_evento_usuario(user_id, "inicio_sesion", "Inicio de sesión exitoso")
             #registrar_evento_usuario_test()
-
-            registrar_evento_con_lib()
+            #registrar_evento_con_lib()
+            registrar_evento_usuario_requests()
 
             st.write("despues de registrar_evento_usuario")
             st.stop()
