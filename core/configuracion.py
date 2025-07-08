@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from datetime import datetime
+import pandas as pd
 
 def registrar_log(nombre_evento, duracion):
     log_dir = "logs"
@@ -13,4 +14,17 @@ def registrar_log(nombre_evento, duracion):
     else:
         df_log.to_csv(ruta_log, index=False)
 
+
+def obtener_parametros(hoja: str, ruta: str):
+    """
+    Lee una hoja del archivo de parámetros.
+
+    Args:
+        hoja (str): Nombre de la hoja.
+        ruta (str): Ruta completa del archivo Excel.
+
+    Returns:
+        DataFrame: Datos de la hoja.
+    """
+    return pd.read_excel(ruta, sheet_name=hoja)
 

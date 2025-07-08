@@ -1,15 +1,15 @@
 # interfaz_planes.py
 import streamlit as st
 import pandas as pd
-from configuracion import obtener_parametros  # Tu lector de Excel
+from core.configuracion import obtener_parametros
 
-def mostrar_interfaz_planes():
+def mostrar_interfaz_planes(ruta_parametros: str):  # <-- añadimos ruta como argumento
     st.title("🧩 Planes de Suscripción - DataSmart Express")
     st.markdown("Consulta las funcionalidades incluidas en cada plan y elige el que más se adapte a tus necesidades.")
 
-    # Leer hojas de Excel
-    df_planes_func = obtener_parametros('PLANES')
-    df_planes_analisis = obtener_parametros('EN_ANALISIS')
+    # Leer hojas desde Excel
+    df_planes_func = obtener_parametros('PLANES', ruta_parametros)
+    df_planes_analisis = obtener_parametros('EN_ANALISIS', ruta_parametros)
 
     # Validar que ambas hojas tengan columna DESCRIPCION
     if 'DESCRIPCION' not in df_planes_func.columns or 'DESCRIPCION' not in df_planes_analisis.columns:
