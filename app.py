@@ -109,7 +109,7 @@ archivo_usuario = st.file_uploader("📂 Carga tu archivo con datos contables y 
 ruta_parametros = "data/Parametros.xlsx"
 
 if not archivo_usuario:
-    mostrar_interfaz_planes()
+    mostrar_interfaz_planes(ruta_parametros)
     st.stop()
 
 # --- Parámetros generales ---
