@@ -144,6 +144,7 @@ def validar_plan_trial(usuario):
                         fecha_fin=hoy.isoformat()
                     )
 
+
                     registrar_evento_usuario("trial_expirado", {
                         "user_id": usuario["user_id"],
                         "dias_trial": dias_trial,
