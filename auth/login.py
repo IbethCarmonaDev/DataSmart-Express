@@ -3,7 +3,7 @@ from datetime import datetime
 import streamlit as st
 from auth.conexion_supabase import supabase
 from utilidades.eventos import registrar_evento_usuario
-from utilidades.mensajes import mostrar_mensaje_confirmacion  # ✅ Mensajes visuales
+from utilidades.mensajes import mostrar_mensaje_confirmacion
 
 def login_usuario(email: str, password: str):
     try:
@@ -24,6 +24,7 @@ def login_usuario(email: str, password: str):
                 return {"status": "no_confirmado"}
             else:
                 registrar_evento_usuario("login_fallido_credenciales", {"email": email})
+                from utilidades.mensajes import mostrar_mensaje_confirmacion
                 mostrar_mensaje_confirmacion(
                     titulo="Error de inicio de sesión",
                     mensaje="Correo o contraseña incorrectos. Por favor, verifica e intenta nuevamente.",
@@ -34,6 +35,7 @@ def login_usuario(email: str, password: str):
         # ✅ Obtener el ID del usuario autenticado
         user_id = getattr(user, "id", None)
         if not user_id:
+            from utilidades.mensajes import mostrar_mensaje_confirmacion
             mostrar_mensaje_confirmacion(
                 titulo="Error interno",
                 mensaje="No se pudo obtener el ID del usuario autenticado.",
@@ -66,9 +68,34 @@ def login_usuario(email: str, password: str):
             # 🔄 Validar plan (y posiblemente actualizarlo si expiró)
             perfil = validar_plan_trial(perfil)
 
+            # ✅ Mostrar mensaje si el plan fue degradado por expiración
+            # if perfil.get("plan_actual") == "Free" and perfil.get("dias_restantes_trial") == 0:
+            #     from utilidades.mensajes import mostrar_mensaje_confirmacion
+            #     mostrar_mensaje_confirmacion(
+            #         titulo="Fin del periodo de prueba",
+            #         mensaje="Tu periodo de prueba ha finalizado. Ahora estás en el plan <strong>Free</strong>. Puedes seguir usando la app con funcionalidades limitadas o actualizar tu plan en cualquier momento.",
+            #         tipo="info"
+            #     )
+            #
+
+            if perfil.get("plan_actual") == "Free" and perfil.get("dias_restantes_trial") == 0:
+                from utilidades.mensajes import mostrar_mensaje_confirmacion
+                mostrar_mensaje_confirmacion(
+                    titulo="🎯 Tu prueba gratuita ha finalizado",
+                    mensaje=f"""
+                    Tu periodo de prueba de <strong>{perfil.get("dias_trial", 7)} días</strong> ha finalizado el <strong>{perfil.get("fecha_fin_trial")}</strong>.<br><br>
+                    Actualmente estás en el plan <strong>Free</strong> con funcionalidades limitadas. Para acceder a todas las herramientas de análisis, te invitamos a explorar nuestros planes disponibles.
+                    """,
+                    tipo="info",
+                    boton_texto="Ver planes disponibles",
+                    boton_callback=lambda: st.session_state.update({"modo": "planes"}),
+                    mensaje_final="Gracias por usar DataSmart Express 💙"
+                )
+
             return perfil
         else:
             registrar_evento_usuario("login_sin_perfil", {"user_id": user_id, "email": email})
+            from utilidades.mensajes import mostrar_mensaje_confirmacion
             mostrar_mensaje_confirmacion(
                 titulo="Perfil no encontrado",
                 mensaje="Usuario autenticado pero no tiene perfil registrado.",

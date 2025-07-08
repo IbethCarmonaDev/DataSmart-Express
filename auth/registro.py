@@ -69,6 +69,7 @@ def registrar_usuario(nombre, correo, password, idioma="es"):
             mensaje="🎉 Tu cuenta ha sido creada correctamente. Revisa tu correo para confirmar tu email.",
             tipo="success"
         )
+        registrar_evento_usuario("Registro exitoso", {"email": correo})
         return {"status": "ok"}
 
     except Exception as e:
@@ -83,7 +84,8 @@ def registrar_usuario(nombre, correo, password, idioma="es"):
         else:
             clave = None
 
-        registrar_evento_usuario("registro_error", {"email": correo, "error": error_str})
+        registrar_evento_usuario("Registro Error", {"email": correo, "error": error_str})
+
 
         mensaje = obtener_mensaje_error(clave, idioma) if clave else f"❌ Error: {e}"
         mostrar_mensaje_confirmacion(
