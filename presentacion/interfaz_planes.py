@@ -51,10 +51,24 @@ def mostrar_interfaz_planes(ruta_parametros: str):
 
         col1, col2 = st.columns([3, 1])
         with col1:
-            precio = f"${int(row['PRECIO_COP']):,} COP".replace(",", ".")
+            #precio = f"${int(row['PRECIO_COP']):,} COP".replace(",", ".")
+
+            moneda = row['MONEDA'].strip().upper()
+            precio = row['PRECIO']
+
+            if moneda == "COP":
+                precio_str = f"${int(precio):,} COP".replace(",", ".")
+            elif moneda == "USD":
+                precio_str = f"${precio:.2f} USD"
+            else:
+                precio_str = f"{precio} {moneda}"
+
             st.markdown(f"### ✨ Plan {plan}")
-            st.markdown(f"💵 **{precio} / {int(row['DURACION_DIAS'])} días**")
+            #st.markdown(f"💵 **{precio} / {int(row['DURACION_DIAS'])} días**")
+            st.markdown(f"💵 **{precio_str} / {int(row['DURACION_DIAS'])} días**")
             st.markdown(f"📝 _{row['DESCRIPCION CORTA']}_")
+
+
 
             beneficios = df_union[df_union[plan] == 1]["DESCRIPCION"].tolist()
             for b in beneficios[:6]:
