@@ -10,7 +10,24 @@ from auth.conexion_supabase import supabase
 from utilidades.eventos import registrar_evento_usuario
 from datetime import datetime, timedelta, timezone
 
-def actualizar_plan_usuario(user_id: str, nuevo_plan: str, fecha_fin_trial: str = None):
+def actualizar_plan_usuario(supabase, user_id: str, nuevo_plan: str, fecha_fin_trial: str = None):
+    try:
+        update_data = {
+            "plan_actual": nuevo_plan
+        }
+
+        if fecha_fin_trial:
+            update_data["fecha_fin_trial"] = fecha_fin_trial
+
+        response = supabase.table("usuarios").update(update_data).eq("user_id", user_id).execute()
+
+        if response.status_code not in (200, 204):
+            st.error(f"❌ Error actualizando plan: {response.status_code}")
+    except Exception as e:
+        st.error(f"❌ Excepción al actualizar plan en Supabase: {e}")
+
+
+def OLD2actualizar_plan_usuario(user_id: str, nuevo_plan: str, fecha_fin_trial: str = None):
     try:
         update_data = {
             "plan_actual": nuevo_plan

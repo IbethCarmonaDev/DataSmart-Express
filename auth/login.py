@@ -138,12 +138,13 @@ def validar_plan_trial(usuario):
                     usuario["dias_restantes_trial"] = 0
                     usuario["fecha_fin_trial"] = hoy.isoformat()
 
-                    actualizar_plan_usuario(
-                        user_id=usuario["user_id"],
-                        nuevo_plan="Free",
-                        fecha_fin=hoy.isoformat()
-                    )
+                    # actualizar_plan_usuario(
+                    #     user_id=usuario["user_id"],
+                    #     nuevo_plan="Free",
+                    #     fecha_fin=hoy.isoformat()
+                    # )
 
+                    actualizar_plan_usuario(supabase, usuario["user_id"], "Free", hoy.isoformat())
 
                     registrar_evento_usuario("trial_expirado", {
                         "user_id": usuario["user_id"],
