@@ -76,6 +76,7 @@ def mostrar_interfaz_planes(ruta_parametros: str):
             if len(beneficios) > 6:
                 st.markdown("...y más funcionalidades")
 
+
         with col2:
             st.button(f"Suscribirme a {plan}", key=f"btn_{plan.lower()}")
 
