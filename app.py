@@ -23,6 +23,7 @@ from auth.verificacion import mostrar_verificacion_o_reset, manejar_signup
 from auth.redireccion_fragmento import redireccionar_fragmento_si_es_necesario
 from auth.manejo_confirmacion import insertar_perfil_post_signup
 from utilidades.mensajes import mostrar_mensaje_confirmacion
+from presentacion.interfaz_planes import mostrar_interfaz_planes
 
 # --- Configuración inicial ---
 load_dotenv(override=True)
@@ -106,6 +107,10 @@ st.markdown(f"👤 Usuario: {st.session_state.usuario['nombre']} | Plan: **{st.s
 
 archivo_usuario = st.file_uploader("📂 Carga tu archivo con datos contables y clasificación de cuentas", type=["xlsx"])
 ruta_parametros = "data/Parametros.xlsx"
+
+if not archivo_usuario:
+    mostrar_interfaz_planes()
+    st.stop()
 
 # --- Parámetros generales ---
 df_kpis_param = pd.read_excel(ruta_parametros, sheet_name="KPIS_FINANCIEROS")

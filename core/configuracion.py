@@ -12,3 +12,5 @@ def registrar_log(nombre_evento, duracion):
         df_log.to_csv(ruta_log, mode="a", header=False, index=False)
     else:
         df_log.to_csv(ruta_log, index=False)
+
+
