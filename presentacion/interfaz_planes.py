@@ -68,8 +68,6 @@ def mostrar_interfaz_planes(ruta_parametros: str):
             st.markdown(f"💵 **{precio_str} / {int(row['DURACION_DIAS'])} días**")
             st.markdown(f"📝 _{row['DESCRIPCION CORTA']}_")
 
-
-
             beneficios = df_union[df_union[plan] == 1]["DESCRIPCION"].tolist()
             for b in beneficios[:6]:
                 st.markdown(f"- {b.strip()}")
