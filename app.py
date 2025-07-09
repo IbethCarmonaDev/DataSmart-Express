@@ -191,8 +191,8 @@ if archivo_usuario:
             elif tab == "📤 Exportar":
                 mostrar_exportacion(df_estado, df_kpis_filtrados, año, mes, config_plan)
 
-# --- Cierre de sesión ---
-st.sidebar.markdown("---")
-if st.sidebar.button("🔓 Cerrar sesión"):
-    del st.session_state["usuario"]
-    st.rerun()
+# # --- Cierre de sesión ---
+# st.sidebar.markdown("---")
+# if st.sidebar.button("🔓 Cerrar sesión"):
+#     del st.session_state["usuario"]
+#     st.rerun()
