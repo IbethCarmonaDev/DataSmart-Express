@@ -25,6 +25,7 @@ from auth.manejo_confirmacion import insertar_perfil_post_signup
 from utilidades.mensajes import mostrar_mensaje_confirmacion
 from presentacion.interfaz_planes import mostrar_interfaz_planes
 from presentacion.layout_base import mostrar_layout
+from secciones.seccion_inicio import mostrar_inicio
 
 # --- Configuración inicial ---
 load_dotenv(override=True)
@@ -108,7 +109,9 @@ st.markdown("## 📈 DataSmart Express")
 st.markdown("_Estado de Resultados Inteligente con KPIs Financieros_", unsafe_allow_html=True)
 st.markdown(f"👤 Usuario: {st.session_state.usuario['nombre']} | Plan: **{st.session_state.usuario['plan_actual']}**")
 
-archivo_usuario = st.file_uploader("📂 Carga tu archivo con datos contables y clasificación de cuentas", type=["xlsx"])
+#archivo_usuario = st.file_uploader("📂 Carga tu archivo con datos contables y clasificación de cuentas", type=["xlsx"])
+archivo_usuario = mostrar_inicio()
+
 ruta_parametros = "data/Parametros.xlsx"
 
 if not archivo_usuario:
