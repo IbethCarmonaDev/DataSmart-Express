@@ -16,6 +16,7 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
             f"<h4 style='margin-top:18px; color:#004080;'>DataSmart Express</h4>",
             unsafe_allow_html=True
         )
+
     with col3:
         st.markdown(
             f"<div style='text-align:right; margin-top:22px;'>👤 <strong>{nombre_usuario}</strong><br>🧾 Plan: <strong>{plan_usuario}</strong></div>",
