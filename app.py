@@ -110,7 +110,7 @@ st.markdown("_Estado de Resultados Inteligente con KPIs Financieros_", unsafe_al
 st.markdown(f"👤 Usuario: {st.session_state.usuario['nombre']} | Plan: **{st.session_state.usuario['plan_actual']}**")
 
 #archivo_usuario = st.file_uploader("📂 Carga tu archivo con datos contables y clasificación de cuentas", type=["xlsx"])
-archivo_usuario = mostrar_inicio()
+archivo_usuario = mostrar_inicio(usuario["nombre"], usuario["plan_actual"])
 
 ruta_parametros = "data/Parametros.xlsx"
 
