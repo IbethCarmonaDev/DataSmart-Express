@@ -1,16 +1,19 @@
 import streamlit as st
 
 def mostrar_inicio(usuario, plan_actual):
-    st.markdown("## 👋 Bienvenida a DataSmart Express")
+    st.markdown("## 👋 Te damos la bienvenida a DataSmart Express")
+
+    st.markdown(f"""    
+    Tu plataforma para visualizar y analizar estados financieros de forma inteligente.
+    
+    #### 🎉 ¡Hola, {usuario}!
+    """)
+
 
     # Aviso de plan Free
     if plan_actual == "Free":
         st.warning("⚠️ Tu período de prueba ha finalizado. Ahora estás en el plan **Free**.\n\nAlgunas funcionalidades estarán limitadas.")
 
-    st.markdown(f"""
-    #### 🎉 ¡Hola, {usuario}!
-    Bienvenida a **DataSmart Express** — Tu plataforma para visualizar y analizar estados financieros de forma inteligente.
-    """)
 
     st.markdown("""
     ---

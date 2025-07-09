@@ -90,24 +90,24 @@ if plan == "Premium_trial" and dias_restantes is not None and dias_restantes > 0
         mensaje=f"📆 Te quedan {dias_restantes} días para disfrutar todas las funcionalidades.",
         tipo="info"
     )
-elif plan == "Free" and usuario.get("fecha_inicio_trial"):
-    mostrar_mensaje_confirmacion(
-        titulo="⛔ Tu periodo de prueba ha finalizado",
-        mensaje="Has pasado al plan Free. Algunas funcionalidades estarán limitadas.",
-        tipo="warning"
-    )
+# elif plan == "Free" and usuario.get("fecha_inicio_trial"):
+#     mostrar_mensaje_confirmacion(
+#         titulo="⛔ Tu periodo de prueba ha finalizado",
+#         mensaje="Has pasado al plan Free. Algunas funcionalidades estarán limitadas.",
+#         tipo="warning"
+#     )
 
 
 # --- Encabezado general ---
-try:
-    logo = Image.open("Logo.png")
-    st.image(logo, width=200)
-except:
-    pass
+# try:
+#     logo = Image.open("Logo.png")
+#     st.image(logo, width=200)
+# except:
+#     pass
 
-st.markdown("## 📈 DataSmart Express")
-st.markdown("_Estado de Resultados Inteligente con KPIs Financieros_", unsafe_allow_html=True)
-st.markdown(f"👤 Usuario: {st.session_state.usuario['nombre']} | Plan: **{st.session_state.usuario['plan_actual']}**")
+# st.markdown("## 📈 DataSmart Express")
+# st.markdown("_Estado de Resultados Inteligente con KPIs Financieros_", unsafe_allow_html=True)
+# st.markdown(f"👤 Usuario: {st.session_state.usuario['nombre']} | Plan: **{st.session_state.usuario['plan_actual']}**")
 
 #archivo_usuario = st.file_uploader("📂 Carga tu archivo con datos contables y clasificación de cuentas", type=["xlsx"])
 archivo_usuario = mostrar_inicio(usuario["nombre"], usuario["plan_actual"])
