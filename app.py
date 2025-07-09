@@ -24,6 +24,7 @@ from auth.redireccion_fragmento import redireccionar_fragmento_si_es_necesario
 from auth.manejo_confirmacion import insertar_perfil_post_signup
 from utilidades.mensajes import mostrar_mensaje_confirmacion
 from presentacion.interfaz_planes import mostrar_interfaz_planes
+from presentacion.layout_base import mostrar_layout
 
 # --- Configuración inicial ---
 load_dotenv(override=True)
@@ -77,6 +78,8 @@ if "usuario" not in st.session_state:
 
 # --- Mostrar mensaje según plan ---
 usuario = st.session_state["usuario"]
+mostrar_layout(nombre_usuario=usuario["nombre"], plan_usuario=usuario["plan_actual"])
+
 plan = usuario.get("plan_actual")
 dias_restantes = usuario.get("dias_restantes_trial")
 
