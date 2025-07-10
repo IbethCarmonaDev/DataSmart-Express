@@ -1,5 +1,5 @@
-import streamlit as st
 from PIL import Image
+import streamlit as st
 
 def mostrar_layout(nombre_usuario: str, plan_usuario: str):
     st.markdown(
@@ -9,7 +9,7 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.5rem 1rem;
+            padding: 0.7rem 1rem;
             background-color: #f8f9fa;
             border-bottom: 1px solid #ddd;
         }
@@ -18,17 +18,24 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
             align-items: center;
         }
         .top-bar-left img {
-            height: 50px;
-            margin-right: 10px;
+            height: 48px;
+            margin-right: 15px;
         }
-        .top-bar-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        .top-bar-right span {
+        .user-info {
             font-weight: bold;
             color: #4B0082;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .plan-info {
+            font-weight: bold;
+            color: #4B0082;
+            margin-left: 8px;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 0.6rem;
         }
         .nav-button {
             padding: 0.4rem 0.8rem;
@@ -36,32 +43,38 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
             background-color: #e9ecef;
             border: none;
             font-size: 0.9rem;
+            cursor: pointer;
         }
         </style>
         """,
         unsafe_allow_html=True
     )
 
-    # Logo (usa tu archivo actual o reemplaza la ruta si lo tienes en otra carpeta)
     logo = Image.open("Logo.png")
-    # st.image(logo, width=150)
 
-    # Barra superior en columnas
-    col1, col2 = st.columns([1, 2])
-
-    with col1:
-        st.image(logo, width=150)
-
-    with col2:
-        st.markdown(f"""
-            <div class='top-bar-right'>
-                👤 <span>{nombre_usuario}</span> | 📄 Plan: <span>{plan_usuario}</span> &nbsp;&nbsp;
-                <button class='nav-button'>Inicio</button>
-                <button class='nav-button'>Planes</button>
-                <button class='nav-button'>Perfil</button>
-                <button class='nav-button'>Cerrar sesión</button>
+    st.markdown(f"""
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <img src="data:image/png;base64,{logo_to_base64(logo)}" alt="Logo">
+                <div class="user-info">
+                    👤 {nombre_usuario} | 📄 Plan: <span class="plan-info">{plan_usuario}</span>
+                </div>
             </div>
-        """, unsafe_allow_html=True)
+            <div class="nav-buttons">
+                <button class="nav-button">Inicio</button>
+                <button class="nav-button">Planes</button>
+                <button class="nav-button">Perfil</button>
+                <button class="nav-button">Cerrar sesión</button>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+def logo_to_base64(img):
+    import base64
+    from io import BytesIO
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    return base64.b64encode(buffer.getvalue()).decode()
 
 # import streamlit as st
 # from PIL import Image
