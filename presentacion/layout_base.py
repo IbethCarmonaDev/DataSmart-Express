@@ -44,13 +44,13 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
 
     # Logo (usa tu archivo actual o reemplaza la ruta si lo tienes en otra carpeta)
     logo = Image.open("Logo.png")
-    st.image(logo, width=150)
+    # st.image(logo, width=150)
 
     # Barra superior en columnas
     col1, col2 = st.columns([1, 2])
 
     with col1:
-        st.image(logo, width=120)
+        st.image(logo, width=150)
 
     with col2:
         st.markdown(f"""
