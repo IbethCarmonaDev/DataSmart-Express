@@ -12,12 +12,11 @@ def image_to_base64(image):
     img_str = base64.b64encode(buffer.getvalue()).decode("utf-8")
     return img_str
 
-
 def mostrar_layout(nombre_usuario: str, plan_usuario: str):
     logo = Image.open("Logo.png")
     logo_base64 = image_to_base64(logo)
 
-    # Estilos para encabezado sticky
+    # CSS sticky + estilos
     st.markdown("""
         <style>
         .sticky-header {
@@ -45,20 +44,14 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
             font-weight: bold;
             color: #4B0082;
         }
-        .botones button {
-            background-color: white;
-            color: #4B0082;
-            border: 1px solid #4B0082;
-            border-radius: 6px;
-            padding: 5px 12px;
-            margin-left: 6px;
-            font-weight: bold;
-            cursor: pointer;
+        .botones {
+            display: flex;
+            gap: 10px;
         }
         </style>
     """, unsafe_allow_html=True)
 
-    # HTML: cabecera sticky con botones
+    # Layout con columnas para mantener el diseño y botones funcionales
     st.markdown(f"""
         <div class="sticky-header">
             <div class="usuario-info">
@@ -68,21 +61,23 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
                     <span>📄 Plan: {plan_usuario}</span>
                 </div>
             </div>
-            <div class="botones">
-                <form action="" method="get">
-                    <button type="submit" name="pagina" value="Inicio">Inicio</button>
-                    <button type="submit" name="pagina" value="Planes">Planes</button>
-                    <button type="submit" name="pagina" value="Perfil">Perfil</button>
-                    <button type="submit" name="pagina" value="Salir">Cerrar sesión</button>
-                </form>
-            </div>
         </div>
     """, unsafe_allow_html=True)
 
-    # Leer query param desde st.query_params
-    pagina = st.query_params.get("pagina", None)
-    if pagina:
-        cambiar_pagina(pagina)
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+
+    with col1:
+        if st.button("🏠 Inicio"):
+            cambiar_pagina("Inicio")
+    with col2:
+        if st.button("💼 Planes"):
+            cambiar_pagina("Planes")
+    with col3:
+        if st.button("👤 Perfil"):
+            cambiar_pagina("Perfil")
+    with col4:
+        if st.button("🚪 Cerrar sesión"):
+            cambiar_pagina("Salir")
 
 
 # import streamlit as st
