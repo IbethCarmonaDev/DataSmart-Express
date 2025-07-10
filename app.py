@@ -30,10 +30,13 @@ from secciones.seccion_inicio import mostrar_inicio
 # --- Configuración inicial ---
 load_dotenv(override=True)
 openai.api_key = os.getenv("OPENAI_API_KEY")
-st.set_page_config(page_title="DataSmart Express", layout="wide")
+
+
+#st.set_page_config(page_title="DataSmart Express", layout="wide")
 
 # Detectar fragmento y redirigir
 redireccionar_fragmento_si_es_necesario()
+
 
 # --- Leer parámetros desde la URL ---
 params = st.query_params
