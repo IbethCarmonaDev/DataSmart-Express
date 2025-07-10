@@ -32,7 +32,7 @@ load_dotenv(override=True)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
-#st.set_page_config(page_title="DataSmart Express", layout="wide")
+st.set_page_config(page_title="", layout="wide")
 
 # Detectar fragmento y redirigir
 redireccionar_fragmento_si_es_necesario()
@@ -114,6 +114,7 @@ if plan == "Premium_trial" and dias_restantes is not None and dias_restantes > 0
 
 #archivo_usuario = st.file_uploader("📂 Carga tu archivo con datos contables y clasificación de cuentas", type=["xlsx"])
 archivo_usuario = mostrar_inicio(usuario["nombre"], usuario["plan_actual"])
+
 
 ruta_parametros = "data/Parametros.xlsx"
 
