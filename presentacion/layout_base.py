@@ -12,6 +12,7 @@ def image_to_base64(image):
     img_str = base64.b64encode(buffer.getvalue()).decode("utf-8")
     return img_str
 
+
 def mostrar_layout(nombre_usuario: str, plan_usuario: str):
     logo = Image.open("Logo.png")
     logo_base64 = image_to_base64(logo)
