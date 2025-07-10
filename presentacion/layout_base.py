@@ -18,8 +18,8 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
             align-items: center;
         }
         .top-bar-left img {
-            height: 90px;
-            margin-right: 20px;
+            height: 120px;
+            margin-right: 30px;
         }
         .top-bar-info {
             display: flex;
