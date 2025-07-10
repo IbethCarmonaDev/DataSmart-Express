@@ -1,7 +1,7 @@
 import streamlit as st
 
 def mostrar_inicio(usuario, plan_actual):
-    st.markdown("## 👋 Te damos la bienvenida a DataSmart Express")
+    st.markdown("# 👋 Te damos la bienvenida a DataSmart Express")
 
     # st.markdown(f"""
     # Tu plataforma para visualizar y analizar estados financieros de forma inteligente.
