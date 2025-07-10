@@ -9,7 +9,7 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.7rem 1rem;
+            padding: 0.5rem 1rem;
             background-color: #f8f9fa;
             border-bottom: 1px solid #ddd;
         }
@@ -18,32 +18,30 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
             align-items: center;
         }
         .top-bar-left img {
-            height: 75px;
+            height: 90px;
             margin-right: 20px;
         }
-        .user-info {
+        .top-bar-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .top-bar-info span {
             font-weight: bold;
             color: #4B0082;
+            font-size: 1.1rem;
+        }
+        .top-bar-right {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-        }
-        .plan-info {
-            font-weight: bold;
-            color: #4B0082;
-            margin-left: 8px;
-        }
-        .nav-buttons {
-            display: flex;
-            gap: 0.6rem;
+            gap: 1rem;
         }
         .nav-button {
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
             background-color: #e9ecef;
             border: none;
-            font-size: 0.9rem;
-            cursor: pointer;
+            font-size: 0.95rem;
         }
         </style>
         """,
@@ -53,28 +51,29 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
     logo = Image.open("Logo.png")
 
     st.markdown(f"""
-        <div class="top-bar">
-            <div class="top-bar-left">
-                <img src="data:image/png;base64,{logo_to_base64(logo)}" alt="Logo">
-                <div class="user-info">
-                    👤 {nombre_usuario} | 📄 Plan: <span class="plan-info">{plan_usuario}</span>
+        <div class='top-bar'>
+            <div class='top-bar-left'>
+                <img src='data:image/png;base64,{_image_to_base64(logo)}' alt='Logo DataSmart Express'/>
+                <div class='top-bar-info'>
+                    <span>👤 {nombre_usuario}</span>
+                    <span>📄 Plan: {plan_usuario}</span>
                 </div>
             </div>
-            <div class="nav-buttons">
-                <button class="nav-button">Inicio</button>
-                <button class="nav-button">Planes</button>
-                <button class="nav-button">Perfil</button>
-                <button class="nav-button">Cerrar sesión</button>
+            <div class='top-bar-right'>
+                <button class='nav-button'>Inicio</button>
+                <button class='nav-button'>Planes</button>
+                <button class='nav-button'>Perfil</button>
+                <button class='nav-button'>Cerrar sesión</button>
             </div>
         </div>
     """, unsafe_allow_html=True)
 
-def logo_to_base64(img):
+def _image_to_base64(image):
     import base64
     from io import BytesIO
-    buffer = BytesIO()
-    img.save(buffer, format="PNG")
-    return base64.b64encode(buffer.getvalue()).decode()
+    buffered = BytesIO()
+    image.save(buffered, format="PNG")
+    return base64.b64encode(buffered.getvalue()).decode()
 
 # import streamlit as st
 # from PIL import Image
