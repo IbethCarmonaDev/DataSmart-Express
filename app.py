@@ -1,11 +1,9 @@
 import streamlit as st
 import pandas as pd
-from PIL import Image
 import os
 import time
 from dotenv import load_dotenv
 import openai
-from streamlit_javascript import st_javascript
 
 from auth.interfaz_login import mostrar_login
 from auth.reset_password import mostrar_reset_password
@@ -19,11 +17,11 @@ from secciones.seccion_kpi import mostrar_kpis
 from secciones.seccion_analisis import mostrar_analisis
 from secciones.seccion_graficas_inteligente import mostrar_graficas
 from secciones.seccion_exportar import mostrar_exportacion
-from auth.verificacion import mostrar_verificacion_o_reset, manejar_signup
+from auth.verificacion import mostrar_verificacion_o_reset
 from auth.redireccion_fragmento import redireccionar_fragmento_si_es_necesario
 from auth.manejo_confirmacion import insertar_perfil_post_signup
 from utilidades.mensajes import mostrar_mensaje_confirmacion
-from presentacion.interfaz_planes import mostrar_interfaz_planes
+from secciones.seccion_planes import mostrar_interfaz_planes
 from presentacion.layout_base import mostrar_layout
 from secciones.seccion_inicio import mostrar_inicio
 
@@ -82,7 +80,39 @@ if "usuario" not in st.session_state:
 
 # --- Mostrar mensaje según plan ---
 usuario = st.session_state["usuario"]
+
+if "pagina_actual" not in st.session_state:
+    st.session_state["pagina_actual"] = "Inicio"
+
+
 mostrar_layout(nombre_usuario=usuario["nombre"], plan_usuario=usuario["plan_actual"])
+
+
+pagina = st.session_state["pagina_actual"]
+
+# 👉 Control de navegación
+if pagina == "Inicio":
+    archivo_usuario = mostrar_inicio(usuario["nombre"], usuario["plan_actual"])
+    if not archivo_usuario:
+        mostrar_interfaz_planes("data/Parametros.xlsx")
+        st.stop()
+elif pagina == "Planes":
+    mostrar_interfaz_planes("data/Parametros.xlsx")
+    st.stop()
+elif pagina == "Perfil":
+    st.subheader("👤 Perfil del usuario")
+    st.write(usuario)
+    st.stop()
+elif pagina == "Salir":
+    del st.session_state["usuario"]
+    st.success("Sesión cerrada.")
+    st.stop()
+else:
+    archivo_usuario = mostrar_inicio(usuario["nombre"], usuario["plan_actual"])
+    if not archivo_usuario:
+        mostrar_interfaz_planes("data/Parametros.xlsx")
+        st.stop()
+
 
 plan = usuario.get("plan_actual")
 dias_restantes = usuario.get("dias_restantes_trial")

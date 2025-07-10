@@ -1,4 +1,4 @@
-# interfaz_planes.py
+# seccion_planes.py
 import streamlit as st
 import pandas as pd
 from core.configuracion import obtener_parametros
