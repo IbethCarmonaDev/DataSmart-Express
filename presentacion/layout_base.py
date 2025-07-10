@@ -1,22 +1,34 @@
 import streamlit as st
 from PIL import Image
+import base64
+from io import BytesIO
 
 def cambiar_pagina(pagina: str):
     st.session_state["pagina_actual"] = pagina
 
+def image_to_base64(image):
+    buffer = BytesIO()
+    image.save(buffer, format="PNG")
+    img_str = base64.b64encode(buffer.getvalue()).decode("utf-8")
+    return img_str
+
 def mostrar_layout(nombre_usuario: str, plan_usuario: str):
     logo = Image.open("Logo.png")
+    logo_base64 = image_to_base64(logo)
 
+    # 💡 CSS para sticky header
     st.markdown("""
         <style>
-        .encabezado {
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            background-color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #ccc;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.5rem 1rem;
-            background-color: #f9f9f9;
-            border-bottom: 1px solid #ccc;
-            border-radius: 8px;
         }
         .usuario-info {
             display: flex;
@@ -32,54 +44,47 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
             font-weight: bold;
             color: #4B0082;
         }
-        .botones {
-            display: flex;
-            gap: 10px;
-        }
         .botones button {
             background-color: white;
             color: #4B0082;
             border: 1px solid #4B0082;
             border-radius: 6px;
-            padding: 4px 10px;
+            padding: 5px 12px;
+            margin-left: 6px;
             font-weight: bold;
             cursor: pointer;
         }
         </style>
     """, unsafe_allow_html=True)
 
-    # HTML que construye el layout visual
+    # 🖼 Cabecera sticky con botones funcionales
     st.markdown(f"""
-        <div class="encabezado">
+        <div class="sticky-header">
             <div class="usuario-info">
-                <img src="data:image/png;base64,{image_to_base64(logo)}" width="70"/>
+                <img src="data:image/png;base64,{logo_base64}" width="70"/>
                 <div class="usuario-texto">
                     <span>👤 {nombre_usuario}</span>
                     <span>📄 Plan: {plan_usuario}</span>
                 </div>
             </div>
             <div class="botones">
-                <form method="post"><button name="pagina" value="Inicio">Inicio</button></form>
-                <form method="post"><button name="pagina" value="Planes">Planes</button></form>
-                <form method="post"><button name="pagina" value="Perfil">Perfil</button></form>
-                <form method="post"><button name="pagina" value="Salir">Cerrar sesión</button></form>
+                <form method="post">
+                    <button type="submit" name="pagina" value="Inicio">Inicio</button>
+                    <button type="submit" name="pagina" value="Planes">Planes</button>
+                    <button type="submit" name="pagina" value="Perfil">Perfil</button>
+                    <button type="submit" name="pagina" value="Salir">Cerrar sesión</button>
+                </form>
             </div>
         </div>
     """, unsafe_allow_html=True)
 
-    # Detectar cambio de página desde formulario POST
-    if st.session_state.get("_form_data"):
-        pagina = st.session_state["_form_data"].get("pagina")
-        if pagina:
-            cambiar_pagina(pagina)
+    # 🔄 Detectar si viene navegación desde formulario HTML
+    if "form_pagina" not in st.session_state:
+        st.session_state["form_pagina"] = st.experimental_get_query_params().get("pagina", [None])[0]
 
-def image_to_base64(image):
-    import base64
-    from io import BytesIO
-    buffer = BytesIO()
-    image.save(buffer, format="PNG")
-    img_str = base64.b64encode(buffer.getvalue()).decode("utf-8")
-    return img_str
+    form_data = st.experimental_get_query_params().get("pagina", [None])[0]
+    if form_data:
+        cambiar_pagina(form_data)
 
 
 # import streamlit as st

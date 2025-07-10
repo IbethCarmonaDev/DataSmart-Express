@@ -81,8 +81,15 @@ if "usuario" not in st.session_state:
 # --- Mostrar mensaje según plan ---
 usuario = st.session_state["usuario"]
 
+
 if "pagina_actual" not in st.session_state:
     st.session_state["pagina_actual"] = "Inicio"
+
+# Capturar navegación desde formulario HTML
+form_data = st.experimental_get_query_params().get("pagina", [None])[0]
+if form_data:
+    st.session_state["pagina_actual"] = form_data
+
 
 
 mostrar_layout(nombre_usuario=usuario["nombre"], plan_usuario=usuario["plan_actual"])

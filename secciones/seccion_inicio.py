@@ -35,6 +35,7 @@ def mostrar_inicio(usuario, plan_actual):
     return archivo
 
 
+
 def OLDmostrar_inicio(archivo_usuario=None):
     st.subheader("👋 Bienvenido a DataSmart Express")
     usuario = st.session_state["usuario"]
