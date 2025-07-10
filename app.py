@@ -86,7 +86,7 @@ if "pagina_actual" not in st.session_state:
     st.session_state["pagina_actual"] = "Inicio"
 
 # Capturar navegación desde formulario HTML
-form_data = st.experimental_get_query_params().get("pagina", [None])[0]
+form_data = params.get("pagina", None)
 if form_data:
     st.session_state["pagina_actual"] = form_data
 

@@ -16,7 +16,7 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
     logo = Image.open("Logo.png")
     logo_base64 = image_to_base64(logo)
 
-    # 💡 CSS para sticky header
+    # Estilos para encabezado sticky
     st.markdown("""
         <style>
         .sticky-header {
@@ -57,7 +57,7 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
         </style>
     """, unsafe_allow_html=True)
 
-    # 🖼 Cabecera sticky con botones funcionales
+    # HTML: cabecera sticky con botones
     st.markdown(f"""
         <div class="sticky-header">
             <div class="usuario-info">
@@ -68,7 +68,7 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
                 </div>
             </div>
             <div class="botones">
-                <form method="post">
+                <form action="" method="get">
                     <button type="submit" name="pagina" value="Inicio">Inicio</button>
                     <button type="submit" name="pagina" value="Planes">Planes</button>
                     <button type="submit" name="pagina" value="Perfil">Perfil</button>
@@ -78,13 +78,10 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
         </div>
     """, unsafe_allow_html=True)
 
-    # 🔄 Detectar si viene navegación desde formulario HTML
-    if "form_pagina" not in st.session_state:
-        st.session_state["form_pagina"] = st.experimental_get_query_params().get("pagina", [None])[0]
-
-    form_data = st.experimental_get_query_params().get("pagina", [None])[0]
-    if form_data:
-        cambiar_pagina(form_data)
+    # Leer query param desde st.query_params
+    pagina = st.query_params.get("pagina", None)
+    if pagina:
+        cambiar_pagina(pagina)
 
 
 # import streamlit as st
