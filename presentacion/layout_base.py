@@ -1,71 +1,159 @@
 import streamlit as st
-from PIL import Image
-
+from streamlit.components.v1 import html
 
 def mostrar_layout(nombre_usuario, plan_usuario):
-    pagina_actual = st.session_state.get("pagina_actual", "Inicio")
+    with st.container():
+        col1, col2 = st.columns([0.1, 0.9])
 
-    # --- Estilos CSS ---
-    st.markdown("""
-        <style>
-        .header-container {
-            position: sticky;
-            top: 0;
-            z-index: 999;
-            background-color: white;
-            padding: 1rem 1rem 0 1rem;
-            border-bottom: 1px solid #eee;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-        }
-        .user-info img {
-            height: 40px;
-            margin-right: 10px;
-        }
-        .menu-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-        .menu-buttons a {
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border: 1px solid #a559c9;
-            border-radius: 8px;
-            color: #4b0082;
-            font-weight: bold;
-            background-color: white;
-        }
-        .menu-buttons a.active {
-            background-color: #a559c9;
-            color: white;
-        }
-        </style>
-    """, unsafe_allow_html=True)
+        with col1:
+            st.image("Logo.png", width=70)
 
-    # --- Encabezado sticky ---
-    st.markdown(f"""
-        <div class="header-container">
-            <div class="user-info">
-                <img src="https://i.ibb.co/Xj6Ccn0/Logo.png" alt="Logo">
-                <div>
-                    <strong style="font-size: 1.1rem; color: #4b0082;">{nombre_usuario.upper()}</strong><br>
-                    <span style="font-size: 0.9rem; color: #555;">📄 Plan: {plan_usuario}</span>
-                </div>
+        with col2:
+            st.markdown(f"""
+            <div style='display: flex; flex-direction: column; justify-content: center;'>
+                <strong style='font-size: 1.2em; color: purple;'>{nombre_usuario.upper()}</strong>
+                <span style='font-size: 0.9em;'>📄 Plan: <strong>{plan_usuario}</strong></span>
             </div>
-            <div class="menu-buttons">
-                <a href="?pagina=Inicio" class="{ 'active' if pagina_actual == 'Inicio' else '' }">🏠 Inicio</a>
-                <a href="?pagina=Planes" class="{ 'active' if pagina_actual == 'Planes' else '' }">💼 Planes</a>
-                <a href="?pagina=Perfil" class="{ 'active' if pagina_actual == 'Perfil' else '' }">👤 Perfil</a>
-                <a href="?pagina=Salir" class="{ 'active' if pagina_actual == 'Salir' else '' }">🚪 Cerrar sesión</a>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
 
-    st.markdown("""<br><br>""", unsafe_allow_html=True)
+    # --- Barra de navegación sticky ---
+    html("""
+    <style>
+    .nav-container {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        background-color: white;
+        padding: 10px;
+        z-index: 999;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+    .nav-button {
+        padding: 10px 20px;
+        border: 2px solid #a855f7;
+        border-radius: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        background-color: white;
+        color: #6b21a8;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: all 0.2s ease;
+    }
+    .nav-button:hover {
+        background-color: #a855f7;
+        color: white;
+    }
+    .nav-button.active {
+        background-color: #c084fc;
+        color: white;
+    }
+    </style>
+
+    <script>
+    const buttons = window.parent.document.querySelectorAll('.nav-button');
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+    </script>
+    """, height=0)
+
+    col_inicio, col_planes, col_perfil, col_salir = st.columns(4)
+    with col_inicio:
+        if st.button("\U0001F3E0 Inicio", use_container_width=True):
+            st.session_state["pagina_actual"] = "Inicio"
+            st.experimental_rerun()
+    with col_planes:
+        if st.button("\U0001F4BC Planes", use_container_width=True):
+            st.session_state["pagina_actual"] = "Planes"
+            st.experimental_rerun()
+    with col_perfil:
+        if st.button("\U0001F464 Perfil", use_container_width=True):
+            st.session_state["pagina_actual"] = "Perfil"
+            st.experimental_rerun()
+    with col_salir:
+        if st.button("\U0001F4DC Cerrar sesión", use_container_width=True):
+            st.session_state["pagina_actual"] = "Salir"
+            st.experimental_rerun()
+
+    st.markdown("---")
+
+
+# import streamlit as st
+# from PIL import Image
+#
+#
+# def mostrar_layout(nombre_usuario, plan_usuario):
+#     pagina_actual = st.session_state.get("pagina_actual", "Inicio")
+#
+#     # --- Estilos CSS ---
+#     st.markdown("""
+#         <style>
+#         .header-container {
+#             position: sticky;
+#             top: 0;
+#             z-index: 999;
+#             background-color: white;
+#             padding: 1rem 1rem 0 1rem;
+#             border-bottom: 1px solid #eee;
+#         }
+#         .user-info {
+#             display: flex;
+#             align-items: center;
+#         }
+#         .user-info img {
+#             height: 40px;
+#             margin-right: 10px;
+#         }
+#         .menu-buttons {
+#             display: flex;
+#             justify-content: center;
+#             gap: 1rem;
+#             margin: 1rem 0;
+#         }
+#         .menu-buttons a {
+#             text-decoration: none;
+#             padding: 0.5rem 1rem;
+#             border: 1px solid #a559c9;
+#             border-radius: 8px;
+#             color: #4b0082;
+#             font-weight: bold;
+#             background-color: white;
+#         }
+#         .menu-buttons a.active {
+#             background-color: #a559c9;
+#             color: white;
+#         }
+#         </style>
+#     """, unsafe_allow_html=True)
+#
+#     # --- Encabezado sticky ---
+#     st.markdown(f"""
+#         <div class="header-container">
+#             <div class="user-info">
+#                 <img src="https://i.ibb.co/Xj6Ccn0/Logo.png" alt="Logo">
+#                 <div>
+#                     <strong style="font-size: 1.1rem; color: #4b0082;">{nombre_usuario.upper()}</strong><br>
+#                     <span style="font-size: 0.9rem; color: #555;">📄 Plan: {plan_usuario}</span>
+#                 </div>
+#             </div>
+#             <div class="menu-buttons">
+#                 <a href="?pagina=Inicio" class="{ 'active' if pagina_actual == 'Inicio' else '' }">🏠 Inicio</a>
+#                 <a href="?pagina=Planes" class="{ 'active' if pagina_actual == 'Planes' else '' }">💼 Planes</a>
+#                 <a href="?pagina=Perfil" class="{ 'active' if pagina_actual == 'Perfil' else '' }">👤 Perfil</a>
+#                 <a href="?pagina=Salir" class="{ 'active' if pagina_actual == 'Salir' else '' }">🚪 Cerrar sesión</a>
+#             </div>
+#         </div>
+#     """, unsafe_allow_html=True)
+#
+#     st.markdown("""<br><br>""", unsafe_allow_html=True)
 
 
 # import streamlit as st
