@@ -1,112 +1,182 @@
 import streamlit as st
 from PIL import Image
-import base64
-from io import BytesIO
 
-def cambiar_pagina(pagina: str):
-    st.session_state["pagina_actual"] = pagina
 
-def image_to_base64(image):
-    buffer = BytesIO()
-    image.save(buffer, format="PNG")
-    return base64.b64encode(buffer.getvalue()).decode()
-
-def mostrar_layout(nombre_usuario: str, plan_usuario: str):
-    logo = Image.open("Logo.png")
-    logo_base64 = image_to_base64(logo)
+def mostrar_layout(nombre_usuario, plan_usuario):
     pagina_actual = st.session_state.get("pagina_actual", "Inicio")
 
-    # --- Estilos sticky + botones alineados ---
-    st.markdown(f"""
+    # --- Estilos CSS ---
+    st.markdown("""
         <style>
-        .sticky-header {{
-            position: fixed;
+        .header-container {
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
+            z-index: 999;
             background-color: white;
-            z-index: 1000;
-            padding: 0.6rem 1.5rem;
-            border-bottom: 1px solid #ccc;
+            padding: 1rem 1rem 0 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        .user-info {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-        }}
-        .usuario-info {{
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }}
-        .usuario-texto {{
-            display: flex;
-            flex-direction: column;
-        }}
-        .usuario-texto span:first-child {{
-            font-weight: bold;
-            color: #4B0082;
-            font-size: 1.05rem;
-        }}
-        .header-placeholder {{
-            height: 90px;
-        }}
-        .botones-row {{
-            margin-top: -20px;
-            margin-bottom: 20px;
+        }
+        .user-info img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .menu-buttons {
             display: flex;
             justify-content: center;
-            gap: 12px;
-        }}
-        .stButton > button {{
-            border-radius: 6px;
-            padding: 6px 16px;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .menu-buttons a {
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid #a559c9;
+            border-radius: 8px;
+            color: #4b0082;
             font-weight: bold;
-            border: 1px solid #bbb;
-            color: #4B0082;
-            background-color: #f9f9f9;
-        }}
-        .stButton > button:hover {{
-            background-color: #e8e8ff;
-        }}
-        .activo > button {{
-            background-color: #4B0082 !important;
-            color: white !important;
-            border-color: #4B0082 !important;
-        }}
+            background-color: white;
+        }
+        .menu-buttons a.active {
+            background-color: #a559c9;
+            color: white;
+        }
         </style>
     """, unsafe_allow_html=True)
 
-    # Sticky: logo + nombre + plan
+    # --- Encabezado sticky ---
     st.markdown(f"""
-        <div class="sticky-header">
-            <div class="usuario-info">
-                <img src="data:image/png;base64,{logo_base64}" width="60">
-                <div class="usuario-texto">
-                    <span>👤 {nombre_usuario}</span>
-                    <span>📄 Plan: {plan_usuario}</span>
+        <div class="header-container">
+            <div class="user-info">
+                <img src="https://i.ibb.co/Xj6Ccn0/Logo.png" alt="Logo">
+                <div>
+                    <strong style="font-size: 1.1rem; color: #4b0082;">{nombre_usuario.upper()}</strong><br>
+                    <span style="font-size: 0.9rem; color: #555;">📄 Plan: {plan_usuario}</span>
                 </div>
             </div>
+            <div class="menu-buttons">
+                <a href="?pagina=Inicio" class="{ 'active' if pagina_actual == 'Inicio' else '' }">🏠 Inicio</a>
+                <a href="?pagina=Planes" class="{ 'active' if pagina_actual == 'Planes' else '' }">💼 Planes</a>
+                <a href="?pagina=Perfil" class="{ 'active' if pagina_actual == 'Perfil' else '' }">👤 Perfil</a>
+                <a href="?pagina=Salir" class="{ 'active' if pagina_actual == 'Salir' else '' }">🚪 Cerrar sesión</a>
+            </div>
         </div>
-        <div class="header-placeholder"></div>
     """, unsafe_allow_html=True)
 
-    # Botones debajo del sticky (funcionales)
-    st.markdown("<div class='botones-row'>", unsafe_allow_html=True)
-    btns = {
-        "Inicio": "🏠 Inicio",
-        "Planes": "💼 Planes",
-        "Perfil": "👤 Perfil",
-        "Salir": "🚪 Cerrar sesión"
-    }
+    st.markdown("""<br><br>""", unsafe_allow_html=True)
 
-    for clave, texto in btns.items():
-        clase = "activo" if pagina_actual == clave else ""
-        with st.container():
-            with st.columns([1])[0]:
-                if st.button(texto, key=f"btn_{clave}"):
-                    cambiar_pagina(clave)
-                if clase:
-                    st.markdown(f"<style>.stButton#{'btn_' + clave} button{{background-color:#4B0082;color:white;border-color:#4B0082;}}</style>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+
+# import streamlit as st
+# from PIL import Image
+# import base64
+# from io import BytesIO
+#
+# def cambiar_pagina(pagina: str):
+#     st.session_state["pagina_actual"] = pagina
+#
+# def image_to_base64(image):
+#     buffer = BytesIO()
+#     image.save(buffer, format="PNG")
+#     return base64.b64encode(buffer.getvalue()).decode()
+#
+# def mostrar_layout(nombre_usuario: str, plan_usuario: str):
+#     logo = Image.open("Logo.png")
+#     logo_base64 = image_to_base64(logo)
+#     pagina_actual = st.session_state.get("pagina_actual", "Inicio")
+#
+#     # --- Estilos sticky + botones alineados ---
+#     st.markdown(f"""
+#         <style>
+#         .sticky-header {{
+#             position: fixed;
+#             top: 0;
+#             left: 0;
+#             right: 0;
+#             background-color: white;
+#             z-index: 1000;
+#             padding: 0.6rem 1.5rem;
+#             border-bottom: 1px solid #ccc;
+#             display: flex;
+#             align-items: center;
+#             justify-content: space-between;
+#         }}
+#         .usuario-info {{
+#             display: flex;
+#             align-items: center;
+#             gap: 15px;
+#         }}
+#         .usuario-texto {{
+#             display: flex;
+#             flex-direction: column;
+#         }}
+#         .usuario-texto span:first-child {{
+#             font-weight: bold;
+#             color: #4B0082;
+#             font-size: 1.05rem;
+#         }}
+#         .header-placeholder {{
+#             height: 90px;
+#         }}
+#         .botones-row {{
+#             margin-top: -20px;
+#             margin-bottom: 20px;
+#             display: flex;
+#             justify-content: center;
+#             gap: 12px;
+#         }}
+#         .stButton > button {{
+#             border-radius: 6px;
+#             padding: 6px 16px;
+#             font-weight: bold;
+#             border: 1px solid #bbb;
+#             color: #4B0082;
+#             background-color: #f9f9f9;
+#         }}
+#         .stButton > button:hover {{
+#             background-color: #e8e8ff;
+#         }}
+#         .activo > button {{
+#             background-color: #4B0082 !important;
+#             color: white !important;
+#             border-color: #4B0082 !important;
+#         }}
+#         </style>
+#     """, unsafe_allow_html=True)
+#
+#     # Sticky: logo + nombre + plan
+#     st.markdown(f"""
+#         <div class="sticky-header">
+#             <div class="usuario-info">
+#                 <img src="data:image/png;base64,{logo_base64}" width="60">
+#                 <div class="usuario-texto">
+#                     <span>👤 {nombre_usuario}</span>
+#                     <span>📄 Plan: {plan_usuario}</span>
+#                 </div>
+#             </div>
+#         </div>
+#         <div class="header-placeholder"></div>
+#     """, unsafe_allow_html=True)
+#
+#     # Botones debajo del sticky (funcionales)
+#     st.markdown("<div class='botones-row'>", unsafe_allow_html=True)
+#     btns = {
+#         "Inicio": "🏠 Inicio",
+#         "Planes": "💼 Planes",
+#         "Perfil": "👤 Perfil",
+#         "Salir": "🚪 Cerrar sesión"
+#     }
+#
+#     for clave, texto in btns.items():
+#         clase = "activo" if pagina_actual == clave else ""
+#         with st.container():
+#             with st.columns([1])[0]:
+#                 if st.button(texto, key=f"btn_{clave}"):
+#                     cambiar_pagina(clave)
+#                 if clase:
+#                     st.markdown(f"<style>.stButton#{'btn_' + clave} button{{background-color:#4B0082;color:white;border-color:#4B0082;}}</style>", unsafe_allow_html=True)
+#     st.markdown("</div>", unsafe_allow_html=True)
 
 
 # import streamlit as st
