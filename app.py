@@ -24,7 +24,7 @@ from utilidades.mensajes import mostrar_mensaje_confirmacion
 from secciones.seccion_planes import mostrar_interfaz_planes
 from presentacion.layout_base import mostrar_layout
 from secciones.seccion_inicio import mostrar_inicio
-
+from secciones.seccion_perfil import mostrar_perfil
 # --- Configuración inicial ---
 load_dotenv(override=True)
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -100,25 +100,29 @@ pagina = st.session_state["pagina_actual"]
 # 👉 Control de navegación
 if pagina == "Inicio":
     archivo_usuario = mostrar_inicio(usuario["nombre"], usuario["plan_actual"])
-    if not archivo_usuario:
-        mostrar_interfaz_planes("data/Parametros.xlsx")
-        st.stop()
+    # if not archivo_usuario:
+    #     mostrar_interfaz_planes("data/Parametros.xlsx")
+    #     st.stop()
 elif pagina == "Planes":
     mostrar_interfaz_planes("data/Parametros.xlsx")
     st.stop()
+# elif pagina == "Perfil":
+    # st.subheader("👤 Perfil del usuario")
+    # st.write(usuario)
+    # st.stop()
+
 elif pagina == "Perfil":
-    st.subheader("👤 Perfil del usuario")
-    st.write(usuario)
-    st.stop()
+    mostrar_perfil(usuario)
+
 elif pagina == "Salir":
     del st.session_state["usuario"]
     st.success("Sesión cerrada.")
     st.stop()
 else:
     archivo_usuario = mostrar_inicio(usuario["nombre"], usuario["plan_actual"])
-    if not archivo_usuario:
-        mostrar_interfaz_planes("data/Parametros.xlsx")
-        st.stop()
+    # if not archivo_usuario:
+    #     mostrar_interfaz_planes("data/Parametros.xlsx")
+    #     st.stop()
 
 
 plan = usuario.get("plan_actual")
