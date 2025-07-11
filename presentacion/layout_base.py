@@ -57,7 +57,7 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
 
         # Logo
         with cols[0]:
-            logo = Image.open("logo.png")
+            logo = Image.open("Logo.png")
             st.image(logo, width=60)
 
         # Usuario y plan
