@@ -6,11 +6,7 @@ from io import BytesIO
 
 def mostrar_layout(nombre_usuario: str, plan_usuario: str):
     # --- Cargar logo ---
-    ruta_logo = Path("presentacion") / "logo_ds.png"
-    if ruta_logo.exists():
-        logo = Image.open(ruta_logo)
-    else:
-        logo = None
+    logo = Image.open("Logo.png")
 
     # --- Estilos CSS ---
     st.markdown("""
