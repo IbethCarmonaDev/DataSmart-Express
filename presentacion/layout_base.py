@@ -16,7 +16,6 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
         }
         .logo-usuario {
             display: flex;
@@ -39,7 +38,8 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
         .nav-buttons {
             display: flex;
             gap: 1rem;
-            margin-top: 0.5rem;
+            justify-content: center;
+            padding: 0.5rem;
             flex-wrap: wrap;
         }
         button[data-testid="base-button"] {
@@ -49,45 +49,43 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
         </style>
     """, unsafe_allow_html=True)
 
-    # Encabezado sticky
-    with st.container():
-        st.markdown('<div class="header-sticky">', unsafe_allow_html=True)
+    # Encabezado sticky con logo, usuario y plan
+    st.markdown('<div class="header-sticky">', unsafe_allow_html=True)
+    st.markdown('<div class="header-container">', unsafe_allow_html=True)
 
-        cols = st.columns([2, 8, 2])
+    st.markdown('<div class="logo-usuario">', unsafe_allow_html=True)
+    logo = Image.open("Logo.png")
+    col1, col2 = st.columns([1, 10])
+    with col1:
+        st.image(logo, width=50)
+    with col2:
+        st.markdown(f"<div class='usuario-nombre'>{nombre_usuario.upper()}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='usuario-plan'>📄 Plan: <b>{plan_usuario}</b></div>", unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-        # Logo
-        with cols[0]:
-            logo = Image.open("Logo.png")
-            st.image(logo, width=60)
+    st.markdown('</div>', unsafe_allow_html=True)  # header-container
+    st.markdown('</div>', unsafe_allow_html=True)  # header-sticky
 
-        # Usuario y plan
-        with cols[1]:
-            st.markdown(f"<div class='usuario-nombre'>{nombre_usuario.upper()}</div>", unsafe_allow_html=True)
-            st.markdown(f"<div class='usuario-plan'>📄 Plan: <b>{plan_usuario}</b></div>", unsafe_allow_html=True)
-
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    # Botones debajo en horizontal
-    with st.container():
-        st.markdown("<div class='nav-buttons'>", unsafe_allow_html=True)
-        col1, col2, col3, col4 = st.columns(4)
-        with col1:
-            if st.button("🏠 Inicio"):
-                st.experimental_set_query_params(pagina="Inicio")
-                st.experimental_rerun()
-        with col2:
-            if st.button("💼 Planes"):
-                st.experimental_set_query_params(pagina="Planes")
-                st.experimental_rerun()
-        with col3:
-            if st.button("👤 Perfil"):
-                st.experimental_set_query_params(pagina="Perfil")
-                st.experimental_rerun()
-        with col4:
-            if st.button("📋 Cerrar sesión"):
-                st.experimental_set_query_params(pagina="Salir")
-                st.experimental_rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
+    # Botones horizontales debajo del sticky
+    st.markdown("<div class='nav-buttons'>", unsafe_allow_html=True)
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        if st.button("🏠 Inicio"):
+            st.experimental_set_query_params(pagina="Inicio")
+            st.experimental_rerun()
+    with col2:
+        if st.button("💼 Planes"):
+            st.experimental_set_query_params(pagina="Planes")
+            st.experimental_rerun()
+    with col3:
+        if st.button("👤 Perfil"):
+            st.experimental_set_query_params(pagina="Perfil")
+            st.experimental_rerun()
+    with col4:
+        if st.button("📋 Cerrar sesión"):
+            st.experimental_set_query_params(pagina="Salir")
+            st.experimental_rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # import streamlit as st
 # from PIL import Image
