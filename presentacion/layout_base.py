@@ -1,91 +1,83 @@
 import streamlit as st
 from PIL import Image
+import base64
+from io import BytesIO
 
 def mostrar_layout(nombre_usuario: str, plan_usuario: str):
-    st.markdown("""
+    # Convertir imagen a base64 para asegurar carga
+    def get_base64_logo(path):
+        img = Image.open(path)
+        buffered = BytesIO()
+        img.save(buffered, format="PNG")
+        return base64.b64encode(buffered.getvalue()).decode()
+
+    logo_base64 = get_base64_logo("Logo.png")
+
+    st.markdown(f"""
         <style>
-        .header-sticky {
+        .header-sticky {{
+            position: -webkit-sticky;
             position: sticky;
             top: 0;
             z-index: 999;
             background-color: white;
-            padding: 1rem 2rem 0.5rem 2rem;
+            padding: 0.5rem 1rem;
             border-bottom: 1px solid #eee;
-        }
-        .header-container {
+        }}
+        .header-container {{
             display: flex;
-            justify-content: space-between;
             align-items: center;
-        }
-        .logo-usuario {
+            justify-content: space-between;
+        }}
+        .logo-usuario {{
             display: flex;
             align-items: center;
             gap: 1rem;
-        }
-        .usuario-info {
+        }}
+        .usuario-info {{
             display: flex;
             flex-direction: column;
-        }
-        .usuario-nombre {
+        }}
+        .usuario-nombre {{
             font-weight: 700;
             color: #8A2BE2;
             font-size: 1rem;
-        }
-        .usuario-plan {
+        }}
+        .usuario-plan {{
             font-size: 0.9rem;
             color: #444;
-        }
-        .nav-buttons {
+        }}
+        .nav-buttons {{
             display: flex;
-            gap: 1rem;
             justify-content: center;
-            padding: 0.5rem;
+            gap: 1rem;
             flex-wrap: wrap;
-        }
-        button[data-testid="base-button"] {
+            padding: 0.7rem 0.5rem;
+        }}
+        button[data-testid="base-button"] {{
             border-radius: 10px;
             border: 1px solid #8A2BE2;
-        }
+        }}
         </style>
+
+        <div class="header-sticky">
+            <div class="header-container">
+                <div class="logo-usuario">
+                    <img src="data:image/png;base64,{logo_base64}" width="50"/>
+                    <div class="usuario-info">
+                        <div class="usuario-nombre">{nombre_usuario.upper()}</div>
+                        <div class="usuario-plan">📄 Plan: <b>{plan_usuario}</b></div>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <form action="?pagina=Inicio" method="get"><button>🏠 Inicio</button></form>
+                <form action="?pagina=Planes" method="get"><button>💼 Planes</button></form>
+                <form action="?pagina=Perfil" method="get"><button>👤 Perfil</button></form>
+                <form action="?pagina=Salir" method="get"><button>📋 Cerrar sesión</button></form>
+            </div>
+        </div>
     """, unsafe_allow_html=True)
-
-    # Encabezado sticky con logo, usuario y plan
-    st.markdown('<div class="header-sticky">', unsafe_allow_html=True)
-    st.markdown('<div class="header-container">', unsafe_allow_html=True)
-
-    st.markdown('<div class="logo-usuario">', unsafe_allow_html=True)
-    logo = Image.open("Logo.png")
-    col1, col2 = st.columns([1, 10])
-    with col1:
-        st.image(logo, width=50)
-    with col2:
-        st.markdown(f"<div class='usuario-nombre'>{nombre_usuario.upper()}</div>", unsafe_allow_html=True)
-        st.markdown(f"<div class='usuario-plan'>📄 Plan: <b>{plan_usuario}</b></div>", unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)  # header-container
-    st.markdown('</div>', unsafe_allow_html=True)  # header-sticky
-
-    # Botones horizontales debajo del sticky
-    st.markdown("<div class='nav-buttons'>", unsafe_allow_html=True)
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        if st.button("🏠 Inicio"):
-            st.experimental_set_query_params(pagina="Inicio")
-            st.experimental_rerun()
-    with col2:
-        if st.button("💼 Planes"):
-            st.experimental_set_query_params(pagina="Planes")
-            st.experimental_rerun()
-    with col3:
-        if st.button("👤 Perfil"):
-            st.experimental_set_query_params(pagina="Perfil")
-            st.experimental_rerun()
-    with col4:
-        if st.button("📋 Cerrar sesión"):
-            st.experimental_set_query_params(pagina="Salir")
-            st.experimental_rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # import streamlit as st
 # from PIL import Image
