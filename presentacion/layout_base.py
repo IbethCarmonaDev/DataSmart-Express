@@ -77,7 +77,6 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
             </div>
         </div>
     """, unsafe_allow_html=True)
-
 # import streamlit as st
 # from PIL import Image
 # from pathlib import Path
