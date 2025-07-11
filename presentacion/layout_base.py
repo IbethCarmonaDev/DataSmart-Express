@@ -1,92 +1,93 @@
 import streamlit as st
 from PIL import Image
-from pathlib import Path
-from io import BytesIO
-
 
 def mostrar_layout(nombre_usuario: str, plan_usuario: str):
-    # --- Cargar logo ---
-    logo = Image.open("Logo.png")
-
-    # --- Estilos CSS ---
     st.markdown("""
         <style>
-        .header-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem;
+        .header-sticky {
             position: sticky;
             top: 0;
-            background-color: white;
             z-index: 999;
-            border-bottom: 1px solid #ccc;
+            background-color: white;
+            padding: 1rem 2rem 0.5rem 2rem;
+            border-bottom: 1px solid #eee;
         }
-        .user-info {
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .logo-usuario {
             display: flex;
             align-items: center;
-        }
-        .user-info img {
-            height: 50px;
-            margin-right: 1rem;
-        }
-        .botones-container {
-            display: flex;
             gap: 1rem;
         }
-        .boton-activo {
-            background-color: #a855f7 !important;
-            color: white !important;
-            font-weight: bold;
+        .usuario-info {
+            display: flex;
+            flex-direction: column;
         }
-        .stButton>button {
-            border: 1px solid #a855f7;
-            color: #6b21a8;
-            font-weight: 600;
+        .usuario-nombre {
+            font-weight: 700;
+            color: #8A2BE2;
+            font-size: 1rem;
+        }
+        .usuario-plan {
+            font-size: 0.9rem;
+            color: #444;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+        button[data-testid="base-button"] {
+            border-radius: 10px;
+            border: 1px solid #8A2BE2;
         }
         </style>
     """, unsafe_allow_html=True)
 
-    # --- Header ---
+    # Encabezado sticky
     with st.container():
-        st.markdown("<div class='header-container'>", unsafe_allow_html=True)
+        st.markdown('<div class="header-sticky">', unsafe_allow_html=True)
 
-        # Izquierda: Logo y usuario
-        st.markdown("<div class='user-info'>", unsafe_allow_html=True)
-        cols = st.columns([1, 8])
-        if logo:
-            with cols[0]:
-                st.image(logo, width=60)
+        cols = st.columns([2, 8, 2])
+
+        # Logo
+        with cols[0]:
+            logo = Image.open("logo.png")
+            st.image(logo, width=60)
+
+        # Usuario y plan
         with cols[1]:
-            st.markdown(f"""
-                <span style='font-weight: bold; color: #6b21a8;'>{nombre_usuario.upper()}</span><br>
-                <span>📄 Plan: <b>{plan_usuario}</b></span>
-            """, unsafe_allow_html=True)
+            st.markdown(f"<div class='usuario-nombre'>{nombre_usuario.upper()}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='usuario-plan'>📄 Plan: <b>{plan_usuario}</b></div>", unsafe_allow_html=True)
+
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # Botones debajo en horizontal
+    with st.container():
+        st.markdown("<div class='nav-buttons'>", unsafe_allow_html=True)
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            if st.button("🏠 Inicio"):
+                st.experimental_set_query_params(pagina="Inicio")
+                st.experimental_rerun()
+        with col2:
+            if st.button("💼 Planes"):
+                st.experimental_set_query_params(pagina="Planes")
+                st.experimental_rerun()
+        with col3:
+            if st.button("👤 Perfil"):
+                st.experimental_set_query_params(pagina="Perfil")
+                st.experimental_rerun()
+        with col4:
+            if st.button("📋 Cerrar sesión"):
+                st.experimental_set_query_params(pagina="Salir")
+                st.experimental_rerun()
         st.markdown("</div>", unsafe_allow_html=True)
-
-        # Derecha: Navegación
-        st.markdown("<div class='botones-container'>", unsafe_allow_html=True)
-
-        botones = {
-            "Inicio": "🏠 Inicio",
-            "Planes": "💼 Planes",
-            "Perfil": "👤 Perfil",
-            "Salir": "📋 Cerrar sesión"
-        }
-
-        for clave, texto in botones.items():
-            if st.session_state.get("pagina_actual") == clave:
-                estilo = "boton-activo"
-            else:
-                estilo = ""
-            if st.button(texto, key=clave):
-                st.session_state["pagina_actual"] = clave
-
-        st.markdown("</div>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown("""<hr style='margin-top: 0;'>""", unsafe_allow_html=True)
-    st.write("")
 
 # import streamlit as st
 # from PIL import Image
