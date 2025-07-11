@@ -4,30 +4,29 @@ import base64
 from io import BytesIO
 
 def mostrar_layout(nombre_usuario: str, plan_usuario: str):
-    # Convertir imagen a base64 para asegurar carga
-    def get_base64_logo(path):
+    # Convertir logo a base64
+    def get_logo_base64(path):
         img = Image.open(path)
         buffered = BytesIO()
         img.save(buffered, format="PNG")
         return base64.b64encode(buffered.getvalue()).decode()
 
-    logo_base64 = get_base64_logo("Logo.png")
+    logo_base64 = get_logo_base64("Logo.png")
 
     st.markdown(f"""
         <style>
         .header-sticky {{
-            position: -webkit-sticky;
             position: sticky;
             top: 0;
             z-index: 999;
             background-color: white;
-            padding: 0.5rem 1rem;
+            padding: 1rem 2rem 0.5rem 2rem;
             border-bottom: 1px solid #eee;
         }}
         .header-container {{
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
         }}
         .logo-usuario {{
             display: flex;
@@ -49,10 +48,10 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
         }}
         .nav-buttons {{
             display: flex;
-            justify-content: center;
             gap: 1rem;
-            flex-wrap: wrap;
+            justify-content: center;
             padding: 0.7rem 0.5rem;
+            flex-wrap: wrap;
         }}
         button[data-testid="base-button"] {{
             border-radius: 10px;
