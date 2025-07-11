@@ -111,6 +111,7 @@ elif pagina == "Planes":
     # st.write(usuario)
     # st.stop()
 
+
 elif pagina == "Perfil":
     mostrar_perfil(usuario)
 
