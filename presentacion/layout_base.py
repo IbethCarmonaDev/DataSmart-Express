@@ -14,9 +14,9 @@ def image_to_base64(image):
 def mostrar_layout(nombre_usuario: str, plan_usuario: str):
     logo = Image.open("Logo.png")
     logo_base64 = image_to_base64(logo)
-
     pagina_actual = st.session_state.get("pagina_actual", "Inicio")
 
+    # --- Estilos sticky + botones alineados ---
     st.markdown(f"""
         <style>
         .sticky-header {{
@@ -24,13 +24,13 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
             top: 0;
             left: 0;
             right: 0;
-            z-index: 999;
             background-color: white;
-            border-bottom: 1px solid #ccc;
+            z-index: 1000;
             padding: 0.6rem 1.5rem;
+            border-bottom: 1px solid #ccc;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
         }}
         .usuario-info {{
             display: flex;
@@ -47,17 +47,27 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
             font-size: 1.05rem;
         }}
         .header-placeholder {{
-            height: 85px;
+            height: 90px;
+        }}
+        .botones-row {{
+            margin-top: -20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
         }}
         .stButton > button {{
             border-radius: 6px;
-            padding: 6px 12px;
+            padding: 6px 16px;
             font-weight: bold;
             border: 1px solid #bbb;
             color: #4B0082;
             background-color: #f9f9f9;
         }}
-        .stButton.active > button {{
+        .stButton > button:hover {{
+            background-color: #e8e8ff;
+        }}
+        .activo > button {{
             background-color: #4B0082 !important;
             color: white !important;
             border-color: #4B0082 !important;
@@ -65,6 +75,7 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
         </style>
     """, unsafe_allow_html=True)
 
+    # Sticky: logo + nombre + plan
     st.markdown(f"""
         <div class="sticky-header">
             <div class="usuario-info">
@@ -74,33 +85,133 @@ def mostrar_layout(nombre_usuario: str, plan_usuario: str):
                     <span>📄 Plan: {plan_usuario}</span>
                 </div>
             </div>
-            <div>
-                <!-- Botones aquí irán por columnas reales -->
-            </div>
         </div>
         <div class="header-placeholder"></div>
     """, unsafe_allow_html=True)
 
-    # Botones con columnas reales (que sí actualizan estado)
-    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
-    with col1:
-        if st.button("🏠 Inicio", key="btn_inicio"):
-            cambiar_pagina("Inicio")
-        if pagina_actual == "Inicio":
-            st.markdown("<style>.stButton:nth-child(1) button{background-color:#4B0082;color:white;}</style>", unsafe_allow_html=True)
-    with col2:
-        if st.button("💼 Planes", key="btn_planes"):
-            cambiar_pagina("Planes")
-        if pagina_actual == "Planes":
-            st.markdown("<style>.stButton:nth-child(2) button{background-color:#4B0082;color:white;}</style>", unsafe_allow_html=True)
-    with col3:
-        if st.button("👤 Perfil", key="btn_perfil"):
-            cambiar_pagina("Perfil")
-        if pagina_actual == "Perfil":
-            st.markdown("<style>.stButton:nth-child(3) button{background-color:#4B0082;color:white;}</style>", unsafe_allow_html=True)
-    with col4:
-        if st.button("🚪 Cerrar sesión", key="btn_salir"):
-            cambiar_pagina("Salir")
+    # Botones debajo del sticky (funcionales)
+    st.markdown("<div class='botones-row'>", unsafe_allow_html=True)
+    btns = {
+        "Inicio": "🏠 Inicio",
+        "Planes": "💼 Planes",
+        "Perfil": "👤 Perfil",
+        "Salir": "🚪 Cerrar sesión"
+    }
+
+    for clave, texto in btns.items():
+        clase = "activo" if pagina_actual == clave else ""
+        with st.container():
+            with st.columns([1])[0]:
+                if st.button(texto, key=f"btn_{clave}"):
+                    cambiar_pagina(clave)
+                if clase:
+                    st.markdown(f"<style>.stButton#{'btn_' + clave} button{{background-color:#4B0082;color:white;border-color:#4B0082;}}</style>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+# import streamlit as st
+# from PIL import Image
+# import base64
+# from io import BytesIO
+#
+# def cambiar_pagina(pagina: str):
+#     st.session_state["pagina_actual"] = pagina
+#
+# def image_to_base64(image):
+#     buffer = BytesIO()
+#     image.save(buffer, format="PNG")
+#     return base64.b64encode(buffer.getvalue()).decode()
+#
+# def mostrar_layout(nombre_usuario: str, plan_usuario: str):
+#     logo = Image.open("Logo.png")
+#     logo_base64 = image_to_base64(logo)
+#
+#     pagina_actual = st.session_state.get("pagina_actual", "Inicio")
+#
+#     st.markdown(f"""
+#         <style>
+#         .sticky-header {{
+#             position: fixed;
+#             top: 0;
+#             left: 0;
+#             right: 0;
+#             z-index: 999;
+#             background-color: white;
+#             border-bottom: 1px solid #ccc;
+#             padding: 0.6rem 1.5rem;
+#             display: flex;
+#             justify-content: space-between;
+#             align-items: center;
+#         }}
+#         .usuario-info {{
+#             display: flex;
+#             align-items: center;
+#             gap: 15px;
+#         }}
+#         .usuario-texto {{
+#             display: flex;
+#             flex-direction: column;
+#         }}
+#         .usuario-texto span:first-child {{
+#             font-weight: bold;
+#             color: #4B0082;
+#             font-size: 1.05rem;
+#         }}
+#         .header-placeholder {{
+#             height: 85px;
+#         }}
+#         .stButton > button {{
+#             border-radius: 6px;
+#             padding: 6px 12px;
+#             font-weight: bold;
+#             border: 1px solid #bbb;
+#             color: #4B0082;
+#             background-color: #f9f9f9;
+#         }}
+#         .stButton.active > button {{
+#             background-color: #4B0082 !important;
+#             color: white !important;
+#             border-color: #4B0082 !important;
+#         }}
+#         </style>
+#     """, unsafe_allow_html=True)
+#
+#     st.markdown(f"""
+#         <div class="sticky-header">
+#             <div class="usuario-info">
+#                 <img src="data:image/png;base64,{logo_base64}" width="60">
+#                 <div class="usuario-texto">
+#                     <span>👤 {nombre_usuario}</span>
+#                     <span>📄 Plan: {plan_usuario}</span>
+#                 </div>
+#             </div>
+#             <div>
+#                 <!-- Botones aquí irán por columnas reales -->
+#             </div>
+#         </div>
+#         <div class="header-placeholder"></div>
+#     """, unsafe_allow_html=True)
+#
+#     # Botones con columnas reales (que sí actualizan estado)
+#     col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+#     with col1:
+#         if st.button("🏠 Inicio", key="btn_inicio"):
+#             cambiar_pagina("Inicio")
+#         if pagina_actual == "Inicio":
+#             st.markdown("<style>.stButton:nth-child(1) button{background-color:#4B0082;color:white;}</style>", unsafe_allow_html=True)
+#     with col2:
+#         if st.button("💼 Planes", key="btn_planes"):
+#             cambiar_pagina("Planes")
+#         if pagina_actual == "Planes":
+#             st.markdown("<style>.stButton:nth-child(2) button{background-color:#4B0082;color:white;}</style>", unsafe_allow_html=True)
+#     with col3:
+#         if st.button("👤 Perfil", key="btn_perfil"):
+#             cambiar_pagina("Perfil")
+#         if pagina_actual == "Perfil":
+#             st.markdown("<style>.stButton:nth-child(3) button{background-color:#4B0082;color:white;}</style>", unsafe_allow_html=True)
+#     with col4:
+#         if st.button("🚪 Cerrar sesión", key="btn_salir"):
+#             cambiar_pagina("Salir")
 
 
 
